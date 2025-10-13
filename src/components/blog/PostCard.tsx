@@ -84,19 +84,19 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </CardContent>
 
-      {post.creator && (
+      {post.author && (
         <CardFooter className='flex items-center justify-between border-t border-primary/10 pt-4'>
           <Link
-            to={`/author/${post?.creator?.id}`}
+            to={`/author/${post?.author?.id}`}
             className='flex items-center gap-2 hover:opacity-80 transition-opacity'
           >
             <Avatar className='h-8 w-8 border-2 border-primary/20'>
               {/* <AvatarImage  alt={post.author.name} /> */}
               <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-                {post.creator.name[0]}
+                {post.author.name[0]}
               </AvatarFallback>
             </Avatar>
-            <span className='text-sm font-semibold'>{post.creator.name}</span>
+            <span className='text-sm font-semibold'>{post.author.name}</span>
           </Link>
 
           <div className='flex items-center gap-3 text-xs text-muted-foreground'>

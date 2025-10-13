@@ -26,7 +26,7 @@ export default function GamesListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const games = useGamesQuery({ staleTime: 60000, gcTime: 60000 });
+  const games = useGamesQuery();
   const deleteGame = useDeleteGame();
   const disabled = loading || deleteGame.isPending;
 
@@ -55,7 +55,7 @@ export default function GamesListPage() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Games ({games.data.pagination.totalDocs})
+              All Games ({games?.data?.pagination?.totalDocs || 0})
             </h2>
           </div>
         </CardHeader>

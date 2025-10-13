@@ -96,14 +96,14 @@ export const generateFileSchema = (label = 'File'): ZodType =>
     message: `Please upload the ${label.toLowerCase()}`,
   }).or(
     object({
-      id: string(),
-      location: string(),
-      filename: string(),
-      size: number(),
-      mimetype: string(),
-      url: string(),
-      createdAt: string(),
-      updatedAt: string(),
+      id: string().optional().nullable(),
+      location: string().optional().nullable(),
+      filename: string().optional().nullable(),
+      size: number().optional().nullable(),
+      mimetype: string().optional().nullable(),
+      url: string().optional().nullable(),
+      createdAt: string().optional().nullable(),
+      updatedAt: string().optional().nullable(),
     })
   );
 

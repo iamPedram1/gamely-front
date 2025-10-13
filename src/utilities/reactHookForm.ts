@@ -42,6 +42,7 @@ export const getErrorAndHelperText = (
  * @param setAlert - function to show alerts (title, severity)
  */
 export const createOnErrorHandler: SubmitErrorHandler<any> = (errors) => {
+  console.log(errors);
   const messages = Object.values(errors)
     .map((err: any) => err?.message || '')
     .filter(Boolean);

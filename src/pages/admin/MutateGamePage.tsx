@@ -29,6 +29,7 @@ import {
 } from '@/validations/common';
 import { uploadFile } from '@/utilities/uploader';
 import { createOnErrorHandler } from '@/utilities';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Types
 
@@ -50,7 +51,10 @@ export default function MutateGamePage() {
   const isEditMode = 'id' in params;
 
   // Hooks
-  const { control, handleSubmit, reset } = useForm<FormSchema>({});
+  const { control, handleSubmit, reset } = useForm<FormSchema>({
+    mode: 'onTouched',
+    resolver: zodResolver(gameSchema),
+  });
 
   const game = useGameQuery({
     enabled: isEditMode,
@@ -58,11 +62,11 @@ export default function MutateGamePage() {
   });
 
   const createGame = useCreateGame({
-    redirectAfterSuccessTo: '/dashboard/games',
+    stayOnLoadingAfterSuccessMutate: true,
+    redirectAfterSuccessTo: routes.dashboard.games.index,
     autoAlert: { mode: 'add', name: 'Game' },
   });
   const updateGame = useUpdateGame({
-    redirectAfterSuccessTo: '/dashboard/games',
     autoAlert: { mode: 'update', name: 'Game' },
   });
 
@@ -98,10 +102,15 @@ export default function MutateGamePage() {
         </Link>
         <div>
           <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>Add</span> Game
+            <span className='gradient-gaming-text'>
+              {isEditMode ? 'Update' : 'Add'}
+            </span>{' '}
+            Game
           </h1>
           <p className='text-muted-foreground mt-2'>
-            Add a new game to the database
+            {isEditMode
+              ? 'Update game in the database'
+              : 'Add a new game to the database'}
           </p>
         </div>
       </div>

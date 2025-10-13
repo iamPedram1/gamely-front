@@ -119,6 +119,8 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
   );
 
   const query = useQuery<CommonResponseProps<T>, any, T | null, any>({
+    staleTime: 600000,
+    gcTime: 600000,
     ...otherOptions,
     queryFn,
     queryKey,

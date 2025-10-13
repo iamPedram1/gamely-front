@@ -1,11 +1,12 @@
 import apiHandler from '@/utilities/api/apiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
+import useDocApi from '@/hooks/api/useQuery/useDoc';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import { PostProps, PostSummaryProps } from '@/types/blog';
-import useDocApi, { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
+import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
+import type { PostProps, PostSummaryProps } from '@/types/blog';
 
 const postsQueryKey = 'posts';
 
@@ -21,7 +22,7 @@ export const usePostsSummariesQuery = useAppQuery(
 
 export const usePostQuery = (options?: UseDocOptionType<PostProps>) =>
   useDocApi(
-    (slug) => apiHandler.get<PostProps>(`/posts/${slug}`),
+    (id) => apiHandler.get<PostProps>(`/posts/${id}`),
     [postsQueryKey],
     options
   );

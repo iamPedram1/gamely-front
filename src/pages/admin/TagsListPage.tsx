@@ -15,7 +15,6 @@ import {
 
 // Utilities
 import routes from '@/utilities/routes';
-import { mockTags } from '@/data/mockData';
 import useLoadingStore from '@/store/loading';
 import { useDeleteTag, useTagsQuery } from '@/utilities/api/tag';
 
@@ -24,7 +23,7 @@ export default function TagsListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const tags = useTagsQuery({ staleTime: 60000, gcTime: 60000 });
+  const tags = useTagsQuery();
   const deleteTag = useDeleteTag();
   const disabled = loading || deleteTag.isPending;
 
@@ -52,7 +51,7 @@ export default function TagsListPage() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Tags ({tags.data.pagination.totalDocs})
+              All Tags ({tags?.data?.pagination?.totalDocs || 0})
             </h2>
           </div>
         </CardHeader>

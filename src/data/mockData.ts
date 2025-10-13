@@ -70,7 +70,7 @@ The combat system blends traditional RPG elements with innovative space combat m
 Starfield Chronicles sets a new standard for space RPGs. With its engaging story, deep customization options, and breathtaking visuals, it's a game that will keep you exploring for hundreds of hours.`,
     coverImage:
       'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=80',
-    creator: {
+    author: {
       id: '1',
       name: 'Alex Morgan',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
@@ -83,7 +83,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
     comments: [
       {
         id: '1',
-        author: 'GameFan123',
+        username: 'GameFan123',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GameFan',
         content:
           "Great review! I've been playing for 50 hours and still discovering new things.",
@@ -91,7 +91,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
       },
       {
         id: '2',
-        author: 'SpaceExplorer',
+        username: 'SpaceExplorer',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Space',
         content:
           "The ship customization is incredible. Best space game I've played!",
@@ -122,7 +122,7 @@ The game features a deep magic system with over 50 spells. Combining different e
 Each boss requires a unique approach. Study their patterns, exploit weaknesses, and don't be afraid to experiment with different builds.`,
     coverImage:
       'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80',
-    creator: {
+    author: {
       id: '2',
       name: 'Sarah Chen',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
@@ -157,7 +157,7 @@ The competitive scene is thriving, with balanced factions and regular updates ke
 The cyberpunk aesthetic is stunning, with neon-lit cities and detailed unit designs that bring the world to life.`,
     coverImage:
       'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80',
-    creator: {
+    author: {
       id: '1',
       name: 'Alex Morgan',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
@@ -170,7 +170,7 @@ The cyberpunk aesthetic is stunning, with neon-lit cities and detailed unit desi
     comments: [
       {
         id: '3',
-        author: 'StrategyPro',
+        username: 'StrategyPro',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Strategy',
         content: 'The neural network system is genius! Adds so much depth.',
         createdAt: '2024-03-16T11:20:00Z',

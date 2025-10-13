@@ -1,8 +1,16 @@
-import { useState } from 'react';
-import { mockCategories } from '@/data/mockData';
+import { object } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Plus, Edit, Trash2 } from 'lucide-react';
+
+// Hooks
+import { useBoolean, useString } from '@/hooks/state';
+
+// Components
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Edit, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -19,24 +27,41 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
+// Context
+import useLoadingStore from '@/store/loading';
+
+// Utilities
+import { mockCategories } from '@/data/mockData';
+import {
+  useCategoriesQuery,
+  useCreateCategory,
+  useDeleteCategory,
+  useUpdateCategory,
+} from '@/utilities/api/category';
+import {
+  generateRegexStringSchema,
+  generateStringSchema,
+} from '@/validations/common';
+import MutateCategoryDialog from '@/components/admin/MutateCategoryDialog';
 
 export default function CategoriesPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    slug: '',
+  // States
+  const [selectedEditId, setSelectedEditId] = useString();
+  const isMutateDialogOpen = useBoolean(false, {
+    onBeforeSetFalse: () => setSelectedEditId(''),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Create category:', formData);
-    // TODO: Implement category creation
-    setIsDialogOpen(false);
-    setFormData({ name: '', slug: '' });
-  };
+  // Context
+  const { loading } = useLoadingStore();
 
+  // Hooks
+  const categories = useCategoriesQuery();
+  const deleteCategory = useDeleteCategory();
+
+  const disabled = loading || deleteCategory.isPending;
+
+  // Render
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -47,14 +72,14 @@ export default function CategoriesPage() {
           <p className='text-muted-foreground mt-2'>Manage post categories</p>
         </div>
         <Button
-          onClick={() => setIsDialogOpen(true)}
+          disabled={disabled}
+          onClick={isMutateDialogOpen.setTrue}
           className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
         >
           <Plus className='h-4 w-4 mr-2' />
           Add Category
         </Button>
       </div>
-
       <Card className='border-primary/20'>
         <CardHeader>
           <div className='flex items-center justify-between'>
@@ -73,7 +98,7 @@ export default function CategoriesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockCategories.map((category) => (
+              {categories.data.docs.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell className='font-medium'>
                     {category.title}
@@ -83,10 +108,20 @@ export default function CategoriesPage() {
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
-                      <Button variant='ghost' size='icon'>
+                      <Button
+                        size='icon'
+                        variant='ghost'
+                        disabled={disabled}
+                        onClick={() => {
+                          setSelectedEditId(category.id);
+                          isMutateDialogOpen.setTrue();
+                        }}
+                      >
                         <Edit className='h-4 w-4' />
                       </Button>
                       <Button
+                        disabled={disabled}
+                        onClick={() => deleteCategory.mutate(category.id)}
                         variant='ghost'
                         size='icon'
                         className='text-destructive'
@@ -101,57 +136,12 @@ export default function CategoriesPage() {
           </Table>
         </CardContent>
       </Card>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Category</DialogTitle>
-            <DialogDescription>
-              Create a new category for organizing posts
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <div className='space-y-4 py-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='name'>Category Name *</Label>
-                <Input
-                  id='name'
-                  placeholder='e.g., Reviews'
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='slug'>Slug *</Label>
-                <Input
-                  id='slug'
-                  placeholder='e.g., reviews'
-                  value={formData.slug}
-                  onChange={(e) =>
-                    setFormData({ ...formData, slug: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button type='submit' className='gradient-gaming'>
-                Create Category
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {isMutateDialogOpen.state && (
+        <MutateCategoryDialog
+          categoryId={selectedEditId}
+          onClose={isMutateDialogOpen.setFalse}
+        />
+      )}
     </div>
   );
 }

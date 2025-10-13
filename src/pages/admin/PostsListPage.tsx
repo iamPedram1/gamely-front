@@ -25,7 +25,7 @@ export default function PostsListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const posts = usePostsQuery({ staleTime: 60000, gcTime: 60000 });
+  const posts = usePostsQuery();
   const deletePost = useDeletePost();
 
   const disabled = loading || deletePost.isPending;
@@ -55,7 +55,7 @@ export default function PostsListPage() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Posts ({posts.data.pagination.totalDocs})
+              All Posts ({posts?.data?.pagination?.totalDocs || 0})
             </h2>
           </div>
         </CardHeader>
@@ -64,10 +64,10 @@ export default function PostsListPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Game</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead className='text-center'>Category</TableHead>
+                <TableHead className='text-center'>Game</TableHead>
+                <TableHead className='text-center'>Author</TableHead>
+                <TableHead className='text-center'>Date</TableHead>
                 <TableHead className='text-right'>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -75,42 +75,43 @@ export default function PostsListPage() {
               {posts.data.docs.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell className='font-medium max-w-md'>
-                    <div className='flex items-center gap-3'>
-                      {post.coverImage && (
-                        <img
-                          src={post.coverImage.url}
-                          alt={post.title}
-                          className='w-16 h-10 object-cover rounded'
-                        />
-                      )}
-                      <span className='line-clamp-1'>{post.title}</span>
-                    </div>
+                    <span className='max-w-80 line-clamp-1'>{post.title}</span>
                   </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant='secondary'
-                      className='bg-primary/10 text-primary'
-                    >
-                      {post.category.title}
-                    </Badge>
+                  <TableCell className='text-center'>
+                    <Link to={routes.dashboard.categories.index}>
+                      <Badge
+                        variant='secondary'
+                        className='bg-primary/10 text-primary'
+                      >
+                        {post.category.title}
+                      </Badge>
+                    </Link>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant='outline'>{post.game?.title}</Badge>
+                  <TableCell className='text-center'>
+                    {post.game ? (
+                      <Link to={routes.dashboard.games.edit(post.game.id)}>
+                        <Badge variant='outline'>{post.game.title}</Badge>
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
                   </TableCell>
-                  <TableCell>{post.creator?.name}</TableCell>
-                  <TableCell className='text-muted-foreground'>
+                  <TableCell className='text-center'>
+                    {post.author.name}
+                  </TableCell>
+                  <TableCell className='text-center text-muted-foreground'>
                     {dayjs(post.createdAt).format('MMMM D, YYYY')}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
+                      <Button disabled={disabled} variant='ghost' size='icon'>
+                        <Eye className='h-4 w-4' />
+                      </Button>
                       <Link to={routes.dashboard.posts.edit(post.id)}>
                         <Button disabled={disabled} variant='ghost' size='icon'>
-                          <Eye className='h-4 w-4' />
+                          <Edit className='h-4 w-4' />
                         </Button>
                       </Link>
-                      <Button disabled={disabled} variant='ghost' size='icon'>
-                        <Edit className='h-4 w-4' />
-                      </Button>
                       <Button
                         disabled={disabled}
                         onClick={() => deletePost.mutate(post.id)}

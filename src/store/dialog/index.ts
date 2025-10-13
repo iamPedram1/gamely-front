@@ -1,8 +1,8 @@
 'use client';
-import useLoadingStore from './slice';
+import useDialogStore from './slice';
 
 export * from './slice';
 export * from './getters';
 export * from './selectors';
 export * from './setters';
-export default useLoadingStore;
+export default useDialogStore;

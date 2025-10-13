@@ -22,7 +22,7 @@ export const useCategoriesSummariesQuery = useAppQuery(
 
 export const useCategoryQuery = (options?: UseDocOptionType<CategoryProps>) =>
   useDocApi(
-    (slug) => apiHandler.get<CategoryProps>(`/categories/${slug}`),
+    (id) => apiHandler.get<CategoryProps>(`/categories/${id}`),
     [categoriesQueryKey],
     options
   );
@@ -34,7 +34,7 @@ export const useCreateCategory = useAppMutation(
 );
 
 export const useUpdateCategory = useAppMutation(
-  (payload: { id: string; title: string }) =>
+  (payload: CategoryProps) =>
     apiHandler.patch(`/categories/${payload.id}`, payload),
   [categoriesQueryKey]
 );

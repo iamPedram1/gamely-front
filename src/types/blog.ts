@@ -6,10 +6,11 @@ export interface PostProps {
   content: string;
   abstract: string;
   id: string;
-  coverImage: { url: string } | null;
+  coverImage: FileProps | null;
   createdAt: string;
   updatedAt: string;
-  creator?: AuthorProps;
+  readingTime: number;
+  author: AuthorProps;
   tags?: TagProps[];
   category: CategoryProps;
   game?: GameProps;
@@ -49,6 +50,7 @@ export interface CategoryProps {
   id: string;
   title: string;
   slug: string;
+  parentId: string;
 }
 
 export interface SummaryProps {
@@ -69,8 +71,9 @@ export interface GameProps {
 
 export interface CommentProps {
   id: string;
-  author: string;
-  avatar: FileProps;
-  content: string;
+  comment: string;
+  username: string;
   createdAt: string;
+  avatar: FileProps;
+  replies: CommentProps[];
 }

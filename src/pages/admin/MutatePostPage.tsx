@@ -60,26 +60,25 @@ export default function MutatePostPage() {
   // Context
   const { loading } = useLoadingStore();
 
+  // Hooks
   const params = useParams();
   const isEditMode = 'id' in params;
-
-  // Hooks
-  const { control, setValue, getValues, handleSubmit, reset } =
-    useForm<FormSchema>({
-      mode: 'onTouched',
-      resolver: zodResolver(postSchema),
-    });
+  const { control, handleSubmit, reset } = useForm<FormSchema>({
+    mode: 'onTouched',
+    resolver: zodResolver(postSchema),
+  });
 
   const tags = useTagsSummariesQuery();
   const games = useGamesSummariesQuery();
   const categories = useCategoriesSummariesQuery();
 
   const post = usePostQuery({
+    id: params.id,
     enabled: isEditMode,
     onFetch: (doc) =>
       reset({
         ...doc,
-        game: doc.game.id,
+        game: doc.game?.id || undefined,
         category: doc.category.id,
         tags: doc.tags.map((tag) => tag.id),
       }),
@@ -104,7 +103,7 @@ export default function MutatePostPage() {
       payload.coverImage = data.coverImage.id;
     }
 
-    if (isEditMode) updatePost.mutate(payload);
+    if (isEditMode) updatePost.mutate({ id: params.id, ...payload });
     else createPost.mutate(payload);
   };
 
@@ -125,9 +124,16 @@ export default function MutatePostPage() {
         </Link>
         <div>
           <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>Create</span> Post
+            <span className='gradient-gaming-text'>
+              {isEditMode ? 'Update' : 'Create'}
+            </span>{' '}
+            Post
           </h1>
-          <p className='text-muted-foreground mt-2'>Add a new blog post</p>
+          <p className='text-muted-foreground mt-2'>
+            {isEditMode
+              ? 'Update post in the database'
+              : 'Add a new blog post to database'}
+          </p>
         </div>
       </div>
 

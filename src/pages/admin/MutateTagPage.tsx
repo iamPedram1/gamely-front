@@ -76,14 +76,21 @@ export default function AddTagPage() {
         </Link>
         <div>
           <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>Add</span> Tag
+            <span className='gradient-gaming-text'>
+              {isEditMode ? 'Update' : 'Add'}
+            </span>{' '}
+            Tag
           </h1>
-          <p className='text-muted-foreground mt-2'>Create a new tag</p>
+          <p className='text-muted-foreground mt-2'>
+            {isEditMode
+              ? 'Update a tag in the database'
+              : 'Add a new tag to the database'}
+          </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
-        <Card className='border-primary/20'>
+        <Card className='min-w-full border-primary/20'>
           <CardHeader>
             <CardTitle>Tag Details</CardTitle>
           </CardHeader>
@@ -128,7 +135,7 @@ export default function AddTagPage() {
                 disabled={disabled}
               >
                 <Save className='h-4 w-4 mr-2' />
-                Create Tag
+                {isEditMode ? 'Update Tag' : 'Create Tag'}
               </Button>
               <Link to='/dashboard/tags'>
                 <Button disabled={disabled} type='button' variant='outline'>
