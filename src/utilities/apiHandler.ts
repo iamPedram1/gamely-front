@@ -16,13 +16,13 @@ async function appFetch<T = any>(
 ): Promise<CommonResponseProps<T>> {
   try {
     const { signal } = reqInit || {};
-
+    const token = getCookie('Token');
     const res = await fetch(`${baseURL}${endpoint}`, {
       ...reqInit,
       credentials: 'include',
       ...(typeof window !== 'undefined' && { signal }),
       headers: {
-        'X-API-KEY': getCookie('Token'),
+        ...(token && { 'X-API-KEY': getCookie('Token') }),
         'Content-Type': 'application/json; charset=utf-8',
         ...reqInit?.headers,
       },
@@ -42,7 +42,6 @@ async function appFetch<T = any>(
         throw new Error('ERROR', { cause: response });
       })
       .then((v) => v);
-    console.log('res', res);
 
     const statusCode = res?.statusCode || 502;
     const data = res?.data as T | undefined;
@@ -59,13 +58,11 @@ async function appFetch<T = any>(
     };
   } catch (error: any) {
     const statusCode = error?.cause?.statusCode || 502;
-
+    const errors = error?.cause?.errors || [];
     const errorMessage =
       error?.cause?.message ||
       error?.cause?.errors?.[0] ||
       'Internal error occured';
-    const errors = error?.cause?.errors || [];
-    console.log('error', { error, cause: error.cause, errorMessage });
 
     return {
       statusCode,

@@ -1,7 +1,13 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+
+// Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Card,
   CardContent,
@@ -10,54 +16,53 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Utilities
 import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
+import useLoadingStore from '@/store/loading';
+import { setToken } from '@/utilities/cookie/token';
+
+interface FormProps {
+  loginEmail: string;
+  loginPassword: string;
+  registerName: string;
+  registerEmail: string;
+  registerPassword: string;
+  registerConfirmPassword: string;
+}
 
 export default function LoginPage() {
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [registerName, setRegisterName] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
-  const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
+  // Context
+  const { loading } = useLoadingStore();
 
+  // Hooks
+  const { control, handleSubmit } = useForm<FormProps>();
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
-    onSuccess: (data) => {
-      console.log('Success', data);
-    },
-    onError: (data) => {
-      console.log('Error', data);
-    },
+    onSuccess: ({ data }) => setToken(data.token),
   });
   const { mutate: register } = useRegisterMutation({
     redirectAfterSuccessTo: '/',
+    onSuccess: ({ data }) => setToken(data.token),
   });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    login({ email: loginEmail, password: loginPassword });
+  // Utilities
+  const handleLogin = async (data: FormProps) => {
+    login({ email: data.loginEmail, password: data.loginPassword });
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleRegister = async (data: FormProps) => {
     register({
-      email: registerEmail,
-      name: registerName,
-      password: registerPassword,
+      email: data.registerEmail,
+      name: data.registerName,
+      password: data.registerPassword,
     });
   };
 
+  // Render
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
-
       <main className='flex-1 container py-8 flex items-center justify-center'>
         <div className='w-full max-w-md'>
           <Tabs defaultValue='login' className='w-full'>
@@ -65,7 +70,6 @@ export default function LoginPage() {
               <TabsTrigger value='login'>Login</TabsTrigger>
               <TabsTrigger value='register'>Register</TabsTrigger>
             </TabsList>
-
             <TabsContent value='login'>
               <Card>
                 <CardHeader>
@@ -74,33 +78,43 @@ export default function LoginPage() {
                     Enter your email and password to access your account
                   </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSubmit(handleLogin)}>
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
                       <Label htmlFor='login-email'>Email</Label>
-                      <Input
-                        id='login-email'
-                        type='email'
-                        placeholder='you@example.com'
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
-                        required
+                      <Controller
+                        control={control}
+                        name='loginEmail'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='login-email'
+                            type='email'
+                            placeholder='you@example.com'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='login-password'>Password</Label>
-                      <Input
-                        id='login-password'
-                        type='password'
-                        placeholder='••••••••'
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        required
+                      <Controller
+                        control={control}
+                        name='loginPassword'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='login-password'
+                            type='password'
+                            placeholder='••••••••'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                   </CardContent>
                   <CardFooter className='flex flex-col gap-4'>
-                    <Button type='submit' className='w-full'>
+                    <Button disabled={loading} type='submit' className='w-full'>
                       Login
                     </Button>
                     <p className='text-sm text-muted-foreground text-center'>
@@ -115,7 +129,6 @@ export default function LoginPage() {
                 </form>
               </Card>
             </TabsContent>
-
             <TabsContent value='register'>
               <Card>
                 <CardHeader>
@@ -124,59 +137,77 @@ export default function LoginPage() {
                     Enter your details to create a new account
                   </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleRegister}>
+                <form onSubmit={handleSubmit(handleRegister)}>
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
                       <Label htmlFor='register-name'>Name</Label>
-                      <Input
-                        id='register-name'
-                        type='text'
-                        placeholder='John Doe'
-                        value={registerName}
-                        onChange={(e) => setRegisterName(e.target.value)}
-                        required
+                      <Controller
+                        control={control}
+                        name='registerName'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='register-name'
+                            type='text'
+                            placeholder='John Doe'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='register-email'>Email</Label>
-                      <Input
-                        id='register-email'
-                        type='email'
-                        placeholder='you@example.com'
-                        value={registerEmail}
-                        onChange={(e) => setRegisterEmail(e.target.value)}
-                        required
+                      <Controller
+                        control={control}
+                        name='registerEmail'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='register-email'
+                            type='email'
+                            placeholder='you@example.com'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='register-password'>Password</Label>
-                      <Input
-                        id='register-password'
-                        type='password'
-                        placeholder='••••••••'
-                        value={registerPassword}
-                        onChange={(e) => setRegisterPassword(e.target.value)}
-                        required
+                      <Controller
+                        control={control}
+                        name='registerPassword'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='register-password'
+                            type='password'
+                            placeholder='••••••••'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='register-confirm-password'>
                         Confirm Password
                       </Label>
-                      <Input
-                        id='register-confirm-password'
-                        type='password'
-                        placeholder='••••••••'
-                        value={registerConfirmPassword}
-                        onChange={(e) =>
-                          setRegisterConfirmPassword(e.target.value)
-                        }
-                        required
+                      <Controller
+                        control={control}
+                        name='registerConfirmPassword'
+                        render={({ field }) => (
+                          <Input
+                            disabled={loading}
+                            id='register-confirm-password'
+                            type='password'
+                            placeholder='••••••••'
+                            {...field}
+                          />
+                        )}
                       />
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button type='submit' className='w-full'>
+                    <Button disabled={loading} type='submit' className='w-full'>
                       Create Account
                     </Button>
                   </CardFooter>

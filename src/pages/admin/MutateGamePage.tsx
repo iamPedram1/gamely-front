@@ -1,53 +1,104 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, Save } from 'lucide-react';
+import { CrossCircledIcon } from '@radix-ui/react-icons';
+import { Controller, useForm } from 'react-hook-form';
+
+// Components
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save } from 'lucide-react';
-import { Controller, useForm } from 'react-hook-form';
-import { GameProps } from '@/types/blog';
-import { useCreateGame } from '@/utilities/api/game';
+import {
+  useCreateGame,
+  useGameQuery,
+  useUpdateGame,
+} from '@/utilities/api/game';
+
+// Context
 import useLoadingStore from '@/store/loading';
-import { FileProps } from '@/types/api';
-import { CrossCircledIcon } from '@radix-ui/react-icons';
+
+// Utilities
 import { uploadFile } from '@/utilities/uploader';
 
-interface FormProps
-  extends Omit<GameProps, 'id' | 'createdAt' | 'updatedAt' | 'coverImage'> {
-  coverImage: FileProps | File | null;
-}
+// Types
+import { instanceof as instanceof_, number, object, string } from 'zod';
+
+const gameSchema = object({
+  title: string().min(3).max(255),
+  slug: string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug is not valid'),
+  description: string().min(10).max(500),
+  releaseDate: string(),
+  coverImage: instanceof_(File, {
+    message: 'Please upload the cover image',
+  }).or(
+    object({
+      id: string(),
+      location: string(),
+      filename: string(),
+      size: number(),
+      mimetype: string(),
+      url: string(),
+      createdAt: string(),
+      updatedAt: string(),
+    })
+  ),
+});
+
+type FormSchema = Zod.infer<typeof gameSchema>;
 
 export default function AddGamePage() {
   // Context
   const { loading } = useLoadingStore();
 
+  const params = useParams();
+  const isEditMode = 'id' in params;
+
   // Hooks
-  const { control, getValues, handleSubmit } = useForm<FormProps>({});
-  const { mutate: createGame } = useCreateGame({
+  const { control, handleSubmit, reset } = useForm<FormSchema>({});
+
+  const game = useGameQuery({
+    enabled: isEditMode,
+    onFetch: (doc) => reset({ ...doc }),
+  });
+
+  const createGame = useCreateGame({
+    redirectAfterSuccessTo: '/dashboard/games',
+    autoAlert: { mode: 'add', name: 'Game' },
+  });
+  const updateGame = useUpdateGame({
     redirectAfterSuccessTo: '/dashboard/games',
     autoAlert: { mode: 'add', name: 'Game' },
   });
 
   // Utilities
-  const onSubmit = async (data: FormProps) => {
+  const onSubmit = async (data: FormSchema) => {
     const payload: any = { ...data };
 
     if (data.coverImage && data.coverImage instanceof File) {
       const res = await uploadFile([data.coverImage], 'game');
       if (res.data) payload.coverImage = res.data[0].id;
+    } else if ('id' in data.coverImage) {
+      payload.coverImage = data.coverImage.id;
     }
 
-    createGame(payload);
+    if (isEditMode) updateGame.mutate(payload);
+    else createGame.mutate(payload);
   };
+
+  const disabled =
+    loading ||
+    (isEditMode
+      ? updateGame.isPending || !game.isFetched
+      : createGame.isPending);
 
   // Render
   return (
     <div className='space-y-6 max-w-4xl'>
       <div className='flex items-center gap-4'>
         <Link to='/dashboard/games'>
-          <Button variant='ghost' size='icon'>
+          <Button disabled={disabled} variant='ghost' size='icon'>
             <ArrowLeft className='h-5 w-5' />
           </Button>
         </Link>
@@ -74,7 +125,7 @@ export default function AddGamePage() {
                 name='title'
                 render={({ field }) => (
                   <Input
-                    disabled={loading}
+                    disabled={disabled}
                     id='title'
                     placeholder='Enter game title'
                     {...field}
@@ -90,7 +141,7 @@ export default function AddGamePage() {
                 name='slug'
                 render={({ field }) => (
                   <Input
-                    disabled={loading}
+                    disabled={disabled}
                     id='slug'
                     placeholder='game-url-slug'
                     {...field}
@@ -98,9 +149,6 @@ export default function AddGamePage() {
                 )}
               />
             </div>
-            <button type='button' onClick={() => console.log(getValues())}>
-              Logger
-            </button>
             <div className='space-y-2'>
               <Label htmlFor='coverImage'>Cover Image URL *</Label>
               <Controller
@@ -122,11 +170,13 @@ export default function AddGamePage() {
                         <p className='text-muted-foreground mt-2'>
                           {field.value instanceof File
                             ? field.value.name
-                            : field.value.filename || ''}
+                            : field.value.filename}
                         </p>
                         <CrossCircledIcon
-                          onClick={() => field.onChange(null)}
-                          className='size-8 relative top-1.5 cursor-pointer text-red-700'
+                          onClick={() => !disabled && field.onChange(null)}
+                          className={`size-8 relative top-1.5 cursor-pointer ${
+                            disabled ? 'text-muted' : 'text-red-700'
+                          }`}
                         />
                       </div>
                     </div>
@@ -134,7 +184,7 @@ export default function AddGamePage() {
                     <Input
                       accept='image/*'
                       type='file'
-                      disabled={loading}
+                      disabled={disabled}
                       id='coverImage'
                       placeholder='https://example.com/image.jpg'
                       onChange={(e) => field.onChange(e.target.files[0])}
@@ -143,7 +193,6 @@ export default function AddGamePage() {
                 }
               />
             </div>
-
             <div className='space-y-2'>
               <Label htmlFor='releaseDate'>Release Date *</Label>
               <Controller
@@ -151,16 +200,14 @@ export default function AddGamePage() {
                 control={control}
                 name='releaseDate'
                 render={({ field }) => (
-                  <Input
-                    disabled={loading}
-                    id='releaseDate'
-                    type='date'
-                    {...field}
+                  <DatePicker
+                    disabled={disabled}
+                    value={field.value}
+                    onChange={(date) => field.onChange(date.toISOString())}
                   />
                 )}
               />
             </div>
-
             <div className='space-y-2'>
               <Label htmlFor='description'>Description *</Label>
               <Controller
@@ -172,6 +219,7 @@ export default function AddGamePage() {
                     id='description'
                     placeholder='Brief description of the game'
                     rows={5}
+                    disabled={disabled}
                     {...field}
                   />
                 )}
@@ -180,14 +228,15 @@ export default function AddGamePage() {
 
             <div className='flex gap-4 pt-4'>
               <Button
+                disabled={disabled}
                 type='submit'
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               >
                 <Save className='h-4 w-4 mr-2' />
-                Create Game
+                {isEditMode ? 'Update Game' : 'Create Game'}
               </Button>
               <Link to='/dashboard/games'>
-                <Button type='button' variant='outline'>
+                <Button disabled={disabled} type='button' variant='outline'>
                   Cancel
                 </Button>
               </Link>

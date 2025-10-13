@@ -11,11 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useGamesQuery } from '@/utilities/api/game';
+import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
 
 export default function GamesListPage() {
+  // Hooks
   const games = useGamesQuery();
+  const { mutate: deleteGame } = useDeleteGame();
 
+  // Utilities
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -24,6 +27,7 @@ export default function GamesListPage() {
     });
   };
 
+  // Render
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -84,13 +88,16 @@ export default function GamesListPage() {
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
-                      <Button variant='ghost' size='icon'>
-                        <Edit className='h-4 w-4' />
-                      </Button>
+                      <Link to={`/dashboard/games/${game.id}`}>
+                        <Button variant='ghost' size='icon'>
+                          <Edit className='h-4 w-4' />
+                        </Button>
+                      </Link>
                       <Button
                         variant='ghost'
                         size='icon'
                         className='text-destructive'
+                        onClick={() => deleteGame(game.id)}
                       >
                         <Trash2 className='h-4 w-4' />
                       </Button>

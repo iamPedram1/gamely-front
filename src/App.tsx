@@ -1,24 +1,24 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { useRoutes, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 // Pages
 import HomePage from '@/pages/HomePage';
-import PostListPage from '@/pages/PostListPage';
-import PostDetailPage from '@/pages/PostDetailPage';
-import GameListPage from '@/pages/GameListPage';
-import TagListPage from '@/pages/TagListPage';
-import CategoryPostsPage from '@/pages/CategoryPostsPage';
 import LoginPage from '@/pages/LoginPage';
-import AdminLayout from '@/components/admin/AdminLayout';
-import PostsListPage from '@/pages/admin/PostsListPage';
-import AddPostPage from '@/pages/admin/AddPostPage';
-import GamesListPage from '@/pages/admin/GamesListPage';
-import AddGamePage from '@/pages/admin/AddGamePage';
-import CategoriesPage from '@/pages/admin/CategoriesPage';
-import TagsListPage from '@/pages/admin/TagsListPage';
+import TagListPage from '@/pages/TagListPage';
+import PostListPage from '@/pages/PostListPage';
+import GameListPage from '@/pages/GameListPage';
 import AddTagPage from '@/pages/admin/AddTagPage';
+import PostDetailPage from '@/pages/PostDetailPage';
+import AddPostPage from '@/pages/admin/AddPostPage';
+import TagsListPage from '@/pages/admin/TagsListPage';
+import MutateGamePage from '@/pages/admin/MutateGamePage';
+import PostsListPage from '@/pages/admin/PostsListPage';
+import GamesListPage from '@/pages/admin/GamesListPage';
+import AdminLayout from '@/components/admin/AdminLayout';
+import CategoryPostsPage from '@/pages/CategoryPostsPage';
+import CategoriesPage from '@/pages/admin/CategoriesPage';
 
 // Components
 import NotificationProvider from '@/components/ui/notification';
@@ -50,11 +50,14 @@ function App() {
               <Route path='/dashboard' element={<AdminLayout />}>
                 <Route path='posts' element={<PostsListPage />} />
                 <Route path='posts/add' element={<AddPostPage />} />
+                <Route path='posts/:id' element={<AddPostPage />} />
                 <Route path='games' element={<GamesListPage />} />
-                <Route path='games/add' element={<AddGamePage />} />
+                <Route path='games/add' element={<MutateGamePage />} />
+                <Route path='games/:id' element={<MutateGamePage />} />
                 <Route path='categories' element={<CategoriesPage />} />
                 <Route path='tags' element={<TagsListPage />} />
                 <Route path='tags/add' element={<AddTagPage />} />
+                <Route path='tags/:id' element={<AddTagPage />} />
               </Route>
             </Routes>
             <NotificationProvider />
