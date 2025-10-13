@@ -6,17 +6,22 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useState } from 'react';
 import { getCookie } from '@/utilities/cookie';
 import routes from '@/utilities/routes';
+import useAuth from '@/hooks/useAuth';
 
 export default function Header() {
-  const { theme, setTheme } = useTheme();
+  // States
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Hooks
+  const { theme, setTheme } = useTheme();
+  const { isAuthorized, isAuthLoading } = useAuth();
+
+  // Utilities
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Search:', searchQuery);
   };
-
-  const isAuthorized = Boolean(getCookie('Token'));
+  console.log(isAuthorized, isAuthLoading);
 
   return (
     <header className='sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60'>
@@ -82,7 +87,14 @@ export default function Header() {
             <span className='sr-only'>Toggle theme</span>
           </Button>
 
-          {isAuthorized ? (
+          {isAuthLoading ? (
+            <Button
+              disabled
+              className='gradient-gaming font-semibold uppercase tracking-wide glow-effect hover:glow-effect-strong transition-all'
+            >
+              Loading
+            </Button>
+          ) : isAuthorized ? (
             <Link to={routes.profile.index}>
               <Button className='gradient-gaming font-semibold uppercase tracking-wide glow-effect hover:glow-effect-strong transition-all'>
                 Profile

@@ -16,8 +16,18 @@ import routes from '@/utilities/routes';
 import { usePostQuery } from '@/utilities/api/post';
 import { useCommentsQuery } from '@/utilities/api/comment';
 import initialPagination from '@/utilities/pagination';
+import { useState } from 'react';
+import { CommentProps } from '@/types/blog';
+import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
+import useAuth from '@/hooks/useAuth';
 
 export default function PostDetailPage() {
+  // States
+  const [commentToEdit, setCommentToEdit] = useState<CommentProps | null>(null);
+  const [commentToReply, setCommentToReply] = useState<CommentProps | null>(
+    null
+  );
+
   // Hooks
   const { slug } = useParams();
   const post = usePostQuery({ id: slug });
@@ -26,6 +36,12 @@ export default function PostDetailPage() {
     enabled: post.isSuccess,
     initialData: { docs: [], pagination: initialPagination },
   });
+
+  // Utilities
+  const handleCloseDialog = () => {
+    setCommentToEdit(null);
+    setCommentToReply(null);
+  };
 
   // Render
   if (!post.data) {
@@ -52,7 +68,6 @@ export default function PostDetailPage() {
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
-
       <main className='flex-1 container py-8'>
         <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6'>
@@ -60,7 +75,6 @@ export default function PostDetailPage() {
             Back to Posts
           </Button>
         </Link>
-
         <article className='max-w-4xl mx-auto'>
           <div className='mb-6'>
             <div className='flex items-center gap-2 mb-4'>
@@ -172,8 +186,15 @@ export default function PostDetailPage() {
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className='text-sm'>{comment.comment}</p>
+                    <CardContent className='flex flex-col gap-4'>
+                      <p className='text-sm'>{comment.content}</p>
+                      <Button
+                        onClick={() => setCommentToReply(comment)}
+                        className='w-fit'
+                        variant='secondary'
+                      >
+                        Reply
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
@@ -181,8 +202,15 @@ export default function PostDetailPage() {
             )}
           </div>
         </article>
+        {post.data.id && (commentToEdit || commentToReply) && (
+          <MutateCommentDialog
+            commentToEdit={commentToEdit}
+            replyToComment={commentToReply}
+            onClose={handleCloseDialog}
+            postId={post.data.id}
+          />
+        )}
       </main>
-
       <Footer />
     </div>
   );

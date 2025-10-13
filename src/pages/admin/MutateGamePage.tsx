@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { instanceof as instanceof_, object, string } from 'zod';
+import { object } from 'zod';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -18,18 +19,17 @@ import {
 } from '@/utilities/api/game';
 
 // Context
-import useLoadingStore from '@/store/loading';
+import useLoadingStore, { setLoadingState } from '@/store/loading';
 
 // Utilities
 import routes from '@/utilities/routes';
+import { uploadFile } from '@/utilities/uploader';
+import { createOnErrorHandler } from '@/utilities';
 import {
   generateFileSchema,
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
-import { uploadFile } from '@/utilities/uploader';
-import { createOnErrorHandler } from '@/utilities';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 // Types
 
@@ -47,10 +47,9 @@ export default function MutateGamePage() {
   // Context
   const { loading } = useLoadingStore();
 
+  // Hooks
   const params = useParams();
   const isEditMode = 'id' in params;
-
-  // Hooks
   const { control, handleSubmit, reset } = useForm<FormSchema>({
     mode: 'onTouched',
     resolver: zodResolver(gameSchema),
@@ -74,6 +73,7 @@ export default function MutateGamePage() {
   const onSubmit = async (data: FormSchema) => {
     const payload: any = { ...data };
 
+    setLoadingState(true);
     if (data.coverImage && data.coverImage instanceof File) {
       const res = await uploadFile([data.coverImage], 'game');
       if (res.data) payload.coverImage = res.data[0].id;

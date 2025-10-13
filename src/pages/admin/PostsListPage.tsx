@@ -17,15 +17,18 @@ import {
 
 // Utilities
 import routes from '@/utilities/routes';
-import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 import useLoadingStore from '@/store/loading';
+import initialPagination from '@/utilities/pagination';
+import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 
 export default function PostsListPage() {
   // Context
   const { loading } = useLoadingStore();
 
   // Hooks
-  const posts = usePostsQuery();
+  const posts = usePostsQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
   const deletePost = useDeletePost();
 
   const disabled = loading || deletePost.isPending;

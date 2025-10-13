@@ -1,22 +1,25 @@
 import { Link } from 'react-router-dom';
+import { Calendar } from 'lucide-react';
+
+// Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Calendar } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import apiHandler from '@/utilities/api/apiHandler';
-import { GameProps } from '@/types/blog';
-import { DataWithPagination } from '@/types/api';
+
+// Utilities
+import initialPagination from '@/utilities/pagination';
 import { useGamesQuery } from '@/utilities/api/game';
 
 export default function GameListPage() {
-  const games = useGamesQuery({});
+  const games = useGamesQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

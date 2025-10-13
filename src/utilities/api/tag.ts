@@ -16,7 +16,10 @@ export const useTagsQuery = useAppQuery(
 );
 
 export const useTagsSummariesQuery = useAppQuery(
-  () => apiHandler.get<DataWithPagination<SummaryProps>>('/tags/summaries'),
+  () =>
+    apiHandler.get<DataWithPagination<SummaryProps & { postsCount: number }>>(
+      '/tags/summaries'
+    ),
   [tagsQueryKey, 'summaries']
 );
 

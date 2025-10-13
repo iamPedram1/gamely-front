@@ -3,7 +3,6 @@
 import { deleteCookie, getCookie, setCookie } from '@/utilities/cookie';
 
 // Types
-
 export const setToken = (token: string) => {
   setCookie('Token', token);
 };

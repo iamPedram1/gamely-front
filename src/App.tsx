@@ -22,6 +22,7 @@ import CategoriesPage from '@/pages/admin/CategoriesPage';
 
 // Components
 import NotificationProvider from '@/components/ui/notification';
+import ProfilePage from '@/pages/ProfilePage';
 
 function App() {
   const client = new QueryClient();
@@ -45,6 +46,7 @@ function App() {
               <Route path='/tags' element={<TagListPage />} />
               <Route path='/category/:slug' element={<CategoryPostsPage />} />
               <Route path='/login' element={<LoginPage />} />
+              <Route path='/profile' element={<ProfilePage />} />
 
               {/* Admin Routes */}
               <Route path='/dashboard' element={<AdminLayout />}>

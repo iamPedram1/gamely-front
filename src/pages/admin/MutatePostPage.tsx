@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // Context
-import useLoadingStore from '@/store/loading';
+import useLoadingStore, { setLoadingState } from '@/store/loading';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -96,6 +96,7 @@ export default function MutatePostPage() {
   const onSubmit = async (data: FormSchema) => {
     const payload: any = { ...data };
 
+    setLoadingState(true);
     if (data.coverImage && data.coverImage instanceof File) {
       const res = await uploadFile([data.coverImage], 'post');
       if (res.data) payload.coverImage = res.data[0].id;

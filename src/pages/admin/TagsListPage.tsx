@@ -17,14 +17,18 @@ import {
 import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
 import { useDeleteTag, useTagsQuery } from '@/utilities/api/tag';
+import initialPagination from '@/utilities/pagination';
 
 export default function TagsListPage() {
   // Context
   const { loading } = useLoadingStore();
 
   // Hooks
-  const tags = useTagsQuery();
   const deleteTag = useDeleteTag();
+  const tags = useTagsQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
+
   const disabled = loading || deleteTag.isPending;
 
   return (

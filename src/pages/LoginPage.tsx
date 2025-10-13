@@ -40,10 +40,12 @@ export default function LoginPage() {
   const { control, handleSubmit } = useForm<FormProps>();
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
+    stayOnLoadingAfterSuccessMutate: true,
     onSuccess: ({ data }) => setToken(data.token),
   });
   const { mutate: register } = useRegisterMutation({
     redirectAfterSuccessTo: '/',
+    stayOnLoadingAfterSuccessMutate: true,
     onSuccess: ({ data }) => setToken(data.token),
   });
 

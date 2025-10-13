@@ -7,10 +7,9 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useBoolean, useString } from '@/hooks/state';
 
 // Components
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import MutateCategoryDialog from '@/components/admin/MutateCategoryDialog';
 import {
   Table,
   TableBody,
@@ -19,31 +18,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 // Context
 import useLoadingStore from '@/store/loading';
 
 // Utilities
+import initialPagination from '@/utilities/pagination';
 import { mockCategories } from '@/data/mockData';
 import {
   useCategoriesQuery,
-  useCreateCategory,
   useDeleteCategory,
-  useUpdateCategory,
 } from '@/utilities/api/category';
-import {
-  generateRegexStringSchema,
-  generateStringSchema,
-} from '@/validations/common';
-import MutateCategoryDialog from '@/components/admin/MutateCategoryDialog';
 
 export default function CategoriesPage() {
   // States
@@ -56,7 +41,9 @@ export default function CategoriesPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const categories = useCategoriesQuery();
+  const categories = useCategoriesQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
   const deleteCategory = useDeleteCategory();
 
   const disabled = loading || deleteCategory.isPending;

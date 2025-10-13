@@ -7,10 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 // Utilities
-import { useTagsSummariesQuery } from '@/utilities/api/tag';
+import { useTagsQuery } from '@/utilities/api/tag';
+import initialPagination from '@/utilities/pagination';
 
 export default function TagListPage() {
-  const tags = useTagsSummariesQuery();
+  const tags = useTagsQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
 
   return (
     <div className='min-h-screen flex flex-col bg-background'>

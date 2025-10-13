@@ -1,11 +1,19 @@
-import PostCard from '@/components/blog/PostCard';
+// Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import PostCard from '@/components/blog/PostCard';
+
+// Utilities
 import { usePostsQuery } from '@/utilities/api/post';
+import initialPagination from '@/utilities/pagination';
 
 export default function PostListPage() {
-  const posts = usePostsQuery();
+  // Hooks
+  const posts = usePostsQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
 
+  // Render
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />

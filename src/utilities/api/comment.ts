@@ -31,3 +31,19 @@ export const useCreateComment = useAppMutation(
     }),
   [commentsQueryKey]
 );
+
+export const useUpdateComment = useAppMutation(
+  (payload: {
+    postId: string;
+    commentId: string;
+    comment: string;
+    replyToCommentId?: string;
+  }) =>
+    apiHandler.post(`/posts/${payload.postId}/comments/${payload.commentId}`, {
+      comment: payload.comment,
+      ...(payload.replyToCommentId && {
+        replyToCommentId: payload.replyToCommentId,
+      }),
+    }),
+  [commentsQueryKey]
+);

@@ -10,7 +10,7 @@ export interface PostProps {
   createdAt: string;
   updatedAt: string;
   readingTime: number;
-  author: AuthorProps;
+  author: UserProps;
   tags?: TagProps[];
   category: CategoryProps;
   game?: GameProps;
@@ -24,7 +24,7 @@ export interface PostSummaryProps {
   excerpt: string;
   content: string;
   coverImage: FileProps;
-  author: AuthorProps;
+  author: UserProps;
   publishedAt: string;
   tags: TagProps[];
   category: CategoryProps;
@@ -32,11 +32,12 @@ export interface PostSummaryProps {
   comments: CommentProps[];
 }
 
-export interface AuthorProps {
+export interface UserProps {
   id: string;
-  name: string;
-  avatar: FileProps;
   bio: string;
+  name: string;
+  email: string;
+  avatar: FileProps;
 }
 
 export interface TagProps {
@@ -56,6 +57,7 @@ export interface CategoryProps {
 export interface SummaryProps {
   id: string;
   title: string;
+  slug?: string;
 }
 
 export interface GameProps {
@@ -71,7 +73,7 @@ export interface GameProps {
 
 export interface CommentProps {
   id: string;
-  comment: string;
+  content: string;
   username: string;
   createdAt: string;
   avatar: FileProps;

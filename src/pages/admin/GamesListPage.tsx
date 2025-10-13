@@ -19,6 +19,7 @@ import useLoadingStore from '@/store/loading';
 
 // Utilities
 import routes from '@/utilities/routes';
+import initialPagination from '@/utilities/pagination';
 import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
 
 export default function GamesListPage() {
@@ -26,7 +27,9 @@ export default function GamesListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const games = useGamesQuery();
+  const games = useGamesQuery({
+    initialData: { docs: [], pagination: initialPagination },
+  });
   const deleteGame = useDeleteGame();
   const disabled = loading || deleteGame.isPending;
 
