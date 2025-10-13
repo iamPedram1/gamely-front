@@ -1,10 +1,10 @@
-import apiHandler from '@/utilities/apiHandler';
+import apiHandler from '@/utilities/api/apiHandler';
 import useDocApi from '@/hooks/api/useQuery/useDoc';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
-import type { GameProps } from '@/types/blog';
+import type { GameProps, SummaryProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
 import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
 
@@ -12,6 +12,11 @@ const gamesQueryKey = 'games';
 
 export const useGamesQuery = useAppQuery(
   () => apiHandler.get<DataWithPagination<GameProps>>('/games'),
+  [gamesQueryKey]
+);
+
+export const useGamesSummariesQuery = useAppQuery(
+  () => apiHandler.get<SummaryProps[]>('/games/summaries'),
   [gamesQueryKey]
 );
 

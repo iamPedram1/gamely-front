@@ -10,22 +10,6 @@ type Value = boolean | string | number;
  * @param valueB The second value to toggle between.
  * @param initialValue The initial value of the state.
  * @returns An array containing the current state and a function to toggle the state.
- *
- * @example
- * ```jsx
- * import { useToggle } from '@shopify/hooks/state/state';
- *
- * const MyComponent = () => {
- *   const [mode, onToggleMode] = useToggle('create', 'edit');
- *
- *   return (
- *     <div>
- *       <h1>{mode}</h1>
- *       <button onClick={onToggleMode}>Toggle</button>
- *     </div>
- *   );
- * };
- * ```
  */
 export const useToggle = <T extends Value, U extends Value>(
   valueA: T,

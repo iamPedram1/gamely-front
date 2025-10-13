@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Youtube, Gamepad2 } from 'lucide-react';
+import routes from '@/utilities/routes';
 
 export default function Footer() {
   return (
@@ -29,7 +30,7 @@ export default function Footer() {
             <ul className='space-y-3 text-sm'>
               <li>
                 <Link
-                  to='/posts'
+                  to={routes.posts.index}
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
@@ -38,7 +39,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to='/games'
+                  to={routes.games.index}
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
@@ -47,7 +48,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to='/tags'
+                  to={routes.tags.index}
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />

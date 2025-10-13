@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import routes from '@/utilities/routes';
 
 export default function CategoryPostsPage() {
   const { slug } = useParams();
@@ -16,7 +17,7 @@ export default function CategoryPostsPage() {
       <Header />
 
       <main className='flex-1 container py-8'>
-        <Link to='/posts'>
+        <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6'>
             <ArrowLeft className='h-4 w-4 mr-2' />
             Back to Posts

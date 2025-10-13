@@ -34,16 +34,11 @@ export interface PostSummaryProps {
 export interface AuthorProps {
   id: string;
   name: string;
+  avatar: FileProps;
+  bio: string;
 }
 
 export interface TagProps {
-  id: string;
-  postsCount: number;
-  title: string;
-  slug: string;
-}
-
-export interface TagSummaryProps {
   id: string;
   postsCount: number;
   title: string;
@@ -54,6 +49,11 @@ export interface CategoryProps {
   id: string;
   title: string;
   slug: string;
+}
+
+export interface SummaryProps {
+  id: string;
+  title: string;
 }
 
 export interface GameProps {

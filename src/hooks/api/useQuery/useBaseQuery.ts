@@ -129,6 +129,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
       statusCode: -1,
       data: initialData,
     },
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
@@ -139,6 +140,8 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     if ('enabled' in options ? options.enabled : true) {
       if (autoLoading) setLoadingState(true);
     }
+
+    if (query.isStale || !query.isFetched) query.refetch();
   }, []);
 
   useUpdateEffect(() => {

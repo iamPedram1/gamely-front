@@ -1,13 +1,18 @@
 import { useParams, Link } from 'react-router-dom';
-import { mockPosts } from '@/data/mockData';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+
+// Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+// Utilities
+import routes from '@/utilities/routes';
+import { mockPosts } from '@/data/mockData';
 
 export default function PostDetailPage() {
   const { slug } = useParams();
@@ -20,7 +25,7 @@ export default function PostDetailPage() {
         <main className='flex-1 container py-8'>
           <div className='text-center'>
             <h1 className='text-4xl font-bold mb-4'>Post Not Found</h1>
-            <Link to='/posts'>
+            <Link to={routes.posts.index}>
               <Button>Back to Posts</Button>
             </Link>
           </div>
@@ -45,7 +50,7 @@ export default function PostDetailPage() {
       <Header />
 
       <main className='flex-1 container py-8'>
-        <Link to='/posts'>
+        <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6'>
             <ArrowLeft className='h-4 w-4 mr-2' />
             Back to Posts
@@ -67,7 +72,7 @@ export default function PostDetailPage() {
               <div className='flex items-center gap-2'>
                 <Avatar className='h-10 w-10'>
                   <AvatarImage
-                    src={post.creator.avatar}
+                    src={post.creator.avatar.url}
                     alt={post.creator.name}
                   />
                   <AvatarFallback>{post.creator.name[0]}</AvatarFallback>
@@ -85,7 +90,7 @@ export default function PostDetailPage() {
               <div className='flex items-center gap-3'>
                 <div className='flex items-center gap-1'>
                   <Calendar className='h-4 w-4' />
-                  <span>{formatDate(post.publishedAt)}</span>
+                  <span>{formatDate(post.createdAt)}</span>
                 </div>
                 <div className='flex items-center gap-1'>
                   <Clock className='h-4 w-4' />
@@ -97,7 +102,7 @@ export default function PostDetailPage() {
 
           <div className='aspect-video overflow-hidden rounded-lg mb-8'>
             <img
-              src={post.coverImage}
+              src={post.coverImage.url}
               alt={post.title}
               className='w-full h-full object-cover'
             />
@@ -140,7 +145,7 @@ export default function PostDetailPage() {
                       <div className='flex items-center gap-3'>
                         <Avatar>
                           <AvatarImage
-                            src={comment.avatar}
+                            src={comment.avatar.url}
                             alt={comment.author}
                           />
                           <AvatarFallback>{comment.author[0]}</AvatarFallback>

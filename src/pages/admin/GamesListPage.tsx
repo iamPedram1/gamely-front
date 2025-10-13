@@ -1,8 +1,10 @@
+import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
-import { mockGames } from '@/data/mockData';
+import { Plus, Edit, Trash2 } from 'lucide-react';
+
+// Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Edit, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -11,21 +13,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
+// Context
+import useLoadingStore from '@/store/loading';
+
+// Utilities
+import routes from '@/utilities/routes';
 import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
 
 export default function GamesListPage() {
-  // Hooks
-  const games = useGamesQuery();
-  const { mutate: deleteGame } = useDeleteGame();
+  // Context
+  const { loading } = useLoadingStore();
 
-  // Utilities
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  // Hooks
+  const games = useGamesQuery({ staleTime: 60000, gcTime: 60000 });
+  const deleteGame = useDeleteGame();
+  const disabled = loading || deleteGame.isPending;
 
   // Render
   return (
@@ -37,8 +40,11 @@ export default function GamesListPage() {
           </h1>
           <p className='text-muted-foreground mt-2'>Manage all games</p>
         </div>
-        <Link to='/dashboard/games/add'>
-          <Button className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'>
+        <Link to={routes.dashboard.games.add}>
+          <Button
+            disabled={disabled}
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+          >
             <Plus className='h-4 w-4 mr-2' />
             Add Game
           </Button>
@@ -84,20 +90,21 @@ export default function GamesListPage() {
                     </span>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {formatDate(game.releaseDate)}
+                    {dayjs(game.releaseDate).format('MMMM DD, YYYY')}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
-                      <Link to={`/dashboard/games/${game.id}`}>
-                        <Button variant='ghost' size='icon'>
+                      <Link to={routes.dashboard.games.edit(game.id)}>
+                        <Button disabled={disabled} variant='ghost' size='icon'>
                           <Edit className='h-4 w-4' />
                         </Button>
                       </Link>
                       <Button
+                        disabled={disabled}
                         variant='ghost'
                         size='icon'
                         className='text-destructive'
-                        onClick={() => deleteGame(game.id)}
+                        onClick={() => deleteGame.mutate(game.id)}
                       >
                         <Trash2 className='h-4 w-4' />
                       </Button>

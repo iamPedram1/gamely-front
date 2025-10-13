@@ -1,38 +1,48 @@
-import { convertToValidSlug } from './link';
-
 const routes = {
   home: '/',
   login: '/login',
-  internalError: '/internal-error',
-  logout: '/logout',
-  aboutUs: '/about-us',
+  forgotpassword: '/forgot-password',
   register: '/register',
-  landing: '/landing',
-  blog: {
-    index: '/blog',
-    tag: (slug: string) => `/blog/posts?tag=${slug}`,
-    posts: {
-      index: '/blog/posts',
-      edit: (slug: string) => `/blog/posts/${slug}`,
-    },
-  },
-  products: {
-    index: '/products',
-    ofCategory: (slug: string) => `/products/${slug}`,
-  },
-  cart: {
-    index: '/cart',
-    payment: {
-      index: '/cart/payment',
-    },
+  games: {
+    index: '/games',
+    details: (slug: string) => '/games/' + slug,
   },
   profile: {
     index: '/profile',
-    edit: '/profile/edit',
-    orders: '/profile/orders',
-    recents: '/profile/recents',
-    addresses: '/profile/addresses',
-    favorites: '/profile/favorites',
+  },
+  posts: {
+    index: '/posts',
+    details: (slug: string) => '/posts/' + slug,
+  },
+  tags: {
+    index: '/tags',
+    details: (slug: string) => '/tags/' + slug,
+  },
+  categories: {
+    index: '/categories',
+    details: (slug: string) => '/categories/' + slug,
+  },
+  dashboard: {
+    games: {
+      index: '/dashboard/games',
+      add: '/dashboard/games/add',
+      edit: (id: string) => '/dashboard/games/' + id,
+    },
+    posts: {
+      index: '/dashboard/posts',
+      add: '/dashboard/posts/add',
+      edit: (id: string) => '/dashboard/posts/' + id,
+    },
+    tags: {
+      index: '/dashboard/tags',
+      add: '/dashboard/tags/add',
+      edit: (id: string) => '/dashboard/tags/' + id,
+    },
+    categories: {
+      index: '/dashboard/categories',
+      add: '/dashboard/categories/add',
+      edit: (id: string) => '/dashboard/categories/' + id,
+    },
   },
 };
 

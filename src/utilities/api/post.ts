@@ -1,10 +1,11 @@
-import apiHandler from '@/utilities/apiHandler';
+import apiHandler from '@/utilities/api/apiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
 import { PostProps, PostSummaryProps } from '@/types/blog';
+import useDocApi, { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
 
 const postsQueryKey = 'posts';
 
@@ -14,13 +15,16 @@ export const usePostsQuery = useAppQuery(
 );
 
 export const usePostsSummariesQuery = useAppQuery(
-  () =>
-    apiHandler.get<DataWithPagination<PostSummaryProps>>('/posts/summaries'),
+  () => apiHandler.get<PostSummaryProps[]>('/posts/summaries'),
   [postsQueryKey]
 );
 
-export const usePostQuery = async () =>
-  useAppQuery((slug) => apiHandler.get(`/posts/${slug}`), [postsQueryKey]);
+export const usePostQuery = (options?: UseDocOptionType<PostProps>) =>
+  useDocApi(
+    (slug) => apiHandler.get<PostProps>(`/posts/${slug}`),
+    [postsQueryKey],
+    options
+  );
 
 export const useCreatePost = useAppMutation(
   (payload: { title: string; coverImage: string }) =>

@@ -1,8 +1,8 @@
-import useAlertStore, { Severity } from './slice';
+import useAlertStore, { SeverityType } from './slice';
 
 export const setAlertState = (
   message: string,
-  severity: Severity = 'error',
+  severity: SeverityType = 'error',
   duration: number = 5000
 ): void => {
   if (typeof message !== 'string') return;

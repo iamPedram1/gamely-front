@@ -21,6 +21,7 @@ import {
 import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
 import useLoadingStore from '@/store/loading';
 import { setToken } from '@/utilities/cookie/token';
+import routes from '@/utilities/routes';
 
 interface FormProps {
   loginEmail: string;
@@ -119,7 +120,7 @@ export default function LoginPage() {
                     </Button>
                     <p className='text-sm text-muted-foreground text-center'>
                       <Link
-                        to='/forgot-password'
+                        to={routes.forgotpassword}
                         className='hover:text-foreground transition-colors'
                       >
                         Forgot your password?

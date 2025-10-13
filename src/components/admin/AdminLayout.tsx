@@ -8,12 +8,19 @@ import {
   LogOut,
   Menu,
 } from 'lucide-react';
+
+// Hooks
+import { useBoolean } from '@/hooks/state';
+
+// Components
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+
+// Utilities
+import routes from '@/utilities/routes';
 
 export default function AdminLayout() {
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarOpen = useBoolean(true);
 
   const navItems = [
     { path: '/dashboard/posts', icon: FileText, label: 'Posts' },
@@ -28,18 +35,20 @@ export default function AdminLayout() {
     <div className='min-h-screen bg-background flex'>
       <aside
         className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
+          sidebarOpen.state ? 'w-64' : 'w-20'
         } border-r border-primary/20 bg-accent/30 transition-all duration-300 flex flex-col`}
       >
         <div className='p-6 border-b border-primary/20'>
           <Link
-            to='/dashboard/posts'
+            to={routes.dashboard.posts.index}
             className='flex items-center gap-3 font-bold text-xl'
           >
             <div className='p-2 rounded-xl bg-gradient-gaming glow-effect'>
               <LayoutDashboard className='h-6 w-6 text-white' />
             </div>
-            {sidebarOpen && <span className='gradient-gaming-text'>ADMIN</span>}
+            {sidebarOpen.state && (
+              <span className='gradient-gaming-text'>ADMIN</span>
+            )}
           </Link>
         </div>
         <nav className='flex-1 p-4 space-y-2'>
@@ -54,7 +63,7 @@ export default function AdminLayout() {
                 }`}
               >
                 <item.icon className='h-5 w-5' />
-                {sidebarOpen && (
+                {sidebarOpen.state && (
                   <span className='font-semibold'>{item.label}</span>
                 )}
               </Button>
@@ -68,18 +77,14 @@ export default function AdminLayout() {
               className='w-full justify-start gap-3 hover:bg-primary/10'
             >
               <LogOut className='h-5 w-5' />
-              {sidebarOpen && <span>Back to Site</span>}
+              {sidebarOpen.state && <span>Back to Site</span>}
             </Button>
           </Link>
         </div>
       </aside>
       <div className='flex-1 flex flex-col'>
         <header className='h-16 border-b border-primary/20 bg-background/80 backdrop-blur-xl flex items-center justify-between px-6'>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
+          <Button variant='ghost' size='icon' onClick={sidebarOpen.toggle}>
             <Menu className='h-5 w-5' />
           </Button>
           <div className='flex items-center gap-4'>

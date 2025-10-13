@@ -1,9 +1,11 @@
+import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
-import { mockPosts } from '@/data/mockData';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
+
+// Components
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -12,19 +14,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { usePostsQuery } from '@/utilities/api/post';
+
+// Utilities
+import routes from '@/utilities/routes';
+import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
+import useLoadingStore from '@/store/loading';
 
 export default function PostsListPage() {
-  const posts = usePostsQuery();
+  // Context
+  const { loading } = useLoadingStore();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  // Hooks
+  const posts = usePostsQuery({ staleTime: 60000, gcTime: 60000 });
+  const deletePost = useDeletePost();
 
+  const disabled = loading || deletePost.isPending;
+
+  // Render
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -34,8 +40,11 @@ export default function PostsListPage() {
           </h1>
           <p className='text-muted-foreground mt-2'>Manage all blog posts</p>
         </div>
-        <Link to='/dashboard/posts/add'>
-          <Button className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'>
+        <Link to={routes.dashboard.posts.add}>
+          <Button
+            disabled={disabled}
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+          >
             <Plus className='h-4 w-4 mr-2' />
             Add Post
           </Button>
@@ -90,19 +99,21 @@ export default function PostsListPage() {
                   </TableCell>
                   <TableCell>{post.creator?.name}</TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {formatDate(post.createdAt)}
+                    {dayjs(post.createdAt).format('MMMM D, YYYY')}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
-                      <Link to={`/post/${post.slug}`}>
-                        <Button variant='ghost' size='icon'>
+                      <Link to={routes.dashboard.posts.edit(post.id)}>
+                        <Button disabled={disabled} variant='ghost' size='icon'>
                           <Eye className='h-4 w-4' />
                         </Button>
                       </Link>
-                      <Button variant='ghost' size='icon'>
+                      <Button disabled={disabled} variant='ghost' size='icon'>
                         <Edit className='h-4 w-4' />
                       </Button>
                       <Button
+                        disabled={disabled}
+                        onClick={() => deletePost.mutate(post.id)}
                         variant='ghost'
                         size='icon'
                         className='text-destructive'

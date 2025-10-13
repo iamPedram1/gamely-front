@@ -1,4 +1,6 @@
+import { setAlertState } from '@/store/alert';
 import { convertNumberToPersian } from '@/utilities/helperPack';
+import type { SubmitErrorHandler } from 'react-hook-form';
 
 type ControllerFieldState = {
   invalid: boolean;
@@ -33,3 +35,18 @@ export const getErrorAndHelperText = (
     ? convertNumberToPersian(fieldState.error?.message || '')
     : '',
 });
+
+/**
+ * Creates a reusable onError handler for React Hook Form.
+ *
+ * @param setAlert - function to show alerts (title, severity)
+ */
+export const createOnErrorHandler: SubmitErrorHandler<any> = (errors) => {
+  const messages = Object.values(errors)
+    .map((err: any) => err?.message || '')
+    .filter(Boolean);
+
+  if (messages.length > 0) {
+    setAlertState(messages[0], 'error');
+  }
+};

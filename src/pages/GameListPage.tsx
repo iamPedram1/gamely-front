@@ -10,7 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import apiHandler from '@/utilities/apiHandler';
+import apiHandler from '@/utilities/api/apiHandler';
 import { GameProps } from '@/types/blog';
 import { DataWithPagination } from '@/types/api';
 import { useGamesQuery } from '@/utilities/api/game';

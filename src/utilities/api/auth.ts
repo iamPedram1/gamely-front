@@ -1,4 +1,4 @@
-import apiHandler from '@/utilities/apiHandler';
+import apiHandler from '@/utilities/api/apiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 

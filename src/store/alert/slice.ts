@@ -1,10 +1,10 @@
 'use client';
 import { create } from 'zustand';
 
-export type Severity = 'success' | 'info' | 'warning' | 'error';
+export type SeverityType = 'success' | 'info' | 'warning' | 'error';
 
 export interface NotificationStateProps {
-  severity: Severity | '';
+  severity: SeverityType | '';
   open?: boolean;
   message?: string;
   duration?: number;

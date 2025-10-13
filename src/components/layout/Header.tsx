@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useState } from 'react';
 import { getCookie } from '@/utilities/cookie';
+import routes from '@/utilities/routes';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -33,19 +34,19 @@ export default function Header() {
 
           <nav className='hidden md:flex items-center gap-8 text-sm font-medium'>
             <Link
-              to='/posts'
+              to={routes.posts.index}
               className='transition-all hover:text-primary hover:scale-105 text-foreground/80 uppercase tracking-wide'
             >
               News
             </Link>
             <Link
-              to='/games'
+              to={routes.games.index}
               className='transition-all hover:text-primary hover:scale-105 text-foreground/80 uppercase tracking-wide'
             >
               Games
             </Link>
             <Link
-              to='/tags'
+              to={routes.tags.index}
               className='transition-all hover:text-primary hover:scale-105 text-foreground/80 uppercase tracking-wide'
             >
               Tags
@@ -82,13 +83,13 @@ export default function Header() {
           </Button>
 
           {isAuthorized ? (
-            <Link to='/profile'>
+            <Link to={routes.profile.index}>
               <Button className='gradient-gaming font-semibold uppercase tracking-wide glow-effect hover:glow-effect-strong transition-all'>
                 Profile
               </Button>
             </Link>
           ) : (
-            <Link to='/login'>
+            <Link to={routes.login}>
               <Button className='gradient-gaming font-semibold uppercase tracking-wide glow-effect hover:glow-effect-strong transition-all'>
                 Sign In
               </Button>

@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { mockTags } from '@/data/mockData';
+import { Plus, Edit, Trash2 } from 'lucide-react';
+
+// Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Plus, Edit, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -12,7 +13,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+// Utilities
+import routes from '@/utilities/routes';
+import { mockTags } from '@/data/mockData';
+import useLoadingStore from '@/store/loading';
+import { useDeleteTag, useTagsQuery } from '@/utilities/api/tag';
+
 export default function TagsListPage() {
+  // Context
+  const { loading } = useLoadingStore();
+
+  // Hooks
+  const tags = useTagsQuery({ staleTime: 60000, gcTime: 60000 });
+  const deleteTag = useDeleteTag();
+  const disabled = loading || deleteTag.isPending;
+
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -22,8 +37,11 @@ export default function TagsListPage() {
           </h1>
           <p className='text-muted-foreground mt-2'>Manage post tags</p>
         </div>
-        <Link to='/dashboard/tags/add'>
-          <Button className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'>
+        <Link to={routes.dashboard.tags.add}>
+          <Button
+            disabled={disabled}
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+          >
             <Plus className='h-4 w-4 mr-2' />
             Add Tag
           </Button>
@@ -33,7 +51,9 @@ export default function TagsListPage() {
       <Card className='border-primary/20'>
         <CardHeader>
           <div className='flex items-center justify-between'>
-            <h2 className='text-xl font-bold'>All Tags ({mockTags.length})</h2>
+            <h2 className='text-xl font-bold'>
+              All Tags ({tags.data.pagination.totalDocs})
+            </h2>
           </div>
         </CardHeader>
         <CardContent>
@@ -46,7 +66,7 @@ export default function TagsListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockTags.map((tag) => (
+              {tags.data.docs.map((tag) => (
                 <TableRow key={tag.id}>
                   <TableCell className='font-medium'>#{tag.title}</TableCell>
                   <TableCell className='text-muted-foreground'>
@@ -54,10 +74,13 @@ export default function TagsListPage() {
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>
-                      <Button variant='ghost' size='icon'>
-                        <Edit className='h-4 w-4' />
-                      </Button>
+                      <Link to={routes.dashboard.tags.edit(tag.id)}>
+                        <Button disabled={disabled} variant='ghost' size='icon'>
+                          <Edit className='h-4 w-4' />
+                        </Button>
+                      </Link>
                       <Button
+                        disabled={disabled}
                         variant='ghost'
                         size='icon'
                         className='text-destructive'

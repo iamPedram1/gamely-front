@@ -1,7 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
-import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { Controller, useForm } from 'react-hook-form';
+import { CrossCircledIcon } from '@radix-ui/react-icons';
+import { instanceof as instanceof_, object, string } from 'zod';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -20,35 +21,28 @@ import {
 import useLoadingStore from '@/store/loading';
 
 // Utilities
+import routes from '@/utilities/routes';
+import {
+  generateFileSchema,
+  generateRegexStringSchema,
+  generateStringSchema,
+} from '@/validations/common';
 import { uploadFile } from '@/utilities/uploader';
+import { createOnErrorHandler } from '@/utilities';
 
 // Types
-import { instanceof as instanceof_, number, object, string } from 'zod';
 
 const gameSchema = object({
-  title: string().min(3).max(255),
-  slug: string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug is not valid'),
-  description: string().min(10).max(500),
-  releaseDate: string(),
-  coverImage: instanceof_(File, {
-    message: 'Please upload the cover image',
-  }).or(
-    object({
-      id: string(),
-      location: string(),
-      filename: string(),
-      size: number(),
-      mimetype: string(),
-      url: string(),
-      createdAt: string(),
-      updatedAt: string(),
-    })
-  ),
+  title: generateStringSchema('title', 3, 255),
+  slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  description: generateStringSchema('description', 10, 500),
+  releaseDate: generateStringSchema('release date'),
+  coverImage: generateFileSchema('cover image'),
 });
 
 type FormSchema = Zod.infer<typeof gameSchema>;
 
-export default function AddGamePage() {
+export default function MutateGamePage() {
   // Context
   const { loading } = useLoadingStore();
 
@@ -69,7 +63,7 @@ export default function AddGamePage() {
   });
   const updateGame = useUpdateGame({
     redirectAfterSuccessTo: '/dashboard/games',
-    autoAlert: { mode: 'add', name: 'Game' },
+    autoAlert: { mode: 'update', name: 'Game' },
   });
 
   // Utilities
@@ -97,7 +91,7 @@ export default function AddGamePage() {
   return (
     <div className='space-y-6 max-w-4xl'>
       <div className='flex items-center gap-4'>
-        <Link to='/dashboard/games'>
+        <Link to={routes.dashboard.games.index}>
           <Button disabled={disabled} variant='ghost' size='icon'>
             <ArrowLeft className='h-5 w-5' />
           </Button>
@@ -111,7 +105,7 @@ export default function AddGamePage() {
           </p>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
         <Card className='border-primary/20'>
           <CardHeader>
             <CardTitle>Game Details</CardTitle>
@@ -235,7 +229,7 @@ export default function AddGamePage() {
                 <Save className='h-4 w-4 mr-2' />
                 {isEditMode ? 'Update Game' : 'Create Game'}
               </Button>
-              <Link to='/dashboard/games'>
+              <Link to={routes.dashboard.games.index}>
                 <Button disabled={disabled} type='button' variant='outline'>
                   Cancel
                 </Button>

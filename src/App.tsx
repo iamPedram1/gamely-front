@@ -9,9 +9,9 @@ import LoginPage from '@/pages/LoginPage';
 import TagListPage from '@/pages/TagListPage';
 import PostListPage from '@/pages/PostListPage';
 import GameListPage from '@/pages/GameListPage';
-import AddTagPage from '@/pages/admin/AddTagPage';
+import AddTagPage from '@/pages/admin/MutateTagPage';
 import PostDetailPage from '@/pages/PostDetailPage';
-import AddPostPage from '@/pages/admin/AddPostPage';
+import MutatePostPage from '@/pages/admin/MutatePostPage';
 import TagsListPage from '@/pages/admin/TagsListPage';
 import MutateGamePage from '@/pages/admin/MutateGamePage';
 import PostsListPage from '@/pages/admin/PostsListPage';
@@ -49,8 +49,8 @@ function App() {
               {/* Admin Routes */}
               <Route path='/dashboard' element={<AdminLayout />}>
                 <Route path='posts' element={<PostsListPage />} />
-                <Route path='posts/add' element={<AddPostPage />} />
-                <Route path='posts/:id' element={<AddPostPage />} />
+                <Route path='posts/add' element={<MutatePostPage />} />
+                <Route path='posts/:id' element={<MutatePostPage />} />
                 <Route path='games' element={<GamesListPage />} />
                 <Route path='games/add' element={<MutateGamePage />} />
                 <Route path='games/:id' element={<MutateGamePage />} />

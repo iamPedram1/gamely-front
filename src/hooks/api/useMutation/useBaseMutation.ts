@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-query';
 
 // Context
-import { setLoadingState } from '@/store/loading';
+import { getLoadingState, setLoadingState } from '@/store/loading';
 import { setAlertState } from '@/store/alert';
 import {
   onCloseDialog,
@@ -27,6 +27,7 @@ import { convertNumberToPersian } from '@/utilities/helperPack';
 import type { UseFormReturn } from 'react-hook-form';
 import type { CommonResponseProps } from '@/types/api';
 import type { AlertCrudType } from '@/utilities';
+import { useUnMount } from '@/hooks/utils';
 
 interface AutoAlertProps {
   hookFormMethods?: UseFormReturn<any>;
@@ -186,7 +187,6 @@ const useBaseMutation = <TData, TError, TVariables>(
         const message =
           data?.message || error?.cause?.message || error?.cause?.errors?.[0];
         const isSuccess = error && 'message' in error ? false : true;
-        console.log({ message, error, isSuccess });
 
         if (!noRevalidate && revalidateBehavior === 'after-settled') {
           mutationKey?.forEach((queryKey: any) => {
@@ -311,6 +311,10 @@ const useBaseMutation = <TData, TError, TVariables>(
     },
     [openDialogBeforeMutate]
   );
+
+  useUnMount(() => {
+    if (getLoadingState()) setLoadingState(false);
+  });
 
   // Return
   return { ...mutation, mutate: handleMutate, mutateAsync: handleMutateAsync };

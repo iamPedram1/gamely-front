@@ -383,7 +383,6 @@ export const debounce = <T extends Function>(
 
 export function isHTMLStringEmpty(htmlString: string) {
   return (
-    // remove all tags...
     htmlString
       .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // strip scripts
       .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // strip styles
@@ -398,31 +397,3 @@ export const toSafeNumber = (v: any) => {
 
   return Number.isFinite(n) ? n : 0;
 };
-
-export const getSecureCookieFlags = (expireDate: string) => ({
-  secure: true,
-  httpOnly: true,
-  priority: 'high',
-  sameSite: 'lax',
-  expires: new Date(expireDate),
-  domain: appDomain,
-});
-
-/**
- * Utility function to create a non-blocking server action that can be invoked with {@link runParallelAction}.
- * Learn more at https://github.com/icflorescu/next-server-actions-parallel.
- *
- * @example
- * const listUsers = createParallelAction(async () => { // 👈 don't forget the `async` keyword
- *   return await prisma.user.findMany();
- * });
- *
- * const listProducts = createParallelAction(async () => {
- *   return await prisma.product.findMany();
- })
- */
-export function createParallelAction<T, U extends unknown[]>(
-  action: (...args: U) => Promise<T>
-) {
-  return async (...args: U) => [action(...args)] as const;
-}

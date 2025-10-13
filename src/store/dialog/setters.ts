@@ -1,6 +1,6 @@
 'use client';
+import { SeverityType } from '@/store/alert';
 import useDialogStore, { DialogSlice, SubmitHandler } from './slice';
-import type { ColorType } from '@shopify/types/core/mui';
 
 export type OpenDialogConfigType = Partial<
   Pick<
@@ -32,11 +32,16 @@ export const onOpenDialog = (config?: OpenDialogConfigType) => {
   const state = useDialogStore.getState();
   if (config) {
     if (config.title !== undefined) state.onSetTitle(config.title);
-    if (config.submitTitle !== undefined) state.onSetSubmitTitle(config.submitTitle);
-    if (config.submitColor !== undefined) state.onSetSubmitColor(config.submitColor);
-    if (config.cancelTitle !== undefined) state.onSetCancelTitle(config.cancelTitle);
-    if (config.cancelColor !== undefined) state.onSetCancelColor(config.cancelColor);
-    if (config.onSubmit !== undefined) state.onSetSubmitHandler(config.onSubmit);
+    if (config.submitTitle !== undefined)
+      state.onSetSubmitTitle(config.submitTitle);
+    if (config.submitColor !== undefined)
+      state.onSetSubmitColor(config.submitColor);
+    if (config.cancelTitle !== undefined)
+      state.onSetCancelTitle(config.cancelTitle);
+    if (config.cancelColor !== undefined)
+      state.onSetCancelColor(config.cancelColor);
+    if (config.onSubmit !== undefined)
+      state.onSetSubmitHandler(config.onSubmit);
   }
   state.onOpenDialog();
 };
@@ -72,7 +77,7 @@ export const onSetDialogSubmitTitle = (submitTitle: string) => {
  * @param {ColorType} submitColor - The new color.
  * @see onSetDialogSubmitColor
  */
-export const onSetDialogSubmitColor = (submitColor: ColorType) => {
+export const onSetDialogSubmitColor = (submitColor: SeverityType) => {
   useDialogStore.getState().onSetSubmitColor(submitColor);
 };
 
@@ -90,7 +95,7 @@ export const onSetDialogCancelTitle = (cancelTitle: string) => {
  * @param {ColorType} cancelColor - The new color.
  * @see onSetDialogCancelColor
  */
-export const onSetDialogCancelColor = (cancelColor: ColorType) => {
+export const onSetDialogCancelColor = (cancelColor: SeverityType) => {
   useDialogStore.getState().onSetCancelColor(cancelColor);
 };
 
@@ -99,6 +104,8 @@ export const onSetDialogCancelColor = (cancelColor: ColorType) => {
  * @param {SubmitHandler | undefined} submitHandler - The handler or undefined.
  * @see onSetDialogSubmitHandler
  */
-export const onSetDialogSubmitHandler = (submitHandler: SubmitHandler | undefined) => {
+export const onSetDialogSubmitHandler = (
+  submitHandler: SubmitHandler | undefined
+) => {
   useDialogStore.getState().onSetSubmitHandler(submitHandler);
 };

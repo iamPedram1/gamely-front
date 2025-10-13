@@ -1,11 +1,11 @@
 'use client';
-import { useCallback, useState } from 'react';
 import {
-  findAndDeleteByIndex,
   findAndDelete,
+  findAndDeleteByIndex,
   findAndUpdateById,
   findAndUpdateByIndex,
-} from '@shopify/utilities/array';
+} from '@/utilities';
+import { useCallback, useState } from 'react';
 
 export interface UseArrayReturnProps<T> {
   state: T[];
@@ -61,14 +61,18 @@ export function useArray<T>(defValue: T[] = []): UseArrayReturnProps<T> {
 
   const handleUpdateById = useCallback(
     (id: string, onSuccess: (foundedObj: T) => void) => {
-      setState((prevState) => findAndUpdateById(prevState as any[], id, onSuccess));
+      setState((prevState) =>
+        findAndUpdateById(prevState as any[], id, onSuccess)
+      );
     },
     [state]
   );
 
   const handleUpdateByIndex = useCallback(
     (index: number, onSuccess: (foundedObj: T) => void) => {
-      setState((prevState) => findAndUpdateByIndex(prevState as any[], index, onSuccess));
+      setState((prevState) =>
+        findAndUpdateByIndex(prevState as any[], index, onSuccess)
+      );
     },
     [state]
   );
