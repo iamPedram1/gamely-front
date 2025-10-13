@@ -1,7 +1,73 @@
 import { CommonResponseProps } from '@/types/api';
+import { getAppBaseURL } from '@/utilities/appVariables';
 import { getCookie } from '@/utilities/cookie';
+import {
+  filterQueryParamsByWhitelist,
+  getUrlWithQueryString,
+} from '@/utilities/request';
 
-export interface RequestInitPropsWithAdminIndicator extends RequestInit {
+export interface AppRequestInitProps extends Omit<RequestInit, 'body'> {
+  /**
+   * The body of the request, represented as a key-value pair object.
+   * This is used to send data in POST, PUT, or PATCH requests. The object
+   * is automatically serialized to JSON for the request payload.
+   * @example `{ username: "user", password: "pass" }`
+   */
+  body?: Record<string, any>;
+
+  /**
+   * An optional token for authentication or authorization purposes.
+   * If provided, it overrides the default token retrieved from cookies
+   * (e.g., `token` cookie). Typically used for custom or manual authentication
+   * in API requests.
+   * @default Retrieved from `cookies().get('token')`
+   * @example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   */
+  token?: string;
+
+  /**
+   * An optional query object representing additional parameters to be included
+   * in the request URL as query strings. The object is serialized and appended
+   * to the URL.
+   * @example `{ page: 1, limit: 10 }` becomes `?page=1&limit=10`
+   */
+  query?: Record<string, any>;
+
+  /**
+   * A flag indicating whether to sanitize the input data before processing.
+   * When true, the request body and query parameters are sanitized to prevent
+   * injection attacks or malformed data. Set to false for trusted inputs.
+   * @default true
+   */
+  sanitize?: boolean;
+
+  /**
+   * An optional signal to abort the request if needed.
+   * Allows cancellation of the fetch request, typically used for timeout or
+   * user-initiated cancellation.
+   * @example AbortSignal.timeout(5000) // Abort after 5 seconds
+   */
+  signal?: AbortSignal;
+
+  /**
+   * An optional key used for caching or query identification.
+   * Useful for integrating with data fetching libraries (e.g., React Query)
+   * to uniquely identify a request or cache entry.
+   * @example ["settings", { page: 1 }]
+   */
+  queryKey?: any;
+
+  /**
+   * Optional metadata to include with the request.
+   * Can be used to pass additional context or configuration to the API handler
+   * or middleware, such as request-specific flags or identifiers.
+   * @example { userId: "123", sessionId: "abc" }
+   */
+  meta?: any | undefined;
+}
+
+export interface RequestInitPropsWithAdminIndicator
+  extends AppRequestInitProps {
   isAdminSide?: boolean;
   needToken?: boolean;
   noQuery?: boolean;
@@ -15,9 +81,29 @@ async function appFetch<T = any>(
   reqInit?: RequestInitPropsWithAdminIndicator
 ): Promise<CommonResponseProps<T>> {
   try {
-    const { signal } = reqInit || {};
+    const {
+      signal,
+      noQuery = false,
+      isAdminSide = false,
+      queryWhitelistKeyNames,
+    } = reqInit || {};
+
+    console.log('api handler', reqInit);
+    const query = noQuery
+      ? {}
+      : {
+          ...(reqInit?.meta?.query || {}),
+          ...(reqInit?.query || {}),
+        };
+    const queries =
+      queryWhitelistKeyNames === undefined
+        ? query
+        : filterQueryParamsByWhitelist(query, queryWhitelistKeyNames);
+    const url = `${baseURL}${endpoint}`;
+    const sanitizedUrl = getUrlWithQueryString(url, queries);
     const token = getCookie('Token');
-    const res = await fetch(`${baseURL}${endpoint}`, {
+
+    const res = await fetch(sanitizedUrl, {
       ...reqInit,
       credentials: 'include',
       ...(typeof window !== 'undefined' && { signal }),

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
+import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 // Utilities
@@ -46,6 +47,9 @@ export default function TagListPage() {
             );
           })}
         </div>
+        {tags.data.pagination && (
+          <PaginationControls pagination={tags.data.pagination} />
+        )}
       </main>
 
       <Footer />

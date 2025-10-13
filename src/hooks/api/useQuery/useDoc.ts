@@ -12,6 +12,7 @@ import { setAlertState } from '@/store/alert';
 // Custom Types
 import type { CommonResponseProps } from '@/types/api';
 import type { AlertProps, UseBaseQueryOptionsProps } from './useBaseQuery';
+import { AppRequestInitProps } from '@/utilities/api/apiHandler';
 
 export type UseDocApiReturnProps<T> = DefinedUseQueryResult<T | null, Error>;
 export type UseDocOptionType<T> = Omit<
@@ -34,7 +35,7 @@ export type UseDocOptionType<T> = Omit<
 };
 
 export function useDocApi<T>(
-  queryFn: (id: string, reqInit?: RequestInit) => any,
+  queryFn: (id: string, reqInit?: AppRequestInitProps) => any,
   queryKey: string[],
   options: UseDocOptionType<T> = {}
 ) {

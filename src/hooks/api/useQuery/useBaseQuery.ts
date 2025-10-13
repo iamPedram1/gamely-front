@@ -90,13 +90,16 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     onFetchFailed,
     ...otherOptions
   } = options;
+  console.log(options);
 
   // Hooks
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+
   const queryKey = useMemo(() => {
     const keys = [...otherOptions.queryKey];
-    if (refetchOnQueryChange) keys.push(searchParams);
+    if (refetchOnQueryChange)
+      keys.push(Object.fromEntries(new URLSearchParams(searchParams)));
 
     return keys;
   }, [otherOptions.queryKey, searchParams, refetchOnQueryChange]);
@@ -108,7 +111,11 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
       const result = await (otherOptions as any)?.queryFn?.({
         ...(signal && { signal }),
         ...(queryKey && { queryKey }),
-        query: { ...(query || {}), ...searchParams, ...queries },
+        query: {
+          ...(query || {}),
+          ...Object.fromEntries(new URLSearchParams(searchParams)),
+          ...queries,
+        },
       });
 
       if (!result.isSuccess) throw new Error(result.message, { cause: result });
@@ -131,7 +138,6 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
       statusCode: -1,
       data: initialData,
     },
-    refetchOnMount: true,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
@@ -143,8 +149,16 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
       if (autoLoading) setLoadingState(true);
     }
 
-    if (query.isStale || !query.isFetched) query.refetch();
+    if (
+      ('enabled' in options ? options.enabled : true) &&
+      (query.isStale || !query.isFetched)
+    )
+      query.refetch();
   }, []);
+
+  useUpdateEffect(() => {
+    if (refetchOnQueryChange) query.refetch();
+  }, [searchParams]);
 
   useUpdateEffect(() => {
     if (query.isFetched && !query.isFetching) {

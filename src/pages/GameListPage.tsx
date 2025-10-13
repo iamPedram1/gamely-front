@@ -5,6 +5,7 @@ import { Calendar } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
+import PaginationControls from '@/components/ui/pagination-controls';
 import {
   Card,
   CardContent,
@@ -87,6 +88,9 @@ export default function GameListPage() {
             </Card>
           ))}
         </div>
+        {games.data.pagination && (
+          <PaginationControls pagination={games.data.pagination} />
+        )}
       </main>
 
       <Footer />

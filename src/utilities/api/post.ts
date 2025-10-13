@@ -11,31 +11,35 @@ import type { PostProps, PostSummaryProps } from '@/types/blog';
 const postsQueryKey = 'posts';
 
 export const usePostsQuery = useAppQuery(
-  () => apiHandler.get<DataWithPagination<PostProps>>('/posts'),
+  (reqInit) => apiHandler.get<DataWithPagination<PostProps>>('/posts', reqInit),
   [postsQueryKey]
 );
 
 export const usePostsSummariesQuery = useAppQuery(
-  () => apiHandler.get<PostSummaryProps[]>('/posts/summaries'),
+  (reqInit) => apiHandler.get<PostSummaryProps[]>('/posts/summaries', reqInit),
   [postsQueryKey]
 );
 
 export const usePostQuery = (options?: UseDocOptionType<PostProps>) =>
   useDocApi(
-    (id) => apiHandler.get<PostProps>(`/posts/${id}`),
+    (id, reqInit) =>
+      apiHandler.get<PostProps>(`/posts/${id}`, {
+        queryWhitelistKeyNames: ['page', 'limit', 'search'],
+        ...reqInit,
+      }),
     [postsQueryKey],
     options
   );
 
 export const useCreatePost = useAppMutation(
-  (payload: { title: string; coverImage: string }) =>
-    apiHandler.post('/posts', payload),
+  (payload: { title: string; coverImage: string }, reqInit) =>
+    apiHandler.post('/posts', payload, { ...reqInit }),
   [postsQueryKey]
 );
 
 export const useUpdatePost = useAppMutation(
-  (payload: { id: string; title: string; coverImage: string }) =>
-    apiHandler.patch(`/posts/${payload.id}`, payload),
+  (payload: { id: string; title: string; coverImage: string }, reqInit) =>
+    apiHandler.patch(`/posts/${payload.id}`, payload, reqInit),
   [postsQueryKey]
 );
 export const useDeletePost = useAppMutation(

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 
 const useAuth = () => {
   const token = getToken();
+
   const navigate = useNavigate();
   const profile = useProfileQuery({
     enabled: Boolean(token),

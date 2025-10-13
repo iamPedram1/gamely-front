@@ -11,21 +11,26 @@ import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
 const tagsQueryKey = 'tags';
 
 export const useTagsQuery = useAppQuery(
-  () => apiHandler.get<DataWithPagination<TagProps>>('/tags'),
+  (context) =>
+    apiHandler.get<DataWithPagination<TagProps>>('/tags', {
+      ...context,
+      queryWhitelistKeyNames: ['page', 'limit', 'search'],
+    }),
   [tagsQueryKey]
 );
 
 export const useTagsSummariesQuery = useAppQuery(
-  () =>
+  (context) =>
     apiHandler.get<DataWithPagination<SummaryProps & { postsCount: number }>>(
-      '/tags/summaries'
+      '/tags/summaries',
+      { ...context, queryWhitelistKeyNames: ['page', 'limit', 'search'] }
     ),
   [tagsQueryKey, 'summaries']
 );
 
 export const useTagQuery = (options?: UseDocOptionType<TagProps>) =>
   useDocApi(
-    (slug) => apiHandler.get<TagProps>(`/tags/${slug}`),
+    (slug, context) => apiHandler.get<TagProps>(`/tags/${slug}`, context),
     [tagsQueryKey],
     options
   );
@@ -37,8 +42,8 @@ export const useCreateTag = useAppMutation(
 );
 
 export const useUpdateTag = useAppMutation(
-  (payload: Pick<TagProps, 'id' | 'title' | 'slug'>) =>
-    apiHandler.patch(`/tags/${payload.id}`, payload),
+  (payload: Pick<TagProps, 'id' | 'title' | 'slug'>, context) =>
+    apiHandler.patch(`/tags/${payload.id}`, payload, context),
   [tagsQueryKey]
 );
 export const useDeleteTag = useAppMutation(

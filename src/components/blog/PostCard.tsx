@@ -15,8 +15,6 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  console.log(post);
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -25,8 +23,10 @@ export default function PostCard({ post }: PostCardProps) {
     });
   };
 
+  console.log(post);
+
   return (
-    <Card className='overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group'>
+    <Card className='flex flex-col overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group'>
       {post.coverImage && (
         <Link to={`/post/${post.slug}`}>
           <div className='aspect-video overflow-hidden relative'>
@@ -83,34 +83,34 @@ export default function PostCard({ post }: PostCardProps) {
             ))}
         </div>
       </CardContent>
+      <CardFooter className='flex mt-auto items-center justify-between border-t border-primary/10 pt-4'>
+        <Link
+          to={`/author/${post?.author?.id}`}
+          className='flex items-center gap-2 hover:opacity-80 transition-opacity'
+        >
+          <Avatar className='h-8 w-8 border-2 border-primary/20'>
+            <AvatarImage
+              src={post.author?.avatar?.url}
+              alt={post.author.name}
+            />
+            <AvatarFallback className='bg-primary/10 text-primary font-bold'>
+              {post.author.name[0]}
+            </AvatarFallback>
+          </Avatar>
+          <span className='text-sm font-semibold'>{post.author.name}</span>
+        </Link>
 
-      {post.author && (
-        <CardFooter className='flex items-center justify-between border-t border-primary/10 pt-4'>
-          <Link
-            to={`/author/${post?.author?.id}`}
-            className='flex items-center gap-2 hover:opacity-80 transition-opacity'
-          >
-            <Avatar className='h-8 w-8 border-2 border-primary/20'>
-              {/* <AvatarImage  alt={post.author.name} /> */}
-              <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-                {post.author.name[0]}
-              </AvatarFallback>
-            </Avatar>
-            <span className='text-sm font-semibold'>{post.author.name}</span>
-          </Link>
-
-          <div className='flex items-center gap-3 text-xs text-muted-foreground'>
-            <div className='flex items-center gap-1'>
-              <Calendar className='h-3 w-3' />
-              <span>{formatDate(post.createdAt)}</span>
-            </div>
-            <div className='flex items-center gap-1'>
-              <Clock className='h-3 w-3' />
-              <span>{5} min</span>
-            </div>
+        <div className='flex items-center gap-3 text-xs text-muted-foreground'>
+          <div className='flex items-center gap-1'>
+            <Calendar className='h-3 w-3' />
+            <span>{formatDate(post.createdAt)}</span>
           </div>
-        </CardFooter>
-      )}
+          <div className='flex items-center gap-1'>
+            <Clock className='h-3 w-3' />
+            <span>{post.readingTime} min</span>
+          </div>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

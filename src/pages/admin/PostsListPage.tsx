@@ -3,9 +3,18 @@ import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 // Components
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Searchbar from '@/components/ui/searchbar';
+import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -20,12 +29,14 @@ import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
 import initialPagination from '@/utilities/pagination';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
+import { useCategoriesSummariesQuery } from '@/utilities/api/category';
 
 export default function PostsListPage() {
   // Context
   const { loading } = useLoadingStore();
 
   // Hooks
+  const categories = useCategoriesSummariesQuery({ initialData: [] });
   const posts = usePostsQuery({
     initialData: { docs: [], pagination: initialPagination },
   });
@@ -60,6 +71,29 @@ export default function PostsListPage() {
             <h2 className='text-xl font-bold'>
               All Posts ({posts?.data?.pagination?.totalDocs || 0})
             </h2>
+            <div className='flex items-center gap-3'>
+              <Searchbar placeholder='Search in posts...' />
+              <Select>
+                <SelectTrigger className='w-[180px]'>
+                  <SelectValue placeholder='Filter by category' />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.isFetching ? (
+                    <SelectItem disabled value='loading'>
+                      Loading...
+                    </SelectItem>
+                  ) : (
+                    <>
+                      {categories?.data?.map?.((ctg) => (
+                        <SelectItem key={ctg.id} value={ctg.id}>
+                          {ctg.title}
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -75,7 +109,7 @@ export default function PostsListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {posts.data.docs.map((post) => (
+              {posts?.data?.docs?.map?.((post) => (
                 <TableRow key={post.id}>
                   <TableCell className='font-medium max-w-md'>
                     <span className='max-w-80 line-clamp-1'>{post.title}</span>
@@ -130,6 +164,9 @@ export default function PostsListPage() {
               ))}
             </TableBody>
           </Table>
+          {posts?.data?.pagination && (
+            <PaginationControls pagination={posts.data.pagination} />
+          )}
         </CardContent>
       </Card>
     </div>

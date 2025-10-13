@@ -4,6 +4,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
+import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
@@ -19,6 +20,7 @@ import useLoadingStore from '@/store/loading';
 
 // Utilities
 import routes from '@/utilities/routes';
+import Searchbar from '@/components/ui/searchbar';
 import initialPagination from '@/utilities/pagination';
 import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
 
@@ -60,6 +62,9 @@ export default function GamesListPage() {
             <h2 className='text-xl font-bold'>
               All Games ({games?.data?.pagination?.totalDocs || 0})
             </h2>
+            <div className='flex items-center gap-3'>
+              <Searchbar placeholder='Search in games...' />
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -117,6 +122,9 @@ export default function GamesListPage() {
               ))}
             </TableBody>
           </Table>
+          {games.data.pagination && (
+            <PaginationControls pagination={games.data.pagination} />
+          )}
         </CardContent>
       </Card>
     </div>

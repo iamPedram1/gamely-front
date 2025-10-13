@@ -24,7 +24,6 @@ import useLoadingStore from '@/store/loading';
 
 // Utilities
 import initialPagination from '@/utilities/pagination';
-import { mockCategories } from '@/data/mockData';
 import {
   useCategoriesQuery,
   useDeleteCategory,
@@ -71,7 +70,7 @@ export default function CategoriesPage() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Categories ({mockCategories.length})
+              All Categories ({categories.data?.pagination?.totalDocs || 0})
             </h2>
           </div>
         </CardHeader>
@@ -85,7 +84,7 @@ export default function CategoriesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {categories.data.docs.map((category) => (
+              {categories?.data?.docs?.map?.((category) => (
                 <TableRow key={category.id}>
                   <TableCell className='font-medium'>
                     {category.title}
