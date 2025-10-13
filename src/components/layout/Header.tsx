@@ -32,7 +32,7 @@ export default function Header() {
             className='flex items-center gap-3 font-bold text-2xl group'
           >
             <div className='p-2 rounded-xl bg-gradient-gaming glow-effect group-hover:glow-effect-strong transition-all'>
-              <Gamepad2 className='h-7 w-7 text-white' />
+              <Gamepad2 className='h-7 w-7 gradient-gaming-text dark:text-white' />
             </div>
             <span className='gradient-gaming-text'>GameLy</span>
           </Link>
@@ -65,11 +65,11 @@ export default function Header() {
             className='hidden sm:flex items-center gap-2'
           >
             <div className='relative'>
-              <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
+              <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input
                 type='search'
                 placeholder='Search games...'
-                className='pl-10 w-[200px] lg:w-[300px] bg-accent/50 border-primary/20 focus:border-primary'
+                className='pl-8 w-[200px] lg:w-[300px] bg-accent/25 dark:bg-accent/50 border-primary/20 focus:border-primary'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -79,7 +79,7 @@ export default function Header() {
           <Button
             variant='ghost'
             size='icon'
-            className='hover:bg-primary/10'
+            className='hover:bg-primary dark:hover:bg-primary/50 transition-all'
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           >
             <Sun className='h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />

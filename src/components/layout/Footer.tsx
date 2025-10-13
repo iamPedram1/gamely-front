@@ -12,8 +12,8 @@ export default function Footer() {
               to='/'
               className='flex items-center gap-3 font-bold text-xl group'
             >
-              <div className='p-2 rounded-xl bg-gradient-gaming glow-effect'>
-                <Gamepad2 className='h-6 w-6 text-white' />
+              <div className='p-2 rounded-xl bg-white dark:bg-gradient-gaming glow-effect group-hover:glow-effect-strong transition-all'>
+                <Gamepad2 className='h-6 w-6 dark:text-white' />
               </div>
               <span className='gradient-gaming-text'>GameLy</span>
             </Link>
