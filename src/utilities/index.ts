@@ -3,7 +3,7 @@ export * from './appVariables';
 export * from './array';
 export * from './date';
 export * from './editor';
-export * from './endpoint';
+export * from './endpoints';
 export * from './file';
 export * from './id';
 export * from './memo';

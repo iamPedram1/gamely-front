@@ -20,9 +20,10 @@ import {
 // Utilities
 import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
 import useLoadingStore from '@/store/loading';
-import { setToken } from '@/utilities/cookie/token';
+import { setRefreshToken, setToken } from '@/utilities/cookie/token';
 import routes from '@/utilities/routes';
 import { setAlertState } from '@/store/alert';
+import useAuth from '@/hooks/useAuth';
 
 interface FormProps {
   loginEmail: string;
@@ -38,19 +39,18 @@ export default function LoginPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
+  const { signin } = useAuth();
   const { control, handleSubmit } = useForm<FormProps>();
+
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
-    onSuccess: ({ data }) => {
-      setToken(data.token);
-      setAlertState('Welcome', 'success');
-    },
+    onSuccess: ({ data }) => signin(data.token, data.refreshToken),
   });
   const { mutate: register } = useRegisterMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
-    onSuccess: ({ data }) => setToken(data.token),
+    onSuccess: ({ data }) => signin(data.token, data.refreshToken),
   });
 
   // Utilities

@@ -1,10 +1,19 @@
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 
 // Utilities
-import { useProfileQuery } from '@/utilities/api/auth';
-import { clearToken, getToken, setToken } from '@/utilities/cookie/token';
-import { UserProps } from '@/types/blog';
-import { useNavigate } from 'react-router';
+import { revokeToken, useProfileQuery } from '@/utilities/api/auth';
+import {
+  deleteRefreshToken,
+  deleteToken,
+  getRefreshToken,
+  getToken,
+  setRefreshToken,
+  setToken,
+} from '@/utilities/cookie/token';
+
+// Custom Types
+import type { UserProps } from '@/types/blog';
 
 const useAuth = () => {
   const token = getToken();
@@ -16,12 +25,15 @@ const useAuth = () => {
   });
 
   const logout = useCallback((redirectTo?: string) => {
-    clearToken();
+    revokeToken(getToken(), getRefreshToken());
+    deleteToken();
+    deleteRefreshToken();
     navigate(redirectTo || '/');
   }, []);
 
-  const signin = useCallback((token) => {
+  const signin = useCallback((token: string, refreshToken: string) => {
     setToken(token);
+    setRefreshToken(refreshToken);
   }, []);
 
   return {

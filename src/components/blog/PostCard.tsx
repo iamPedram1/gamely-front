@@ -23,8 +23,6 @@ export default function PostCard({ post }: PostCardProps) {
     });
   };
 
-  console.log(post);
-
   return (
     <Card className='flex flex-col overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group'>
       {post.coverImage && (

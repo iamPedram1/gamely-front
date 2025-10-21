@@ -21,7 +21,6 @@ export default function Header() {
     e.preventDefault();
     console.log('Search:', searchQuery);
   };
-  console.log(isAuthorized, isAuthLoading);
 
   return (
     <header className='sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60'>

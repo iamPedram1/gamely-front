@@ -90,7 +90,6 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     onFetchFailed,
     ...otherOptions
   } = options;
-  console.log(options);
 
   // Hooks
   const navigate = useNavigate();

@@ -1,32 +1,61 @@
+// Custom Utilities
+import endpoints from '@/utilities/endpoints';
 import apiHandler from '@/utilities/api/apiHandler';
+import safeApiHandler from '@/utilities/api/safeApiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
 import type { UserProps } from '@/types/blog';
+import type { CommonResponseProps } from '@/types/api';
+
+export interface AuthResponseProps {
+  token: string;
+  refreshToken: string;
+}
 
 const authQueryKey = 'auth';
 const profileQueryKey = 'profile';
 
 export const useProfileQuery = useAppQuery(
-  () => apiHandler.get<UserProps>('/user/profile'),
+  () => safeApiHandler.get<UserProps>(endpoints.profile),
   [profileQueryKey]
 );
 
 export const useUpdateProfileMutation = useAppMutation(
   (payload: Partial<UserProps>) =>
-    apiHandler.patch<UserProps>('/user/profile', payload),
+    safeApiHandler.patch<UserProps>(endpoints.profile, payload),
   [authQueryKey]
 );
 
 export const useLoginMutation = useAppMutation(
   (payload: { email: string; password: string }) =>
-    apiHandler.post<{ token: string }>('/auth/login', payload),
+    apiHandler.post<AuthResponseProps>(endpoints.login, payload),
   [authQueryKey, profileQueryKey]
 );
 
 export const useRegisterMutation = useAppMutation(
   (payload: { name: string; email: string; password: string }) =>
-    apiHandler.post<{ token: string }>('/auth/register', payload),
+    apiHandler.post<AuthResponseProps>(endpoints.register, payload),
   [authQueryKey, profileQueryKey]
 );
+
+export const refreshToken = (
+  refreshToken: string
+): Promise<CommonResponseProps<AuthResponseProps>> => {
+  return apiHandler.post(
+    endpoints.tokenRefresh,
+    { refreshToken },
+    { keepalive: true }
+  );
+};
+export const revokeToken = (
+  token: string,
+  refreshToken: string
+): Promise<CommonResponseProps<AuthResponseProps>> => {
+  return apiHandler.post(
+    endpoints.tokenRevoke,
+    { token, refreshToken },
+    { keepalive: true }
+  );
+};
