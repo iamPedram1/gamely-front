@@ -21,7 +21,24 @@
     "user": "User",
     "post": "Post",
     "status": "Status",
-    "date": "Date"
+    "date": "Date",
+    "name": "Name",
+    "slug": "Slug",
+    "game": "Game",
+    "tag": "Tag",
+    "all": "All",
+    "category": "Category",
+    "comment": "Comment",
+    "title": "Title",
+    "description": "Description",
+    "releaseDate": "Release Date",
+    "update": "Update",
+    "create": "Create",
+    "add": "Add",
+    "viewAll": "View All",
+    "min": "min",
+    "filterByCategory": "Filter by category",
+    "searchInPosts": "Search in posts..."
   },
   "auth": {
     "login": "Sign In",
@@ -62,8 +79,8 @@
     "editPost": "Edit Post",
     "addGame": "Add Game",
     "editGame": "Edit Game",
-    "addTag": "Edit Tag",
-    "editTag": "Add Tag",
+    "addTag": "Add Tag",
+    "editTag": "Edit Tag",
     "addCategory": "Add Category",
     "editCategory": "Edit Category",
     "allPosts": "All Posts",
@@ -104,7 +121,13 @@
     "filterByPost": "Filter by Post",
     "filterByUser": "Filter by User",
     "commentActions": "Comment Actions",
-    "manageComment": "Manage this comment"
+    "manageComment": "Manage this comment",
+    "addNewComment": "Add New Comment",
+    "editComment": "Edit Comment",
+    "addComment": "Add Comment",
+    "createNewComment": "Create a new Comment in this post",
+    "editCommentInPost": "Edit Comment in this post",
+    "whatsUp": "Whats up?"
   },
   "post": {
     "title": "Title",
@@ -115,6 +138,75 @@
     "game": "Game",
     "author": "Author",
     "publishedAt": "Published At",
-    "readMore": "Read More"
+    "readMore": "Read More",
+    "enterPostTitle": "Enter post title",
+    "postUrlSlug": "post-url-slug",
+    "readingTime": "Reading Time",
+    "readingTimeMinutes": "Reading Time (Minutes)",
+    "coverImageUrl": "Cover Image URL",
+    "selectCategory": "Select category",
+    "selectGame": "Select game",
+    "abstract": "Abstract",
+    "briefDescription": "Brief description of the post",
+    "writeContent": "Write your post content here...",
+    "createPost": "Create Post",
+    "updatePost": "Update Post",
+    "addNewPost": "Add a new blog post to database",
+    "updatePostInDb": "Update post in the database"
+  },
+  "category": {
+    "updateCategory": "Update category",
+    "addNewCategory": "Add New Category",
+    "updateCategoryInDb": "Update category in the database",
+    "createNewCategory": "Create a new category for organizing posts",
+    "categoryTitle": "Category Title",
+    "slug": "Slug",
+    "createCategory": "Create Category",
+    "exampleReviews": "e.g., Reviews",
+    "exampleReviewsSlug": "e.g., reviews"
+  },
+  "game": {
+    "updateGame": "Update Game",
+    "createGame": "Create Game",
+    "addNewGame": "Add a new game to the database",
+    "updateGameInDb": "Update game in the database",
+    "gameDetails": "Game Details",
+    "gameTitle": "Game Title",
+    "enterGameTitle": "Enter game title",
+    "gameUrlSlug": "game-url-slug",
+    "coverImageUrl": "Cover Image URL",
+    "releaseDate": "Release Date",
+    "description": "Description",
+    "briefGameDescription": "Brief description of the game"
+  },
+  "tag": {
+    "updateTag": "Update Tag",
+    "createTag": "Create Tag",
+    "addNewTag": "Add a new tag to the database",
+    "updateTagInDb": "Update a tag in the database",
+    "tagDetails": "Tag Details",
+    "tagTitle": "Tag Title",
+    "exampleRPG": "e.g., RPG"
+  },
+  "home": {
+    "latestGamingNews": "Latest Gaming News",
+    "levelUpYour": "Level Up Your",
+    "gamingExperience": "Gaming Experience",
+    "heroDescription": "Dive into the ultimate gaming hub with exclusive reviews, breaking news, and expert guides for the hottest titles.",
+    "exploreNews": "Explore News",
+    "browseGames": "Browse Games",
+    "articles": "Articles",
+    "games": "Games",
+    "trendingGames": "Trending Games",
+    "mostPopularTitles": "Most popular titles right now",
+    "latestNews": "Latest News",
+    "stayUpdated": "Stay updated with the gaming world",
+    "featured": "Featured"
+  },
+  "form": {
+    "required": "*",
+    "placeholder": {
+      "imageUrl": "https://example.com/image.jpg"
+    }
   }
 }

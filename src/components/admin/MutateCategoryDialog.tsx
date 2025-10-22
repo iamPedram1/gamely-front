@@ -1,6 +1,9 @@
+'use client';
+
 import { object } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -46,7 +49,7 @@ const categorySchema = object({
   slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
 });
 
-type FormSchema = Zod.infer<typeof categorySchema>;
+type FormSchema = (typeof categorySchema)['_output'];
 
 const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   // Props
@@ -54,6 +57,9 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
 
   // States
   const isEditMode = Boolean(categoryId);
+
+  // Translation
+  const { t } = useTranslation();
 
   // Context
   const { loading } = useLoadingStore();
@@ -81,7 +87,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   });
 
   // Utilities
-  const onSubmit = (data: Required<FormSchema>) => {
+  const onSubmit = (data: FormSchema) => {
     if (isEditMode) updateCategory.mutate({ id: categoryId, ...data });
     else createCategory.mutate(data);
   };
@@ -98,25 +104,29 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Update category' : 'Add New Category'}
+            {isEditMode
+              ? t('category.updateCategory')
+              : t('category.addNewCategory')}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Update category in the database'
-              : 'Create a new category for organizing posts'}
+              ? t('category.updateCategoryInDb')
+              : t('category.createNewCategory')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
           <div className='space-y-4 py-4'>
             <div className='space-y-2'>
-              <Label htmlFor='title'>Category Title *</Label>
+              <Label htmlFor='title'>
+                {t('category.categoryTitle')} {t('form.required')}
+              </Label>
               <Controller
                 control={control}
                 name='title'
                 render={({ field }) => (
                   <Input
                     id='title'
-                    placeholder='e.g., Reviews'
+                    placeholder={t('category.exampleReviews')}
                     required
                     disabled={disabled}
                     {...field}
@@ -125,14 +135,16 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='slug'>Slug *</Label>
+              <Label htmlFor='slug'>
+                {t('category.slug')} {t('form.required')}
+              </Label>
               <Controller
                 control={control}
                 name='slug'
                 render={({ field }) => (
                   <Input
                     id='slug'
-                    placeholder='e.g., reviews'
+                    placeholder={t('category.exampleReviewsSlug')}
                     required
                     disabled={disabled}
                     {...field}
@@ -148,14 +160,16 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
               disabled={disabled}
               onClick={onClose}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               disabled={disabled}
               type='submit'
               className='gradient-gaming'
             >
-              {isEditMode ? 'Update Category' : 'Create Category'}
+              {isEditMode
+                ? t('category.updateCategory')
+                : t('category.createCategory')}
             </Button>
           </DialogFooter>
         </form>

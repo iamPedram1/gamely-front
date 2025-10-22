@@ -1,6 +1,10 @@
+'use client';
+
 import { object } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import type Zod from 'zod';
 
 // Components
 import { Textarea } from '@/components/ui/textarea';
@@ -52,6 +56,9 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
   // States
   const isEditMode = Boolean(commentToEdit);
 
+  // Translation
+  const { t } = useTranslation();
+
   // Context
   const { loading } = useLoadingStore();
 
@@ -89,25 +96,27 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? 'Edit Comment' : 'Add New Comment'}
+            {isEditMode ? t('comment.editComment') : t('comment.addNewComment')}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Edit Comment in this post'
-              : 'Create a new Comment in this post'}
+              ? t('comment.editCommentInPost')
+              : t('comment.createNewComment')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
           <div className='space-y-4 py-4'>
             <div className='space-y-2'>
-              <Label htmlFor='title'>Comment *</Label>
+              <Label htmlFor='title'>
+                {t('common.comment')} {t('form.required')}
+              </Label>
               <Controller
                 control={control}
                 name='comment'
                 render={({ field }) => (
                   <Textarea
                     id='comment'
-                    placeholder='Whats up?'
+                    placeholder={t('comment.whatsUp')}
                     required
                     rows={10}
                     disabled={disabled}
@@ -124,14 +133,14 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
               disabled={disabled}
               onClick={onClose}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               disabled={disabled}
               type='submit'
               className='gradient-gaming'
             >
-              {isEditMode ? 'Edit Comment' : 'Add Comment'}
+              {isEditMode ? t('comment.editComment') : t('comment.addComment')}
             </Button>
           </DialogFooter>
         </form>

@@ -31,7 +31,14 @@
     "user": "کاربر",
     "post": "مقاله",
     "status": "وضعیت",
-    "date": "تاریخ"
+    "date": "تاریخ",
+    "update": "به‌روزرسانی",
+    "create": "ایجاد",
+    "add": "افزودن",
+    "viewAll": "مشاهده همه",
+    "min": "دقیقه",
+    "filterByCategory": "فیلتر بر اساس دسته‌بندی",
+    "searchInPosts": "جستجو در مقالات..."
   },
   "auth": {
     "login": "ورود",
@@ -80,7 +87,11 @@
     "allGames": "همه بازی‌ها",
     "allTags": "همه برچسب‌ها",
     "allUsers": "همه کاربران",
-    "allComments": "همه نظرات"
+    "allComments": "همه نظرات",
+    "postDetails": "جزئیات مقاله",
+    "gameDetails": "جزئیات بازی",
+    "tagDetails": "جزئیات برچسب",
+    "categoryDetails": "جزئیات دسته‌بندی"
   },
   "user": {
     "name": "نام",
@@ -109,7 +120,13 @@
     "filterByPost": "فیلتر بر اساس مقاله",
     "filterByUser": "فیلتر بر اساس کاربر",
     "commentActions": "عملیات نظر",
-    "manageComment": "مدیریت این نظر"
+    "manageComment": "مدیریت این نظر",
+    "addNewComment": "افزودن نظر جدید",
+    "editComment": "ویرایش نظر",
+    "addComment": "افزودن نظر",
+    "createNewComment": "ایجاد نظر جدید در این مقاله",
+    "editCommentInPost": "ویرایش نظر در این مقاله",
+    "whatsUp": "چه خبر؟"
   },
   "post": {
     "title": "عنوان",
@@ -120,6 +137,75 @@
     "game": "بازی",
     "author": "نویسنده",
     "publishedAt": "تاریخ انتشار",
-    "readMore": "ادامه مطلب"
+    "readMore": "ادامه مطلب",
+    "enterPostTitle": "عنوان مقاله را وارد کنید",
+    "postUrlSlug": "اسلاگ-آدرس-مقاله",
+    "readingTime": "زمان مطالعه",
+    "readingTimeMinutes": "زمان مطالعه (دقیقه)",
+    "coverImageUrl": "آدرس تصویر کاور",
+    "selectCategory": "انتخاب دسته‌بندی",
+    "selectGame": "انتخاب بازی",
+    "abstract": "خلاصه",
+    "briefDescription": "توضیح مختصر مقاله",
+    "writeContent": "محتوای مقاله خود را اینجا بنویسید...",
+    "createPost": "ایجاد مقاله",
+    "updatePost": "به‌روزرسانی مقاله",
+    "addNewPost": "افزودن مقاله جدید به پایگاه داده",
+    "updatePostInDb": "به‌روزرسانی مقاله در پایگاه داده"
+  },
+  "category": {
+    "updateCategory": "به‌روزرسانی دسته‌بندی",
+    "addNewCategory": "افزودن دسته‌بندی جدید",
+    "updateCategoryInDb": "به‌روزرسانی دسته‌بندی در پایگاه داده",
+    "createNewCategory": "ایجاد دسته‌بندی جدید برای سازماندهی مقالات",
+    "categoryTitle": "عنوان دسته‌بندی",
+    "slug": "اسلاگ",
+    "createCategory": "ایجاد دسته‌بندی",
+    "exampleReviews": "مثال: نقد و بررسی",
+    "exampleReviewsSlug": "مثال: naghd-va-barresi"
+  },
+  "game": {
+    "updateGame": "به‌روزرسانی بازی",
+    "createGame": "ایجاد بازی",
+    "addNewGame": "افزودن بازی جدید به پایگاه داده",
+    "updateGameInDb": "به‌روزرسانی بازی در پایگاه داده",
+    "gameDetails": "جزئیات بازی",
+    "gameTitle": "عنوان بازی",
+    "enterGameTitle": "عنوان بازی را وارد کنید",
+    "gameUrlSlug": "اسلاگ-آدرس-بازی",
+    "coverImageUrl": "آدرس تصویر کاور",
+    "releaseDate": "تاریخ انتشار",
+    "description": "توضیحات",
+    "briefGameDescription": "توضیح مختصر بازی"
+  },
+  "tag": {
+    "updateTag": "به‌روزرسانی برچسب",
+    "createTag": "ایجاد برچسب",
+    "addNewTag": "افزودن برچسب جدید به پایگاه داده",
+    "updateTagInDb": "به‌روزرسانی برچسب در پایگاه داده",
+    "tagDetails": "جزئیات برچسب",
+    "tagTitle": "عنوان برچسب",
+    "exampleRPG": "مثال: نقش‌آفرینی"
+  },
+  "home": {
+    "latestGamingNews": "آخرین اخبار بازی",
+    "levelUpYour": "ارتقا دهید",
+    "gamingExperience": "تجربه بازی خود را",
+    "heroDescription": "به مرکز نهایی بازی با نقدهای انحصاری، اخبار داغ و راهنماهای تخصصی برای محبوب‌ترین عناوین بپیوندید.",
+    "exploreNews": "کاوش در اخبار",
+    "browseGames": "مرور بازی‌ها",
+    "articles": "مقالات",
+    "games": "بازی‌ها",
+    "trendingGames": "بازی‌های پرطرفدار",
+    "mostPopularTitles": "محبوب‌ترین عناوین در حال حاضر",
+    "latestNews": "آخرین اخبار",
+    "stayUpdated": "با دنیای بازی به‌روز بمانید",
+    "featured": "ویژه"
+  },
+  "form": {
+    "required": "*",
+    "placeholder": {
+      "imageUrl": "https://example.com/image.jpg"
+    }
   }
 }
