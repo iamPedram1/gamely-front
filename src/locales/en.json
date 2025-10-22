@@ -208,5 +208,21 @@
     "placeholder": {
       "imageUrl": "https://example.com/image.jpg"
     }
+  },
+  "validation": {
+    "required": "{{field}} is required",
+    "invalidString": "{{field}} must be a string",
+    "invalidNumber": "{{field}} must be a number",
+    "invalidArray": "{{field}} must be an array",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidFormat": "{{field}} format is invalid",
+    "minLength": "{{field}} must be at least {{min}} characters long",
+    "maxLength": "{{field}} cannot be longer than {{max}} characters",
+    "minValue": "{{field}} must be at least {{min}}",
+    "maxValue": "{{field}} must be less than or equal to {{max}}",
+    "minItems": "{{field}} must contain at least {{min}} item(s)",
+    "maxItems": "{{field}} cannot contain more than {{max}} item(s)",
+    "uploadFile": "Please upload the {{field}}",
+    "passwordMismatch": "Passwords don't match"
   }
 }

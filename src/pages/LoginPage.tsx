@@ -1,5 +1,8 @@
+import { object } from 'zod';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Custom Hooks
 import useAuth from '@/hooks/useAuth';
@@ -21,19 +24,28 @@ import {
 } from '@/components/ui/card';
 
 // Utilities
-import useLoadingStore from '@/store/loading';
 import routes from '@/utilities/routes';
+import useLoadingStore from '@/store/loading';
+import { createOnErrorHandler } from '@/utilities';
 import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
-import { useTranslation } from 'react-i18next';
+import {
+  generateEmailSchema,
+  generateStringSchema,
+} from '@/validations/common';
 
-interface FormProps {
-  loginEmail: string;
-  loginPassword: string;
-  registerName: string;
-  registerEmail: string;
-  registerPassword: string;
-  registerConfirmPassword: string;
-}
+const registerFormSchema = object({
+  email: generateEmailSchema(),
+  name: generateStringSchema('name'),
+  password: generateStringSchema('password', 8, 255),
+  confirmPassword: generateStringSchema('confirm password'),
+});
+const loginFormSchema = object({
+  email: generateEmailSchema(),
+  password: generateStringSchema('password', 8, 255),
+});
+
+type LoginFormProps = Zod.infer<typeof loginFormSchema>;
+type RegisterFormProps = Zod.infer<typeof registerFormSchema>;
 
 export default function LoginPage() {
   // Context
@@ -42,7 +54,12 @@ export default function LoginPage() {
   // Hooks
   const { signin } = useAuth();
   const { t } = useTranslation();
-  const { control, handleSubmit } = useForm<FormProps>();
+  const loginForm = useForm<LoginFormProps>({
+    resolver: zodResolver(loginFormSchema),
+  });
+  const registerForm = useForm<RegisterFormProps>({
+    resolver: zodResolver(registerFormSchema),
+  });
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
@@ -55,15 +72,15 @@ export default function LoginPage() {
   });
 
   // Utilities
-  const handleLogin = async (data: FormProps) => {
-    login({ email: data.loginEmail, password: data.loginPassword });
+  const handleLogin = async (data: Required<LoginFormProps>) => {
+    login(data);
   };
 
-  const handleRegister = async (data: FormProps) => {
+  const handleRegister = async (data: Required<RegisterFormProps>) => {
     register({
-      email: data.registerEmail,
-      name: data.registerName,
-      password: data.registerPassword,
+      email: data.email,
+      name: data.name,
+      password: data.password,
     });
   };
 
@@ -86,13 +103,18 @@ export default function LoginPage() {
                     Enter your email and password to access your account
                   </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleSubmit(handleLogin)}>
+                <form
+                  onSubmit={loginForm.handleSubmit(
+                    handleLogin,
+                    createOnErrorHandler
+                  )}
+                >
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
                       <Label htmlFor='login-email'>Email</Label>
                       <Controller
-                        control={control}
-                        name='loginEmail'
+                        control={loginForm.control}
+                        name='email'
                         render={({ field }) => (
                           <Input
                             disabled={loading}
@@ -107,8 +129,8 @@ export default function LoginPage() {
                     <div className='space-y-2'>
                       <Label htmlFor='login-password'>Password</Label>
                       <Controller
-                        control={control}
-                        name='loginPassword'
+                        control={loginForm.control}
+                        name='password'
                         render={({ field }) => (
                           <Input
                             disabled={loading}
@@ -145,13 +167,18 @@ export default function LoginPage() {
                     Enter your details to create a new account
                   </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleSubmit(handleRegister)}>
+                <form
+                  onSubmit={registerForm.handleSubmit(
+                    handleRegister,
+                    createOnErrorHandler
+                  )}
+                >
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
                       <Label htmlFor='register-name'>{t('common.name')}</Label>
                       <Controller
-                        control={control}
-                        name='registerName'
+                        control={registerForm.control}
+                        name='name'
                         render={({ field }) => (
                           <Input
                             disabled={loading}
@@ -166,8 +193,8 @@ export default function LoginPage() {
                     <div className='space-y-2'>
                       <Label htmlFor='register-email'>Email</Label>
                       <Controller
-                        control={control}
-                        name='registerEmail'
+                        control={registerForm.control}
+                        name='email'
                         render={({ field }) => (
                           <Input
                             disabled={loading}
@@ -182,8 +209,8 @@ export default function LoginPage() {
                     <div className='space-y-2'>
                       <Label htmlFor='register-password'>Password</Label>
                       <Controller
-                        control={control}
-                        name='registerPassword'
+                        control={registerForm.control}
+                        name='password'
                         render={({ field }) => (
                           <Input
                             disabled={loading}
@@ -200,8 +227,8 @@ export default function LoginPage() {
                         Confirm Password
                       </Label>
                       <Controller
-                        control={control}
-                        name='registerConfirmPassword'
+                        control={registerForm.control}
+                        name='confirmPassword'
                         render={({ field }) => (
                           <Input
                             disabled={loading}

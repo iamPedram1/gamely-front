@@ -1,9 +1,12 @@
+'use client';
+
 import { object } from 'zod';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -30,18 +33,17 @@ import { useGamesSummariesQuery } from '@/utilities/api/game';
 import { createOnErrorHandler } from '@/utilities/reactHookForm';
 import { useCategoriesSummariesQuery } from '@/utilities/api/category';
 import {
+  useCreatePost,
+  usePostQuery,
+  useUpdatePost,
+} from '@/utilities/api/post';
+import {
   generateFileSchema,
   generateNumberSchema,
   generateRegexStringSchema,
   generateStringSchema,
   generateStringArraySchema,
 } from '@/validations/common';
-import {
-  useCreatePost,
-  usePostQuery,
-  useUpdatePost,
-} from '@/utilities/api/post';
-import { useTranslation } from 'react-i18next';
 
 const postSchema = object({
   title: generateStringSchema('title', 3, 255),
@@ -55,7 +57,7 @@ const postSchema = object({
   coverImage: generateFileSchema('cover image'),
 });
 
-type FormSchema = Zod.infer<typeof postSchema>;
+type FormSchema = (typeof postSchema)['_type'];
 
 export default function MutatePostPage() {
   // Context
@@ -127,14 +129,12 @@ export default function MutatePostPage() {
         <div>
           <h1 className='text-4xl font-black'>
             <span className='gradient-gaming-text'>
-              {isEditMode ? 'Update' : 'Create'}
+              {isEditMode ? t('common.update') : t('common.create')}
             </span>{' '}
-            Post
+            {t('common.post')}
           </h1>
           <p className='text-muted-foreground mt-2'>
-            {isEditMode
-              ? 'Update post in the database'
-              : 'Add a new blog post to database'}
+            {isEditMode ? t('post.updatePostInDb') : t('post.addNewPost')}
           </p>
         </div>
       </div>
@@ -146,7 +146,9 @@ export default function MutatePostPage() {
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='space-y-2'>
-              <Label htmlFor='title'>Title *</Label>
+              <Label htmlFor='title'>
+                {t('post.title')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -154,7 +156,7 @@ export default function MutatePostPage() {
                 render={({ field }) => (
                   <Input
                     id='title'
-                    placeholder='Enter post title'
+                    placeholder={t('post.enterPostTitle')}
                     required
                     {...field}
                   />
@@ -164,18 +166,26 @@ export default function MutatePostPage() {
 
             <div className='grid grid-cols-2 gap-4'>
               <div className='space-y-2'>
-                <Label htmlFor='slug'>Slug *</Label>
+                <Label htmlFor='slug'>
+                  {t('common.slug')} {t('form.required')}
+                </Label>
                 <Controller
                   defaultValue=''
                   control={control}
                   name='slug'
                   render={({ field }) => (
-                    <Input id='slug' placeholder='post-url-slug' {...field} />
+                    <Input
+                      id='slug'
+                      placeholder={t('post.postUrlSlug')}
+                      {...field}
+                    />
                   )}
                 />
               </div>
               <div className='space-y-2'>
-                <Label htmlFor='readingTime'>Reading Time *</Label>
+                <Label htmlFor='readingTime'>
+                  {t('post.readingTime')} {t('form.required')}
+                </Label>
                 <Controller
                   defaultValue={1}
                   control={control}
@@ -184,7 +194,7 @@ export default function MutatePostPage() {
                     <Input
                       id='readingTime'
                       type='number'
-                      placeholder='Reading Time (Minuets)'
+                      placeholder={t('post.readingTimeMinutes')}
                       value={field.value}
                       onChange={(v) => field.onChange(v.target.valueAsNumber)}
                     />
@@ -194,7 +204,9 @@ export default function MutatePostPage() {
             </div>
 
             <div className='space-y-2'>
-              <Label htmlFor='coverImage'>Cover Image URL *</Label>
+              <Label htmlFor='coverImage'>
+                {t('post.coverImageUrl')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue={null}
                 control={control}
@@ -230,7 +242,7 @@ export default function MutatePostPage() {
                       type='file'
                       disabled={disabled}
                       id='coverImage'
-                      placeholder='https://example.com/image.jpg'
+                      placeholder={t('form.placeholder.imageUrl')}
                       onChange={(e) => field.onChange(e.target.files[0])}
                     />
                   )
@@ -239,7 +251,9 @@ export default function MutatePostPage() {
             </div>
             <div className='grid grid-cols-2 gap-4'>
               <div className='space-y-2'>
-                <Label htmlFor='category'>Category *</Label>
+                <Label htmlFor='category'>
+                  {t('post.category')} {t('form.required')}
+                </Label>
                 <Controller
                   defaultValue=''
                   control={control}
@@ -250,7 +264,7 @@ export default function MutatePostPage() {
                       onValueChange={(value) => field.onChange(value)}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select category' />
+                        <SelectValue placeholder={t('post.selectCategory')} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories.data?.map?.((cat) => (
@@ -264,7 +278,9 @@ export default function MutatePostPage() {
                 />
               </div>
               <div className='space-y-2'>
-                <Label htmlFor='game'>Game *</Label>
+                <Label htmlFor='game'>
+                  {t('post.game')} {t('form.required')}
+                </Label>
                 <Controller
                   defaultValue=''
                   control={control}
@@ -275,7 +291,7 @@ export default function MutatePostPage() {
                       onValueChange={(value) => field.onChange(value)}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder='Select game' />
+                        <SelectValue placeholder={t('post.selectGame')} />
                       </SelectTrigger>
                       <SelectContent>
                         {games.data?.map?.((game) => (
@@ -290,7 +306,9 @@ export default function MutatePostPage() {
               </div>
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='excerpt'>Abstract *</Label>
+              <Label htmlFor='excerpt'>
+                {t('post.abstract')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -298,7 +316,7 @@ export default function MutatePostPage() {
                 render={({ field }) => (
                   <Textarea
                     id='abstract'
-                    placeholder='Brief description of the post'
+                    placeholder={t('post.briefDescription')}
                     rows={3}
                     {...field}
                   />
@@ -306,7 +324,9 @@ export default function MutatePostPage() {
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='content'>Content *</Label>
+              <Label htmlFor='content'>
+                {t('post.content')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -314,7 +334,7 @@ export default function MutatePostPage() {
                 render={({ field }) => (
                   <Textarea
                     id='content'
-                    placeholder='Write your post content here...'
+                    placeholder={t('post.writeContent')}
                     rows={12}
                     {...field}
                   />
@@ -327,11 +347,11 @@ export default function MutatePostPage() {
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               >
                 <Save className='h-4 w-4 mr-2' />
-                Create Post
+                {isEditMode ? t('post.updatePost') : t('post.createPost')}
               </Button>
               <Link to={routes.dashboard.posts.index}>
                 <Button type='button' variant='outline'>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </Link>
             </div>

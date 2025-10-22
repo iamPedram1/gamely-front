@@ -1,8 +1,11 @@
+'use client';
+
 import { object } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -32,6 +35,8 @@ type FormSchema = Zod.infer<typeof tagSchema>;
 export default function MutateTagPage() {
   // Context
   const { loading } = useLoadingStore();
+
+  const { t } = useTranslation();
 
   // Hooks
   const params = useParams();
@@ -77,14 +82,12 @@ export default function MutateTagPage() {
         <div>
           <h1 className='text-4xl font-black'>
             <span className='gradient-gaming-text'>
-              {isEditMode ? 'Update' : 'Add'}
+              {isEditMode ? t('common.update') : t('common.add')}
             </span>{' '}
-            Tag
+            {t('common.tag')}
           </h1>
           <p className='text-muted-foreground mt-2'>
-            {isEditMode
-              ? 'Update a tag in the database'
-              : 'Add a new tag to the database'}
+            {isEditMode ? t('tag.updateTagInDb') : t('tag.addNewTag')}
           </p>
         </div>
       </div>
@@ -92,18 +95,20 @@ export default function MutateTagPage() {
       <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
         <Card className='min-w-full border-primary/20'>
           <CardHeader>
-            <CardTitle>Tag Details</CardTitle>
+            <CardTitle>{t('tag.tagDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='space-y-2'>
-              <Label htmlFor='title'>Tag Title *</Label>
+              <Label htmlFor='title'>
+                {t('tag.tagTitle')} {t('form.required')}
+              </Label>
               <Controller
                 control={control}
                 name='title'
                 render={({ field }) => (
                   <Input
                     id='title'
-                    placeholder='e.g., RPG'
+                    placeholder={t('tag.exampleRPG')}
                     required
                     disabled={disabled}
                     {...field}
@@ -112,14 +117,16 @@ export default function MutateTagPage() {
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='slug'>Slug *</Label>
+              <Label htmlFor='slug'>
+                {t('common.slug')} {t('form.required')}
+              </Label>
               <Controller
                 control={control}
                 name='slug'
                 render={({ field }) => (
                   <Input
                     id='slug'
-                    placeholder='e.g., RPG'
+                    placeholder={t('tag.exampleRPG')}
                     required
                     disabled={disabled}
                     {...field}
@@ -135,11 +142,11 @@ export default function MutateTagPage() {
                 disabled={disabled}
               >
                 <Save className='h-4 w-4 mr-2' />
-                {isEditMode ? 'Update Tag' : 'Create Tag'}
+                {isEditMode ? t('tag.updateTag') : t('tag.createTag')}
               </Button>
               <Link to={routes.dashboard.tags.index}>
                 <Button disabled={disabled} type='button' variant='outline'>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </Link>
             </div>

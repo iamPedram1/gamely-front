@@ -207,5 +207,21 @@
     "placeholder": {
       "imageUrl": "https://example.com/image.jpg"
     }
+  },
+  "validation": {
+    "required": "{{field}} الزامی است",
+    "invalidString": "{{field}} باید یک رشته متنی باشد",
+    "invalidNumber": "{{field}} باید یک عدد باشد",
+    "invalidArray": "{{field}} باید یک آرایه باشد",
+    "invalidEmail": "لطفا یک آدرس ایمیل معتبر وارد کنید",
+    "invalidFormat": "فرمت {{field}} نامعتبر است",
+    "minLength": "{{field}} باید حداقل {{min}} کاراکتر باشد",
+    "maxLength": "{{field}} نمی‌تواند بیشتر از {{max}} کاراکتر باشد",
+    "minValue": "{{field}} باید حداقل {{min}} باشد",
+    "maxValue": "{{field}} باید حداکثر {{max}} باشد",
+    "minItems": "{{field}} باید حداقل {{min}} مورد داشته باشد",
+    "maxItems": "{{field}} نمی‌تواند بیشتر از {{max}} مورد داشته باشد",
+    "uploadFile": "لطفا {{field}} را آپلود کنید",
+    "passwordMismatch": "رمزهای عبور مطابقت ندارند"
   }
 }

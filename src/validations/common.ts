@@ -1,16 +1,26 @@
+import i18n from '@/i18n';
 import {
   array,
   number,
   object,
   string,
-  ZodArray,
-  ZodNumber,
-  ZodOptional,
-  ZodString,
-  ZodType,
-  ZodTypeAny,
+  type ZodArray,
+  type ZodNumber,
+  type ZodOptional,
+  type ZodString,
+  type ZodType,
+  type ZodTypeAny,
   instanceof as instanceof_,
 } from 'zod';
+
+/**
+ * Get translated validation message
+ * @param key - translation key from validation namespace
+ * @param params - optional parameters for interpolation
+ */
+const t = (key: string, params?: Record<string, any>): string => {
+  return i18n.t(`validation.${key}`, params) as string;
+};
 
 /**
  * Generate a reusable string schema with common options
@@ -26,18 +36,18 @@ export const generateStringSchema = (
   required = true
 ): ZodString | ZodOptional<ZodString> => {
   let schema: ZodString = string({
-    required_error: `${label} is required`,
-    invalid_type_error: `${label} must be a string`,
+    required_error: t('required', { field: label }),
+    invalid_type_error: t('invalidString', { field: label }),
   });
 
   if (min)
     schema = schema.min(min, {
-      message: `${label} must be at least ${min} characters long`,
+      message: t('minLength', { field: label, min }),
     });
 
   if (max)
     schema = schema.max(max, {
-      message: `${label} cannot be longer than ${max} characters`,
+      message: t('maxLength', { field: label, max }),
     });
 
   return required ? schema : schema.optional();
@@ -53,18 +63,18 @@ export const generateNumberSchema = (
   required = true
 ): ZodNumber | ZodOptional<ZodNumber> => {
   let schema: ZodNumber = number({
-    required_error: `${label} is required`,
-    invalid_type_error: `${label} must be a number`,
+    required_error: t('required', { field: label }),
+    invalid_type_error: t('invalidNumber', { field: label }),
   });
 
-  if (min)
+  if (min !== undefined)
     schema = schema.min(min, {
-      message: `${label} must be at least ${min}`,
+      message: t('minValue', { field: label, min }),
     });
 
-  if (max)
+  if (max !== undefined)
     schema = schema.max(max, {
-      message: `${label} must be less than or equal to ${max}`,
+      message: t('maxValue', { field: label, max }),
     });
 
   return required ? schema : schema.optional();
@@ -79,9 +89,9 @@ export const generateRegexStringSchema = (
   message?: string
 ) => {
   return string({
-    required_error: `${label} is required`,
-    invalid_type_error: `${label} must be a string`,
-  }).regex(regex, message || `${label} format is invalid`);
+    required_error: t('required', { field: label }),
+    invalid_type_error: t('invalidString', { field: label }),
+  }).regex(regex, message || t('invalidFormat', { field: label }));
 };
 
 /**
@@ -93,7 +103,7 @@ export const generateRegexStringSchema = (
  */
 export const generateFileSchema = (label = 'File'): ZodType =>
   instanceof_(File, {
-    message: `Please upload the ${label.toLowerCase()}`,
+    message: t('uploadFile', { field: label.toLowerCase() }),
   }).or(
     object({
       id: string().optional().nullable(),
@@ -124,22 +134,18 @@ export const generateArraySchema = <T extends ZodTypeAny>(
   required = true
 ): ZodArray<T> | ZodOptional<ZodArray<T>> => {
   let schema = array(itemSchema, {
-    required_error: `${label} is required`,
-    invalid_type_error: `${label} must be an array`,
+    required_error: t('required', { field: label }),
+    invalid_type_error: t('invalidArray', { field: label }),
   });
 
   if (min)
     schema = schema.min(min, {
-      message: `${label} must contain at least ${min} item${
-        min > 1 ? 's' : ''
-      }`,
+      message: t('minItems', { field: label, min }),
     });
 
   if (max)
     schema = schema.max(max, {
-      message: `${label} cannot contain more than ${max} item${
-        max > 1 ? 's' : ''
-      }`,
+      message: t('maxItems', { field: label, max }),
     });
 
   return required ? schema : schema.optional();
@@ -158,20 +164,46 @@ export const generateStringArraySchema = (
 ) => {
   let schema = array(
     string({
-      required_error: `${label} is required`,
-      invalid_type_error: `${label} must be an array`,
+      required_error: t('required', { field: label }),
+      invalid_type_error: t('invalidArray', { field: label }),
     })
   );
 
   if (options?.min !== undefined)
     schema = schema.min(options.min, {
-      message: `${label} must have at least ${options.min} items`,
+      message: t('minItems', { field: label, min: options.min }),
     });
 
   if (options?.max !== undefined)
     schema = schema.max(options.max, {
-      message: `${label} must have at most ${options.max} items`,
+      message: t('maxItems', { field: label, max: options.max }),
     });
 
   return options?.required ? schema : schema.optional();
+};
+
+/**
+ * Generate an email schema with translation
+ */
+export const generateEmailSchema = (required = true) => {
+  const schema = string({
+    required_error: t('required', { field: 'email' }),
+    invalid_type_error: t('invalidString', { field: 'email' }),
+  }).email(t('invalidEmail'));
+  console.log(t('invalidEmail'));
+
+  return required ? schema : schema.optional();
+};
+
+/**
+ * Generate a password confirmation schema
+ */
+export const generatePasswordConfirmSchema = (passwordField = 'password') => {
+  return object({
+    password: generateStringSchema('password', 8, 255),
+    confirmPassword: generateStringSchema('confirm password', 8, 255),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('passwordMismatch'),
+    path: ['confirmPassword'],
+  });
 };

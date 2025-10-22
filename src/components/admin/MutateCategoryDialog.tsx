@@ -87,7 +87,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   });
 
   // Utilities
-  const onSubmit = (data: FormSchema) => {
+  const onSubmit = (data: Required<FormSchema>) => {
     if (isEditMode) updateCategory.mutate({ id: categoryId, ...data });
     else createCategory.mutate(data);
   };

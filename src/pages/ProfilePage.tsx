@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { Save, ArrowLeft } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-// Context
 
 // Hooks
 import useAuth from '@/hooks/useAuth';
@@ -25,14 +23,18 @@ import useLoadingStore, { setLoadingState } from '@/store/loading';
 import { useUpdateProfileMutation } from '@/utilities/api/auth';
 
 // Utilities
-import { createOnErrorHandler } from '@/utilities';
-import { generateFileSchema, generateStringSchema } from '@/validations/common';
 import routes from '@/utilities/routes';
 import { uploadFile } from '@/utilities/uploader';
+import { createOnErrorHandler } from '@/utilities';
+import {
+  generateEmailSchema,
+  generateFileSchema,
+  generateStringSchema,
+} from '@/validations/common';
 
 const profileSchema = object({
   name: generateStringSchema('name', 3, 255),
-  email: string().email('Please enter a valid email'),
+  email: generateEmailSchema(),
   bio: generateStringSchema('bio', 1, 255).optional(),
   password: generateStringSchema('password', 1, 255).optional(),
   avatar: generateFileSchema('avatar').optional(),
@@ -117,7 +119,7 @@ export default function ProfilePage() {
         <Header />
 
         <main className='flex-1 container py-8'>
-          <Link to='/'>
+          <Link to='/' className='flex items-center gap-2'>
             <Button variant='ghost' className='mb-6'>
               <ArrowLeft className='h-4 w-4 mr-2' />
               Back to Home

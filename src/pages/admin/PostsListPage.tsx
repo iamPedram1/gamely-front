@@ -1,5 +1,7 @@
+'use client';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 // Components
@@ -29,7 +31,6 @@ import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/category';
-import { useTranslation } from 'react-i18next';
 
 export default function PostsListPage() {
   // Context
@@ -74,10 +75,10 @@ export default function PostsListPage() {
               {t('common.allPosts')} ({posts?.data?.pagination?.totalDocs || 0})
             </h2>
             <div className='flex items-center gap-3'>
-              <Searchbar placeholder='Search in posts...' />
+              <Searchbar placeholder={t('common.searchInPosts')} />
               <Select>
                 <SelectTrigger className='w-[180px]'>
-                  <SelectValue placeholder='Filter by category' />
+                  <SelectValue placeholder={t('common.filterByCategory')} />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.isFetching ? (

@@ -1,9 +1,12 @@
+'use client';
+
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { object } from 'zod';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -41,11 +44,13 @@ const gameSchema = object({
   coverImage: generateFileSchema('cover image'),
 });
 
-type FormSchema = Zod.infer<typeof gameSchema>;
+type FormSchema = any; // Zod.infer<typeof gameSchema>;
 
 export default function MutateGamePage() {
   // Context
   const { loading } = useLoadingStore();
+
+  const { t } = useTranslation();
 
   // Hooks
   const params = useParams();
@@ -103,25 +108,25 @@ export default function MutateGamePage() {
         <div>
           <h1 className='text-4xl font-black'>
             <span className='gradient-gaming-text'>
-              {isEditMode ? 'Update' : 'Add'}
+              {isEditMode ? t('common.update') : t('common.add')}
             </span>{' '}
-            Game
+            {t('common.game')}
           </h1>
           <p className='text-muted-foreground mt-2'>
-            {isEditMode
-              ? 'Update game in the database'
-              : 'Add a new game to the database'}
+            {isEditMode ? t('game.updateGameInDb') : t('game.addNewGame')}
           </p>
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
         <Card className='border-primary/20'>
           <CardHeader>
-            <CardTitle>Game Details</CardTitle>
+            <CardTitle>{t('game.gameDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='space-y-2'>
-              <Label htmlFor='title'>Game Title *</Label>
+              <Label htmlFor='title'>
+                {t('game.gameTitle')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -130,14 +135,16 @@ export default function MutateGamePage() {
                   <Input
                     disabled={disabled}
                     id='title'
-                    placeholder='Enter game title'
+                    placeholder={t('game.enterGameTitle')}
                     {...field}
                   />
                 )}
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='slug'>Slug *</Label>
+              <Label htmlFor='slug'>
+                {t('common.slug')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -146,14 +153,16 @@ export default function MutateGamePage() {
                   <Input
                     disabled={disabled}
                     id='slug'
-                    placeholder='game-url-slug'
+                    placeholder={t('game.gameUrlSlug')}
                     {...field}
                   />
                 )}
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='coverImage'>Cover Image URL *</Label>
+              <Label htmlFor='coverImage'>
+                {t('game.coverImageUrl')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue={null}
                 control={control}
@@ -189,7 +198,7 @@ export default function MutateGamePage() {
                       type='file'
                       disabled={disabled}
                       id='coverImage'
-                      placeholder='https://example.com/image.jpg'
+                      placeholder={t('form.placeholder.imageUrl')}
                       onChange={(e) => field.onChange(e.target.files[0])}
                     />
                   )
@@ -197,7 +206,9 @@ export default function MutateGamePage() {
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='releaseDate'>Release Date *</Label>
+              <Label htmlFor='releaseDate'>
+                {t('game.releaseDate')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -212,7 +223,9 @@ export default function MutateGamePage() {
               />
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='description'>Description *</Label>
+              <Label htmlFor='description'>
+                {t('game.description')} {t('form.required')}
+              </Label>
               <Controller
                 defaultValue=''
                 control={control}
@@ -220,7 +233,7 @@ export default function MutateGamePage() {
                 render={({ field }) => (
                   <Textarea
                     id='description'
-                    placeholder='Brief description of the game'
+                    placeholder={t('game.briefGameDescription')}
                     rows={5}
                     disabled={disabled}
                     {...field}
@@ -236,11 +249,11 @@ export default function MutateGamePage() {
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               >
                 <Save className='h-4 w-4 mr-2' />
-                {isEditMode ? 'Update Game' : 'Create Game'}
+                {isEditMode ? t('game.updateGame') : t('game.createGame')}
               </Button>
               <Link to={routes.dashboard.games.index}>
                 <Button disabled={disabled} type='button' variant='outline'>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </Link>
             </div>

@@ -1,9 +1,9 @@
-import { object } from 'zod';
+'use client';
 import { ArrowLeft, Lock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -22,17 +22,11 @@ import {
 // Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
-import { generateStringSchema } from '@/validations/common';
+import { generatePasswordConfirmSchema } from '@/validations/common';
 import { usePasswordChangeMutation } from '@/utilities/api/auth';
 
 // Types
-const resetPasswordSchema = object({
-  password: generateStringSchema('password', 8, 255),
-  confirmPassword: generateStringSchema('confirm password', 8, 255),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
+const resetPasswordSchema = generatePasswordConfirmSchema();
 
 type FormSchema = Zod.infer<typeof resetPasswordSchema>;
 

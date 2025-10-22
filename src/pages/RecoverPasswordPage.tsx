@@ -1,8 +1,10 @@
-import { object, string } from 'zod';
+'use client';
+
+import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Mail } from 'lucide-react';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -19,19 +21,17 @@ import {
 } from '@/components/ui/card';
 
 // Utilities
-import { generateStringSchema } from '@/validations/common';
+import { generateEmailSchema } from '@/validations/common';
 import { usePasswordRecoveryMutation } from '@/utilities/api/auth';
 import { createOnErrorHandler } from '@/utilities';
 import { zodResolver } from '@hookform/resolvers/zod';
 import routes from '@/utilities/routes';
 
 const recoverPasswordSchema = object({
-  email: generateStringSchema('email').and(
-    string().email('Please enter a valid email')
-  ),
+  email: generateEmailSchema(),
 });
 
-type FormSchema = Zod.infer<typeof recoverPasswordSchema>;
+type FormSchema = (typeof recoverPasswordSchema)['_type'];
 
 export default function RecoverPasswordPage() {
   // Hooks

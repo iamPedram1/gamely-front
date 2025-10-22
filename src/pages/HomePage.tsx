@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, TrendingUp, Zap, Trophy } from 'lucide-react';
 import { mockPosts, mockGames } from '@/data/mockData';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -13,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import routes from '@/utilities/routes';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const featuredPost = mockPosts[0];
   const recentPosts = mockPosts.slice(1);
 
@@ -30,20 +32,19 @@ export default function HomePage() {
                 <div className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20'>
                   <Zap className='h-4 w-4 text-primary' />
                   <span className='text-sm font-semibold text-primary uppercase tracking-wide'>
-                    Latest Gaming News
+                    {t('home.latestGamingNews')}
                   </span>
                 </div>
 
                 <h1 className='text-5xl md:text-7xl font-black leading-tight'>
-                  Level Up Your
+                  {t('home.levelUpYour')}
                   <span className='block gradient-gaming-text text-glow'>
-                    Gaming Experience
+                    {t('home.gamingExperience')}
                   </span>
                 </h1>
 
                 <p className='text-xl text-muted-foreground leading-relaxed'>
-                  Dive into the ultimate gaming hub with exclusive reviews,
-                  breaking news, and expert guides for the hottest titles.
+                  {t('home.heroDescription')}
                 </p>
 
                 <div className='flex flex-wrap gap-4'>
@@ -52,7 +53,7 @@ export default function HomePage() {
                       size='lg'
                       className='gradient-gaming font-bold uppercase tracking-wide glow-effect hover:glow-effect-strong text-lg px-8 py-6'
                     >
-                      Explore News
+                      {t('home.exploreNews')}
                       <ArrowRight className='ml-2 h-5 w-5' />
                     </Button>
                   </Link>
@@ -62,7 +63,7 @@ export default function HomePage() {
                       variant='outline'
                       className='border-2 border-primary/50 hover:bg-primary/10 font-bold uppercase tracking-wide text-lg px-8 py-6'
                     >
-                      Browse Games
+                      {t('home.browseGames')}
                     </Button>
                   </Link>
                 </div>
@@ -75,7 +76,7 @@ export default function HomePage() {
                     <div>
                       <p className='text-2xl font-bold'>{mockPosts.length}+</p>
                       <p className='text-xs text-muted-foreground uppercase'>
-                        Articles
+                        {t('home.articles')}
                       </p>
                     </div>
                   </div>
@@ -86,7 +87,7 @@ export default function HomePage() {
                     <div>
                       <p className='text-2xl font-bold'>{mockGames.length}+</p>
                       <p className='text-xs text-muted-foreground uppercase'>
-                        Games
+                        {t('home.games')}
                       </p>
                     </div>
                   </div>
@@ -98,14 +99,14 @@ export default function HomePage() {
                 <Link to={`/post/${featuredPost.slug}`}>
                   <div className='relative aspect-[4/5] rounded-2xl overflow-hidden border-2 border-primary/20 glow-effect hover:glow-effect-strong transition-all group'>
                     <img
-                      src={featuredPost.coverImage.url}
+                      src={featuredPost.coverImage.url || '/placeholder.svg'}
                       alt={featuredPost.title}
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                     />
                     <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent' />
                     <div className='absolute bottom-0 left-0 right-0 p-6 space-y-3'>
                       <Badge className='gradient-gaming font-semibold'>
-                        Featured
+                        {t('home.featured')}
                       </Badge>
                       <h3 className='text-2xl font-bold text-white line-clamp-2'>
                         {featuredPost.title}
@@ -127,15 +128,17 @@ export default function HomePage() {
             <div className='flex items-center justify-between mb-10'>
               <div>
                 <h2 className='text-4xl font-black mb-2'>
-                  <span className='gradient-gaming-text'>Trending</span> Games
+                  <span className='gradient-gaming-text'>
+                    {t('home.trendingGames')}
+                  </span>
                 </h2>
                 <p className='text-muted-foreground'>
-                  Most popular titles right now
+                  {t('home.mostPopularTitles')}
                 </p>
               </div>
               <Link to='/games'>
                 <Button variant='ghost' className='group'>
-                  View All
+                  {t('common.viewAll')}
                   <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
                 </Button>
               </Link>
@@ -146,7 +149,7 @@ export default function HomePage() {
                 <Link key={game.id} to={`/game/${game.slug}`}>
                   <div className='group relative aspect-[3/4] rounded-xl overflow-hidden border border-primary/20 hover:border-primary/50 transition-all glow-effect hover:glow-effect-strong'>
                     <img
-                      src={game.coverImage.url}
+                      src={game.coverImage.url || '/placeholder.svg'}
                       alt={game.title}
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                     />
@@ -177,15 +180,15 @@ export default function HomePage() {
             <div className='flex items-center justify-between mb-10'>
               <div>
                 <h2 className='text-4xl font-black mb-2'>
-                  Latest <span className='gradient-gaming-text'>News</span>
+                  <span className='gradient-gaming-text'>
+                    {t('home.latestNews')}
+                  </span>
                 </h2>
-                <p className='text-muted-foreground'>
-                  Stay updated with the gaming world
-                </p>
+                <p className='text-muted-foreground'>{t('home.stayUpdated')}</p>
               </div>
               <Link to='/posts'>
                 <Button variant='ghost' className='group'>
-                  View All
+                  {t('common.viewAll')}
                   <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
                 </Button>
               </Link>
