@@ -2,8 +2,10 @@ const endpoints = {
   profile: '/user/profile',
   login: '/auth/login',
   register: '/auth/register',
-  tokenRefresh: '/user/token/refresh',
-  tokenRevoke: '/user/token/revoke',
+  tokenRefresh: '/auth/token/refresh',
+  tokenRevoke: '/auth/token/revoke',
+  recoverPassword: '/auth/recover-password',
+  changePassword: '/auth/change-password',
 };
 
 export default endpoints;

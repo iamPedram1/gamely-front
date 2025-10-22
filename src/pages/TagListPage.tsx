@@ -9,12 +9,9 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 // Utilities
 import { useTagsQuery } from '@/utilities/api/tag';
-import initialPagination from '@/utilities/pagination';
 
 export default function TagListPage() {
-  const tags = useTagsQuery({
-    initialData: { docs: [], pagination: initialPagination },
-  });
+  const tags = useTagsQuery();
 
   return (
     <div className='min-h-screen flex flex-col bg-background'>

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 
+// Custom Hooks
+import useAuth from '@/hooks/useAuth';
+
 // Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -18,12 +21,10 @@ import {
 } from '@/components/ui/card';
 
 // Utilities
-import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
 import useLoadingStore from '@/store/loading';
-import { setRefreshToken, setToken } from '@/utilities/cookie/token';
 import routes from '@/utilities/routes';
-import { setAlertState } from '@/store/alert';
-import useAuth from '@/hooks/useAuth';
+import { useLoginMutation, useRegisterMutation } from '@/utilities/api/auth';
+import { useTranslation } from 'react-i18next';
 
 interface FormProps {
   loginEmail: string;
@@ -40,8 +41,8 @@ export default function LoginPage() {
 
   // Hooks
   const { signin } = useAuth();
+  const { t } = useTranslation();
   const { control, handleSubmit } = useForm<FormProps>();
-
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
@@ -126,7 +127,7 @@ export default function LoginPage() {
                     </Button>
                     <p className='text-sm text-muted-foreground text-center'>
                       <Link
-                        to={routes.forgotpassword}
+                        to={routes.passwordRecovery}
                         className='hover:text-foreground transition-colors'
                       >
                         Forgot your password?
@@ -147,7 +148,7 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit(handleRegister)}>
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
-                      <Label htmlFor='register-name'>Name</Label>
+                      <Label htmlFor='register-name'>{t('common.name')}</Label>
                       <Controller
                         control={control}
                         name='registerName'

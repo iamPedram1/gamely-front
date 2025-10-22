@@ -18,6 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
+        iransans: ['IranSans', 'sans-serif'],
         sans: ['Roboto', 'ui-sans-serif', 'system-ui'],
       },
       colors: {

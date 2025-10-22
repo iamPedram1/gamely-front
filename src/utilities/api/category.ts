@@ -1,12 +1,11 @@
 import apiHandler from '@/utilities/api/safeApiHandler';
-import useDocApi from '@/hooks/api/useQuery/useDoc';
+import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
-import type { CategoryProps, SummaryProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
-import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
+import type { CategoryProps, SummaryProps } from '@/types/blog';
 
 const categoriesQueryKey = 'categories';
 
@@ -20,12 +19,11 @@ export const useCategoriesSummariesQuery = useAppQuery(
   [categoriesQueryKey]
 );
 
-export const useCategoryQuery = (options?: UseDocOptionType<CategoryProps>) =>
-  useDocApi(
-    (id) => apiHandler.get<CategoryProps>(`/categories/${id}`),
-    [categoriesQueryKey],
-    options
-  );
+export const useCategoryQuery = makeUseFetchQuery(
+  (id, reqInit) => apiHandler.get<CategoryProps>(`/categories/${id}`, reqInit),
+  [categoriesQueryKey],
+  { placeholderData: { id: '', title: '', slug: '', parentId: null } }
+);
 
 export const useCreateCategory = useAppMutation(
   (payload: Omit<CategoryProps, 'id'>) =>

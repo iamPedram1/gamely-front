@@ -34,10 +34,13 @@ export interface PostSummaryProps {
 
 export interface UserProps {
   id: string;
-  bio: string;
   name: string;
   email: string;
   avatar: FileProps;
+  bio: string;
+  role: 'admin' | 'author' | 'user';
+  status?: 'active' | 'blocked';
+  createdAt?: string;
 }
 
 export interface TagProps {
@@ -67,15 +70,12 @@ export interface GameProps {
   coverImage: FileProps;
   description: string;
   releaseDate: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface CommentProps {
   id: string;
-  content: string;
   username: string;
-  createdAt: string;
+  content: string;
   avatar: FileProps;
-  replies: CommentProps[];
+  createdAt: string;
 }

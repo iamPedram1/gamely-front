@@ -1,12 +1,11 @@
 import apiHandler from '@/utilities/api/safeApiHandler';
-import useDocApi from '@/hooks/api/useQuery/useDoc';
+import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
 import type { GameProps, SummaryProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
-import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
 
 const gamesQueryKey = 'games';
 
@@ -20,12 +19,10 @@ export const useGamesSummariesQuery = useAppQuery(
   [gamesQueryKey]
 );
 
-export const useGameQuery = (options?: UseDocOptionType<GameProps>) =>
-  useDocApi(
-    (slug) => apiHandler.get<GameProps>(`/games/${slug}`),
-    [gamesQueryKey],
-    options
-  );
+export const useGameQuery = makeUseFetchQuery(
+  (slug) => apiHandler.get<GameProps>(`/games/${slug}`),
+  [gamesQueryKey]
+);
 
 export const useCreateGame = useAppMutation(
   (payload: Omit<GameProps, 'id' | 'coverImage'> & { coverImage: string }) =>

@@ -1,24 +1,11 @@
 import { object } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { Plus, Edit, Trash2 } from 'lucide-react';
-
-// Hooks
-import { useBoolean, useString } from '@/hooks/state';
 
 // Components
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -32,19 +19,16 @@ import {
 import useLoadingStore from '@/store/loading';
 
 // Utilities
-import { mockCategories } from '@/data/mockData';
+import { createOnErrorHandler } from '@/utilities';
 import {
-  useCategoriesQuery,
   useCategoryQuery,
   useCreateCategory,
-  useDeleteCategory,
   useUpdateCategory,
 } from '@/utilities/api/category';
 import {
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
-import { createOnErrorHandler } from '@/utilities';
 
 interface MutateCategoryDialogProps {
   onClose: () => void;
@@ -76,7 +60,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
 
   // Hooks
   const category = useCategoryQuery({
-    id: categoryId,
+    initialParams: categoryId,
     enabled: Boolean(isEditMode && categoryId),
     onFetch: (doc) => reset(doc),
   });

@@ -33,6 +33,17 @@ export const useLoginMutation = useAppMutation(
     apiHandler.post<AuthResponseProps>(endpoints.login, payload),
   [authQueryKey, profileQueryKey]
 );
+export const usePasswordRecoveryMutation = useAppMutation(
+  (payload: { email: string }) =>
+    apiHandler.post<AuthResponseProps>(endpoints.recoverPassword, payload),
+  [authQueryKey, profileQueryKey]
+);
+
+export const usePasswordChangeMutation = useAppMutation(
+  (payload: { recoveryKey: string; password: string }) =>
+    apiHandler.post<AuthResponseProps>(endpoints.changePassword, payload),
+  [authQueryKey, profileQueryKey]
+);
 
 export const useRegisterMutation = useAppMutation(
   (payload: { name: string; email: string; password: string }) =>

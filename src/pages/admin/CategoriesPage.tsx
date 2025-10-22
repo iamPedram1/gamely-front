@@ -1,6 +1,4 @@
-import { object } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
 // Hooks
@@ -23,7 +21,6 @@ import {
 import useLoadingStore from '@/store/loading';
 
 // Utilities
-import initialPagination from '@/utilities/pagination';
 import {
   useCategoriesQuery,
   useDeleteCategory,
@@ -37,12 +34,11 @@ export default function CategoriesPage() {
   });
 
   // Context
+  const { t } = useTranslation();
   const { loading } = useLoadingStore();
 
   // Hooks
-  const categories = useCategoriesQuery({
-    initialData: { docs: [], pagination: initialPagination },
-  });
+  const categories = useCategoriesQuery();
   const deleteCategory = useDeleteCategory();
 
   const disabled = loading || deleteCategory.isPending;
@@ -63,14 +59,15 @@ export default function CategoriesPage() {
           className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
         >
           <Plus className='h-4 w-4 mr-2' />
-          Add Category
+          {t('dashboard.addCategory')}
         </Button>
       </div>
       <Card className='border-primary/20'>
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Categories ({categories.data?.pagination?.totalDocs || 0})
+              {t('dashboard.allCategories')} (
+              {categories.data?.pagination?.totalDocs || 0})
             </h2>
           </div>
         </CardHeader>
@@ -78,9 +75,11 @@ export default function CategoriesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead className='text-right'>Actions</TableHead>
+                <TableHead>{t('common.name')}</TableHead>
+                <TableHead>{t('common.slug')}</TableHead>
+                <TableHead className='text-right'>
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

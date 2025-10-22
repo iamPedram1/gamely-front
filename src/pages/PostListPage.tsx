@@ -5,15 +5,11 @@ import PostCard from '@/components/blog/PostCard';
 import PaginationControls from '@/components/ui/pagination-controls';
 
 // Utilities
-import initialPagination from '@/utilities/pagination';
 import { usePostsQuery } from '@/utilities/api/post';
 
 export default function PostListPage() {
   // Hooks
-  const posts = usePostsQuery({
-    refetchOnQueryChange: true,
-    initialData: { docs: [], pagination: initialPagination },
-  });
+  const posts = usePostsQuery({ refetchOnQueryChange: true });
 
   // Render
   return (

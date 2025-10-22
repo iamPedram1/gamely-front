@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 
@@ -10,16 +11,15 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
 
 // Utilities
 import routes from '@/utilities/routes';
 import { usePostQuery } from '@/utilities/api/post';
 import { useCommentsQuery } from '@/utilities/api/comment';
-import initialPagination from '@/utilities/pagination';
-import { useState } from 'react';
-import { CommentProps } from '@/types/blog';
-import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
-import useAuth from '@/hooks/useAuth';
+
+// Types
+import type { CommentProps } from '@/types/blog';
 
 export default function PostDetailPage() {
   // States
@@ -30,11 +30,10 @@ export default function PostDetailPage() {
 
   // Hooks
   const { slug } = useParams();
-  const post = usePostQuery({ id: slug });
+  const post = usePostQuery({ initialParams: slug });
   const comments = useCommentsQuery({
-    id: slug,
+    initialParams: slug,
     enabled: post.isSuccess,
-    initialData: { docs: [], pagination: initialPagination },
   });
 
   // Utilities

@@ -31,11 +31,12 @@ export interface AlertProps {
 
 type ReactQueryProps<T = any> = Omit<
   DefinedInitialDataOptions<CommonResponseProps<T>, Error, T, QueryKey>,
-  'initialData'
+  'initialData' | 'placeholderData'
 >;
 
 export interface UseBaseQueryOptionsProps<T> extends ReactQueryProps<T> {
   initialData?: T;
+  placeholderData?: T;
   queries?: Record<string, unknown>;
   /**
    * Indicates whether to disable automatic alerts.
@@ -85,6 +86,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     autoLoading,
     disableAutoAlert,
     initialData,
+    placeholderData,
     queries,
     refetchOnQueryChange,
     onFetchFailed,
@@ -130,12 +132,21 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     ...otherOptions,
     queryFn,
     queryKey,
-    initialData: {
+    ...(initialData && {
+      initialData: {
+        errors: [],
+        isSuccess: false,
+        message: '',
+        statusCode: -1,
+        data: initialData,
+      },
+    }),
+    placeholderData: {
       errors: [],
       isSuccess: false,
       message: '',
       statusCode: -1,
-      data: initialData,
+      data: (placeholderData || null) as T,
     },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

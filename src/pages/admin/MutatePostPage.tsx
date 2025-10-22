@@ -41,6 +41,7 @@ import {
   usePostQuery,
   useUpdatePost,
 } from '@/utilities/api/post';
+import { useTranslation } from 'react-i18next';
 
 const postSchema = object({
   title: generateStringSchema('title', 3, 255),
@@ -61,19 +62,19 @@ export default function MutatePostPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
+  const { t } = useTranslation();
   const params = useParams();
   const isEditMode = 'id' in params;
   const { control, handleSubmit, reset } = useForm<FormSchema>({
     mode: 'onTouched',
     resolver: zodResolver(postSchema),
   });
-
   const tags = useTagsSummariesQuery();
   const games = useGamesSummariesQuery();
   const categories = useCategoriesSummariesQuery();
 
   const post = usePostQuery({
-    id: params.id,
+    initialParams: params.id,
     enabled: isEditMode,
     onFetch: (doc) =>
       reset({
@@ -141,7 +142,7 @@ export default function MutatePostPage() {
       <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
         <Card className='border-primary/20'>
           <CardHeader>
-            <CardTitle>Post Details</CardTitle>
+            <CardTitle>{t('dashboard.postDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='space-y-2'>

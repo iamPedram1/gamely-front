@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 
@@ -14,22 +15,13 @@ import {
 } from '@/components/ui/card';
 
 // Utilities
-import initialPagination from '@/utilities/pagination';
 import { useGamesQuery } from '@/utilities/api/game';
 
 export default function GameListPage() {
-  const games = useGamesQuery({
-    initialData: { docs: [], pagination: initialPagination },
-  });
+  // Hooks
+  const games = useGamesQuery();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
+  // Render
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
@@ -74,7 +66,9 @@ export default function GameListPage() {
               <CardFooter className='flex items-center justify-between'>
                 <div className='flex items-center gap-1 text-sm text-muted-foreground'>
                   <Calendar className='h-4 w-4' />
-                  <span>{formatDate(game.createdAt)}</span>
+                  <span>
+                    {dayjs(game.releaseDate).format('YYYY/MM/DDD-HH:MM')}
+                  </span>
                 </div>
                 <Link to={`/game/${game.slug}`}>
                   <Badge

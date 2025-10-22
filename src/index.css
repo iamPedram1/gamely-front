@@ -2,9 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  font-family: 'Roboto', 'ui-sans-serif', system-ui;
+@font-face {
+  font-family: 'IranSans';
+  src: url('/fonts/IranSans/IRANSansX-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IranSans';
+  src: url('/fonts/IranSans/IRANSansX-DemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IranSans';
+  src: url('/fonts/IranSans/IRANSansX-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IranSans';
+  src: url('/fonts/IranSans/IRANSansX-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer base {
+  html[lang='fa'] {
+    font-family: 'IranSans', sans-serif;
+  }
+
+  html:not([lang='fa']) {
+    font-family: 'ui-sans-serif', 'system-ui', sans-serif;
+  }
 }
 
 @layer base {

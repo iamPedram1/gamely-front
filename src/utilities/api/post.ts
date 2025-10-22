@@ -1,11 +1,10 @@
 import apiHandler from '@/utilities/api/safeApiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
-import useDocApi from '@/hooks/api/useQuery/useDoc';
+import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
 import type { PostProps, PostSummaryProps } from '@/types/blog';
 
 const postsQueryKey = 'posts';
@@ -20,16 +19,14 @@ export const usePostsSummariesQuery = useAppQuery(
   [postsQueryKey]
 );
 
-export const usePostQuery = (options?: UseDocOptionType<PostProps>) =>
-  useDocApi(
-    (id, reqInit) =>
-      apiHandler.get<PostProps>(`/posts/${id}`, {
-        queryWhitelistKeyNames: ['page', 'limit', 'search'],
-        ...reqInit,
-      }),
-    [postsQueryKey],
-    options
-  );
+export const usePostQuery = makeUseFetchQuery(
+  (id, reqInit) =>
+    apiHandler.get<PostProps>(`/posts/${id}`, {
+      queryWhitelistKeyNames: ['page', 'limit', 'search'],
+      ...reqInit,
+    }),
+  [postsQueryKey]
+);
 
 export const useCreatePost = useAppMutation(
   (payload: { title: string; coverImage: string }, reqInit) =>

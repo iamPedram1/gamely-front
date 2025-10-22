@@ -48,6 +48,7 @@ export const createOnErrorHandler: SubmitErrorHandler<any> = (errors) => {
     .filter(Boolean);
 
   if (messages.length > 0) {
+    console.log(messages);
     setAlertState(messages[0], 'error');
   }
 };

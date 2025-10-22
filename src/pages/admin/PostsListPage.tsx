@@ -27,20 +27,19 @@ import {
 // Utilities
 import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
-import initialPagination from '@/utilities/pagination';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/category';
+import { useTranslation } from 'react-i18next';
 
 export default function PostsListPage() {
   // Context
+  const { t } = useTranslation();
   const { loading } = useLoadingStore();
 
   // Hooks
-  const categories = useCategoriesSummariesQuery({ initialData: [] });
-  const posts = usePostsQuery({
-    initialData: { docs: [], pagination: initialPagination },
-  });
+  const posts = usePostsQuery();
   const deletePost = useDeletePost();
+  const categories = useCategoriesSummariesQuery({ placeholderData: [] });
 
   const disabled = loading || deletePost.isPending;
 
@@ -50,9 +49,12 @@ export default function PostsListPage() {
       <div className='flex items-center justify-between'>
         <div>
           <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>Posts</span> Management
+            <span className='gradient-gaming-text'>{t('dashboard.posts')}</span>{' '}
+            {t('dashboard.management')}
           </h1>
-          <p className='text-muted-foreground mt-2'>Manage all blog posts</p>
+          <p className='text-muted-foreground mt-2'>{`${t(
+            'dashboard.management'
+          )} ${t('common.all')} ${t('dashboard.posts').toLowerCase()}`}</p>
         </div>
         <Link to={routes.dashboard.posts.add}>
           <Button
@@ -60,7 +62,7 @@ export default function PostsListPage() {
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
           >
             <Plus className='h-4 w-4 mr-2' />
-            Add Post
+            {t('dashboard.addPost')}
           </Button>
         </Link>
       </div>
@@ -69,7 +71,7 @@ export default function PostsListPage() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-bold'>
-              All Posts ({posts?.data?.pagination?.totalDocs || 0})
+              {t('common.allPosts')} ({posts?.data?.pagination?.totalDocs || 0})
             </h2>
             <div className='flex items-center gap-3'>
               <Searchbar placeholder='Search in posts...' />
@@ -80,7 +82,7 @@ export default function PostsListPage() {
                 <SelectContent>
                   {categories.isFetching ? (
                     <SelectItem disabled value='loading'>
-                      Loading...
+                      {t('common.loading')}...
                     </SelectItem>
                   ) : (
                     <>
@@ -100,12 +102,20 @@ export default function PostsListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className='text-center'>Category</TableHead>
-                <TableHead className='text-center'>Game</TableHead>
-                <TableHead className='text-center'>Author</TableHead>
-                <TableHead className='text-center'>Date</TableHead>
-                <TableHead className='text-right'>Actions</TableHead>
+                <TableHead>{t('post.title')}</TableHead>
+                <TableHead className='text-center'>
+                  {t('post.category')}
+                </TableHead>
+                <TableHead className='text-center'>{t('post.game')}</TableHead>
+                <TableHead className='text-center'>
+                  {t('post.author')}
+                </TableHead>
+                <TableHead className='text-center'>
+                  {t('post.publishedAt')}
+                </TableHead>
+                <TableHead className='text-right'>
+                  {t('common.actions')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

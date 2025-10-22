@@ -1,12 +1,11 @@
 import apiHandler from '@/utilities/api/safeApiHandler';
-import useDocApi from '@/hooks/api/useQuery/useDoc';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
+import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 
 // Types
-import type { SummaryProps, TagProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
-import type { UseDocOptionType } from '@/hooks/api/useQuery/useDoc';
+import type { SummaryProps, TagProps } from '@/types/blog';
 
 const tagsQueryKey = 'tags';
 
@@ -28,12 +27,10 @@ export const useTagsSummariesQuery = useAppQuery(
   [tagsQueryKey, 'summaries']
 );
 
-export const useTagQuery = (options?: UseDocOptionType<TagProps>) =>
-  useDocApi(
-    (slug, context) => apiHandler.get<TagProps>(`/tags/${slug}`, context),
-    [tagsQueryKey],
-    options
-  );
+export const useTagQuery = makeUseFetchQuery(
+  (slug, context) => apiHandler.get<TagProps>(`/tags/${slug}`, context),
+  [tagsQueryKey]
+);
 
 export const useCreateTag = useAppMutation(
   (payload: Pick<TagProps, 'title' | 'slug'>) =>

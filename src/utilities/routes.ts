@@ -1,7 +1,7 @@
 const routes = {
   home: '/',
   login: '/login',
-  forgotpassword: '/forgot-password',
+  passwordRecovery: '/password-recovery',
   register: '/register',
   games: {
     index: '/games',
@@ -23,6 +23,7 @@ const routes = {
     details: (slug: string) => '/categories/' + slug,
   },
   dashboard: {
+    comments: '/dashboard/comments',
     games: {
       index: '/dashboard/games',
       add: '/dashboard/games/add',
@@ -37,6 +38,10 @@ const routes = {
       index: '/dashboard/tags',
       add: '/dashboard/tags/add',
       edit: (id: string) => '/dashboard/tags/' + id,
+    },
+    users: {
+      index: '/dashboard/users',
+      edit: (id: string) => '/dashboard/users/' + id,
     },
     categories: {
       index: '/dashboard/categories',

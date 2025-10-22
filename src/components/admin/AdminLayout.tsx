@@ -7,6 +7,8 @@ import {
   FolderOpen,
   LogOut,
   Menu,
+  Users,
+  MessageSquare,
 } from 'lucide-react';
 
 // Hooks
@@ -17,20 +19,37 @@ import { Button } from '@/components/ui/button';
 
 // Utilities
 import routes from '@/utilities/routes';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 export default function AdminLayout() {
-  const location = useLocation();
-  const sidebarOpen = useBoolean(true);
+  // States
+  const sidebarOpen = useBoolean();
 
+  // Hooks
+  const { t } = useTranslation();
+  const location = useLocation();
+
+  // Utilities
+  const isActive = (path: string) => location.pathname.startsWith(path);
   const navItems = [
-    { path: '/dashboard/posts', icon: FileText, label: 'Posts' },
-    { path: '/dashboard/games', icon: Gamepad2, label: 'Games' },
-    { path: '/dashboard/categories', icon: FolderOpen, label: 'Categories' },
-    { path: '/dashboard/tags', icon: Tag, label: 'Tags' },
+    { path: '/dashboard/posts', icon: FileText, label: t('dashboard.posts') },
+    { path: '/dashboard/games', icon: Gamepad2, label: t('dashboard.games') },
+    {
+      path: '/dashboard/categories',
+      icon: FolderOpen,
+      label: t('dashboard.categories'),
+    },
+    { path: '/dashboard/tags', icon: Tag, label: t('dashboard.tags') },
+    { path: '/dashboard/users', icon: Users, label: t('dashboard.users') },
+    {
+      path: '/dashboard/comments',
+      icon: MessageSquare,
+      label: t('dashboard.comments'),
+    },
   ];
 
-  const isActive = (path: string) => location.pathname.startsWith(path);
-
+  // Render
   return (
     <div className='min-h-screen bg-background flex'>
       <aside
@@ -84,12 +103,15 @@ export default function AdminLayout() {
       </aside>
       <div className='flex-1 flex flex-col'>
         <header className='h-16 border-b border-primary/20 bg-background/80 backdrop-blur-xl flex items-center justify-between px-6'>
-          <Button variant='ghost' size='icon' onClick={sidebarOpen.toggle}>
-            <Menu className='h-5 w-5' />
-          </Button>
+          <div className='flex flex-row gap-2'>
+            <Button variant='ghost' size='icon' onClick={sidebarOpen.toggle}>
+              <Menu className='h-5 w-5' />
+            </Button>
+            <LanguageSwitcher />
+          </div>
           <div className='flex items-center gap-4'>
             <span className='text-sm text-muted-foreground'>
-              Admin Dashboard
+              {t('nav.dashboard')}
             </span>
           </div>
         </header>

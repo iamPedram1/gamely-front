@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Youtube, Gamepad2 } from 'lucide-react';
 import routes from '@/utilities/routes';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className='border-t border-primary/20 bg-accent/30 backdrop-blur'>
       <div className='container py-16'>
@@ -15,7 +18,7 @@ export default function Footer() {
               <div className='p-2 rounded-xl bg-white dark:bg-gradient-gaming glow-effect group-hover:glow-effect-strong transition-all'>
                 <Gamepad2 className='h-6 w-6 dark:text-white' />
               </div>
-              <span className='gradient-gaming-text'>GameLy</span>
+              <span className='gradient-gaming-text'>{t('appName')}</span>
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed'>
               Your ultimate destination for gaming news, reviews, and guides.
@@ -25,7 +28,7 @@ export default function Footer() {
 
           <div className='space-y-4'>
             <h4 className='font-bold text-lg uppercase tracking-wide'>
-              Content
+              {t('post.content')}
             </h4>
             <ul className='space-y-3 text-sm'>
               <li>
@@ -34,7 +37,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  All Posts
+                  {t('dashboard.allPosts')}
                 </Link>
               </li>
               <li>
@@ -43,7 +46,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  Games
+                  {t('nav.games')}
                 </Link>
               </li>
               <li>
@@ -52,7 +55,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  Tags
+                  {t('nav.tags')}
                 </Link>
               </li>
             </ul>
@@ -60,7 +63,7 @@ export default function Footer() {
 
           <div className='space-y-4'>
             <h4 className='font-bold text-lg uppercase tracking-wide'>
-              Categories
+              {t('nav.categories')}
             </h4>
             <ul className='space-y-3 text-sm'>
               <li>
@@ -95,7 +98,7 @@ export default function Footer() {
 
           <div className='space-y-4'>
             <h4 className='font-bold text-lg uppercase tracking-wide'>
-              Follow Us
+              {t('nav.followUs')}
             </h4>
             <div className='flex gap-3'>
               <a
@@ -123,8 +126,10 @@ export default function Footer() {
         <div className='mt-12 pt-8 border-t border-primary/10 text-center'>
           <p className='text-sm text-muted-foreground'>
             &copy; {new Date().getFullYear()}{' '}
-            <span className='gradient-gaming-text font-semibold'>GameLy</span>.
-            All rights reserved.
+            <span className='gradient-gaming-text font-semibold'>
+              {t('appName')}
+            </span>
+            . All rights reserved.
           </p>
         </div>
       </div>

@@ -46,6 +46,7 @@ export default function NotificationProvider() {
     }
   }, [severity]);
 
+  // Render
   return (
     <Toast.Provider swipeDirection='right' duration={3000}>
       <Toast.Root

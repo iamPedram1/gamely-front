@@ -9,7 +9,7 @@ import LoginPage from '@/pages/LoginPage';
 import TagListPage from '@/pages/TagListPage';
 import PostListPage from '@/pages/PostListPage';
 import GameListPage from '@/pages/GameListPage';
-import AddTagPage from '@/pages/admin/MutateTagPage';
+import MutateTagPage from '@/pages/admin/MutateTagPage';
 import PostDetailPage from '@/pages/PostDetailPage';
 import MutatePostPage from '@/pages/admin/MutatePostPage';
 import TagsListPage from '@/pages/admin/TagsListPage';
@@ -19,54 +19,112 @@ import GamesListPage from '@/pages/admin/GamesListPage';
 import AdminLayout from '@/components/admin/AdminLayout';
 import CategoryPostsPage from '@/pages/CategoryPostsPage';
 import CategoriesPage from '@/pages/admin/CategoriesPage';
+import RecoverPasswordPage from '@/pages/RecoverPasswordPage';
+import ChangePasswordPage from '@/pages/ChangePasswordPage';
+import UsersListPage from '@/pages/admin/UsersListPage';
+import UserDetailPage from '@/pages/admin/UserDetailPage';
+import CommentsListPage from '@/pages/admin/CommentsListPage';
 
 // Components
 import NotificationProvider from '@/components/ui/notification';
 import ProfilePage from '@/pages/ProfilePage';
+import routes from '@/utilities/routes';
 
 function App() {
-  const client = new QueryClient();
-
   return (
-    <QueryClientProvider client={client}>
-      <ThemeProvider defaultTheme='system' storageKey='game-blog-theme'>
-        <Suspense
-          fallback={
-            <div className='min-h-screen flex items-center justify-center'>
-              Loading...
-            </div>
-          }
-        >
-          <>
-            <Routes>
-              <Route path='/' element={<HomePage />} />
-              <Route path='/posts' element={<PostListPage />} />
-              <Route path='/post/:slug' element={<PostDetailPage />} />
-              <Route path='/games' element={<GameListPage />} />
-              <Route path='/tags' element={<TagListPage />} />
-              <Route path='/category/:slug' element={<CategoryPostsPage />} />
-              <Route path='/login' element={<LoginPage />} />
-              <Route path='/profile' element={<ProfilePage />} />
+    <ThemeProvider defaultTheme='system' storageKey='game-blog-theme'>
+      <Suspense
+        fallback={
+          <div className='min-h-screen flex items-center justify-center'>
+            Loading...
+          </div>
+        }
+      >
+        <>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path={routes.posts.index} element={<PostListPage />} />
+            <Route
+              path={routes.posts.details(':id')}
+              element={<PostDetailPage />}
+            />
+            <Route path={routes.games.index} element={<GameListPage />} />
+            <Route path={routes.tags.index} element={<TagListPage />} />
+            <Route
+              path={routes.categories.details(':id')}
+              element={<CategoryPostsPage />}
+            />
+            <Route path={routes.login} element={<LoginPage />} />
+            <Route path={routes.profile.index} element={<ProfilePage />} />
+            <Route
+              path={routes.passwordRecovery}
+              element={<RecoverPasswordPage />}
+            />
+            <Route
+              path={`${routes.passwordRecovery}/:id`}
+              element={<ChangePasswordPage />}
+            />
 
-              {/* Admin Routes */}
-              <Route path='/dashboard' element={<AdminLayout />}>
-                <Route path='posts' element={<PostsListPage />} />
-                <Route path='posts/add' element={<MutatePostPage />} />
-                <Route path='posts/:id' element={<MutatePostPage />} />
-                <Route path='games' element={<GamesListPage />} />
-                <Route path='games/add' element={<MutateGamePage />} />
-                <Route path='games/:id' element={<MutateGamePage />} />
-                <Route path='categories' element={<CategoriesPage />} />
-                <Route path='tags' element={<TagsListPage />} />
-                <Route path='tags/add' element={<AddTagPage />} />
-                <Route path='tags/:id' element={<AddTagPage />} />
-              </Route>
-            </Routes>
-            <NotificationProvider />
-          </>
-        </Suspense>
-      </ThemeProvider>
-    </QueryClientProvider>
+            {/* Admin Routes */}
+            <Route path='/dashboard' element={<AdminLayout />}>
+              <Route
+                path={routes.dashboard.posts.index}
+                element={<PostsListPage />}
+              />
+              <Route
+                path={routes.dashboard.posts.add}
+                element={<MutatePostPage />}
+              />
+              <Route
+                path={routes.dashboard.posts.edit(':id')}
+                element={<MutatePostPage />}
+              />
+              <Route
+                path={routes.dashboard.games.index}
+                element={<GamesListPage />}
+              />
+              <Route
+                path={routes.dashboard.games.add}
+                element={<MutateGamePage />}
+              />
+              <Route
+                path={routes.dashboard.games.edit(':id')}
+                element={<MutateGamePage />}
+              />
+              <Route
+                path={routes.dashboard.categories.index}
+                element={<CategoriesPage />}
+              />
+              <Route
+                path={routes.dashboard.tags.index}
+                element={<TagsListPage />}
+              />
+              <Route
+                path={routes.dashboard.tags.add}
+                element={<MutateTagPage />}
+              />
+              <Route
+                path={routes.dashboard.tags.edit(':id')}
+                element={<MutateTagPage />}
+              />
+              <Route
+                path={routes.dashboard.users.index}
+                element={<UsersListPage />}
+              />
+              <Route
+                path={routes.dashboard.users.edit(':id')}
+                element={<UserDetailPage />}
+              />
+              <Route
+                path={routes.dashboard.comments}
+                element={<CommentsListPage />}
+              />
+            </Route>
+          </Routes>
+          <NotificationProvider />
+        </>
+      </Suspense>
+    </ThemeProvider>
   );
 }
 

@@ -29,7 +29,7 @@ const tagSchema = object({
 
 type FormSchema = Zod.infer<typeof tagSchema>;
 
-export default function AddTagPage() {
+export default function MutateTagPage() {
   // Context
   const { loading } = useLoadingStore();
 
@@ -69,7 +69,7 @@ export default function AddTagPage() {
   return (
     <div className='space-y-6 max-w-2xl'>
       <div className='flex items-center gap-4'>
-        <Link to='/dashboard/tags'>
+        <Link to={routes.dashboard.tags.index}>
           <Button disabled={disabled} variant='ghost' size='icon'>
             <ArrowLeft className='h-5 w-5' />
           </Button>
@@ -137,7 +137,7 @@ export default function AddTagPage() {
                 <Save className='h-4 w-4 mr-2' />
                 {isEditMode ? 'Update Tag' : 'Create Tag'}
               </Button>
-              <Link to='/dashboard/tags'>
+              <Link to={routes.dashboard.tags.index}>
                 <Button disabled={disabled} type='button' variant='outline'>
                   Cancel
                 </Button>
