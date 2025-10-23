@@ -1,5 +1,3 @@
-'use client';
-
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -33,37 +31,37 @@ import {
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
+import { useMemo } from 'react';
 
 // Types
-const gameSchema = object({
-  title: generateStringSchema('title', 3, 255),
-  slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  description: generateStringSchema('description', 10, 500),
-  releaseDate: generateStringSchema('release date'),
-  coverImage: generateFileSchema('cover image'),
-});
+const createGameSchema = () =>
+  object({
+    title: generateStringSchema('title', 3, 255),
+    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    description: generateStringSchema('description', 10, 500),
+    releaseDate: generateStringSchema('release date'),
+    coverImage: generateFileSchema('cover image'),
+  });
 
-type FormSchema = any; // Zod.infer<typeof gameSchema>;
+type FormSchema = Zod.infer<ReturnType<typeof createGameSchema>>;
 
 export default function MutateGamePage() {
   // Context
   const { loading } = useLoadingStore();
-
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Hooks
   const params = useParams();
   const isEditMode = 'id' in params;
+  const schema = useMemo(createGameSchema, [i18n.language]);
   const { control, handleSubmit, reset } = useForm<FormSchema>({
     mode: 'onTouched',
-    resolver: zodResolver(gameSchema),
+    resolver: zodResolver(schema),
   });
-
   const game = useGameQuery({
     enabled: isEditMode,
     onFetch: (doc) => reset({ ...doc }),
   });
-
   const createGame = useCreateGame({
     stayOnLoadingAfterSuccessMutate: true,
     redirectAfterSuccessTo: routes.dashboard.games.index,
@@ -101,7 +99,7 @@ export default function MutateGamePage() {
       <div className='flex items-center gap-4'>
         <Link to={routes.dashboard.games.index}>
           <Button disabled={disabled} variant='ghost' size='icon'>
-            <ArrowLeft className='h-5 w-5' />
+            <ArrowLeft className='h-5 w-5 rtl:rotate-180' />
           </Button>
         </Link>
         <div>
@@ -247,7 +245,7 @@ export default function MutateGamePage() {
                 type='submit'
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               >
-                <Save className='h-4 w-4 mr-2' />
+                <Save className='h-4 w-4 me-2' />
                 {isEditMode ? t('game.updateGame') : t('game.createGame')}
               </Button>
               <Link to={routes.dashboard.games.index}>

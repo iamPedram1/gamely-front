@@ -1,5 +1,3 @@
-'use client';
-
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -26,11 +24,10 @@ export default function CategoryPostsPage() {
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
-
       <main className='flex-1 container py-8'>
         <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6 rtl:flex-row-reverse'>
-            <ArrowLeft className='h-4 w-4 mr-2' />
+            <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
             {t('common.backToPosts')}
           </Button>
         </Link>
@@ -58,7 +55,6 @@ export default function CategoryPostsPage() {
           </div>
         )}
       </main>
-
       <Footer />
     </div>
   );

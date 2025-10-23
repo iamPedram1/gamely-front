@@ -1,6 +1,8 @@
 {
   "appName": "GameLy",
   "common": {
+    "fa": "Persian",
+    "en": "English",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -49,7 +51,8 @@
     "toggleTheme": "Toggle theme",
     "backToPosts": "Back to Posts",
     "inThisCategory": "in this category",
-    "noPostsInCategory": "No posts found in this category"
+    "noPostsInCategory": "No posts found in this category",
+    "replyToComment": "Reply to Comment"
   },
   "auth": {
     "login": "Sign In",
@@ -152,7 +155,8 @@
     "editUserDetails": "Edit User Details",
     "enterName": "Enter name",
     "enterEmail": "Enter email",
-    "userBio": "User bio"
+    "userBio": "User bio",
+    "unauthorized": "Unauthorized"
   },
   "comment": {
     "comment": "Comment",
@@ -191,6 +195,7 @@
     "readingTime": "Reading Time",
     "readingTimeMinutes": "Reading Time (Minutes)",
     "coverImageUrl": "Cover Image URL",
+    "selectTag": "Select Tag",
     "selectCategory": "Select category",
     "selectGame": "Select game",
     "abstract": "Abstract",
@@ -269,6 +274,27 @@
       "imageUrl": "https://example.com/image.jpg"
     }
   },
+  "fields": {
+    "name": "name",
+    "email": "email",
+    "password": "password",
+    "confirmPassword": "confirm password",
+    "title": "title",
+    "slug": "slug",
+    "parentId": "parent ID",
+    "comment": "comment",
+    "replyToId": "reply to ID",
+    "description": "description",
+    "releaseDate": "release date",
+    "abstract": "abstract",
+    "content": "content",
+    "category": "category",
+    "game": "game",
+    "readingTime": "reading time",
+    "bio": "bio",
+    "coverImage": "cover image",
+    "tags": "tags"
+  },
   "pagination": {
     "showing": "Showing",
     "to": "to",
@@ -280,7 +306,9 @@
     "myProfile": "My Profile",
     "manageAccount": "Manage your account information",
     "profileInformation": "Profile Information",
-    "updateProfile": "Update Profile"
+    "updateProfile": "Update Profile",
+    "avatarRecommendation": "Recommended: Square image, at least 200x200px",
+    "bioDescription": "Brief description for your profile. Maximum 500 characters."
   },
   "validation": {
     "required": "{{field}} is required",
@@ -297,5 +325,10 @@
     "maxItems": "{{field}} cannot contain more than {{max}} item(s)",
     "uploadFile": "Please upload the {{field}}",
     "passwordMismatch": "Passwords don't match"
+  },
+  "multiSelect": {
+    "selectItems": "Select items...",
+    "noItemsFound": "No items found.",
+    "search": "Search..."
   }
 }

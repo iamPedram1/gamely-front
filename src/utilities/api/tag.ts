@@ -20,9 +20,12 @@ export const useTagsQuery = useAppQuery(
 
 export const useTagsSummariesQuery = useAppQuery(
   (context) =>
-    apiHandler.get<DataWithPagination<SummaryProps & { postsCount: number }>>(
+    apiHandler.get<(SummaryProps & { postsCount: number })[]>(
       '/tags/summaries',
-      { ...context, queryWhitelistKeyNames: ['page', 'limit', 'search'] }
+      {
+        ...context,
+        queryWhitelistKeyNames: ['page', 'limit', 'search'],
+      }
     ),
   [tagsQueryKey, 'summaries']
 );

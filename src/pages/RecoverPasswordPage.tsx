@@ -1,10 +1,10 @@
-'use client';
-
 import { object } from 'zod';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -20,27 +20,26 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 
-// Icon Components
-import { ArrowLeft, Mail } from 'lucide-react';
-
 // Custom Utilities
+import routes from '@/utilities/routes';
+import { createOnErrorHandler } from '@/utilities';
 import { generateEmailSchema } from '@/validations/common';
 import { usePasswordRecoveryMutation } from '@/utilities/api/auth';
-import { createOnErrorHandler } from '@/utilities';
-import routes from '@/utilities/routes';
 
-const recoverPasswordSchema = object({
-  email: generateEmailSchema(),
-});
+const createRecoverPasswordSchema = () =>
+  object({
+    email: generateEmailSchema(),
+  });
 
-type FormSchema = (typeof recoverPasswordSchema)['_type'];
+type FormSchema = Zod.infer<ReturnType<typeof createRecoverPasswordSchema>>;
 
 export default function RecoverPasswordPage() {
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(createRecoverPasswordSchema, [i18n.language]);
   const recoverPassword = usePasswordRecoveryMutation();
   const { control, handleSubmit } = useForm<FormSchema>({
-    resolver: zodResolver(recoverPasswordSchema),
+    resolver: zodResolver(schema),
   });
 
   // Utilities
@@ -52,7 +51,6 @@ export default function RecoverPasswordPage() {
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
-
       <main className='flex-1 container py-16 flex items-center justify-center'>
         <div className='w-full max-w-md'>
           <Link to={routes.login}>
@@ -61,7 +59,7 @@ export default function RecoverPasswordPage() {
               variant='ghost'
               className='mb-6'
             >
-              <ArrowLeft className='h-4 w-4 mr-2 rtl:rotate-180' />
+              <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
               {t('auth.backToLogin')}
             </Button>
           </Link>
@@ -139,7 +137,6 @@ export default function RecoverPasswordPage() {
           </Card>
         </div>
       </main>
-
       <Footer />
     </div>
   );

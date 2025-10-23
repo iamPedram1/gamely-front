@@ -1,6 +1,5 @@
-'use client';
-
 import { object } from 'zod';
+import { useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -38,18 +37,19 @@ interface MutateCategoryDialogProps {
   categoryId: string;
 }
 
-const categorySchema = object({
-  title: generateStringSchema('title', 3, 255),
-  parentId: generateStringSchema(
-    'parentId',
-    undefined,
-    undefined,
-    false
-  ).nullable(),
-  slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-});
+const createCategorySchema = () =>
+  object({
+    title: generateStringSchema('title', 3, 255),
+    parentId: generateStringSchema(
+      'parentId',
+      undefined,
+      undefined,
+      false
+    ).nullable(),
+    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  });
 
-type FormSchema = (typeof categorySchema)['_output'];
+type FormSchema = Zod.infer<ReturnType<typeof createCategorySchema>>;
 
 const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   // Props
@@ -59,24 +59,23 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   const isEditMode = Boolean(categoryId);
 
   // Translation
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Context
   const { loading } = useLoadingStore();
 
   // Custom Hooks
+  const schema = useMemo(createCategorySchema, [i18n.language]);
   const category = useCategoryQuery({
     initialParams: categoryId,
     enabled: Boolean(isEditMode && categoryId),
     onFetch: (doc) => reset(doc),
   });
-
   const { control, reset, handleSubmit } = useForm<FormSchema>({
     mode: 'onTouched',
-    resolver: zodResolver(categorySchema),
+    resolver: zodResolver(schema),
     defaultValues: category.data ? category.data : undefined,
   });
-
   const createCategory = useCreateCategory({
     onSuccess: onClose,
     autoAlert: { mode: 'add', name: 'Category' },

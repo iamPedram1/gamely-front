@@ -1,8 +1,6 @@
-'use client';
-
 import * as React from 'react';
+import dayjs from 'dayjs';
 import { Calendar as CalendarIcon } from 'lucide-react';
-
 import { cn } from '@/utilities/tailwind';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -11,8 +9,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import dayjs from 'dayjs';
 import { useUpdateEffect } from '@/hooks/utils';
+import { getDate } from '@/utilities';
+import { useTranslation } from 'react-i18next';
 
 interface DatePickerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'value '> {
@@ -37,6 +36,8 @@ export function DatePicker({
   );
 
   // Hooks
+  const { i18n } = useTranslation();
+
   useUpdateEffect(() => {
     setDate(
       typeof value === 'string' && Boolean(value)
@@ -68,9 +69,9 @@ export function DatePicker({
               'rtl:flex-row-reverse'
             )}
           >
-            <CalendarIcon className='mr-2 h-4 w-4' />
+            <CalendarIcon className='me-2 h-4 w-4' />
             {date ? (
-              dayjs(date).format('D MMMM, YYYY')
+              getDate(date.toISOString(), i18n.language)
             ) : (
               <span>Pick a date</span>
             )}

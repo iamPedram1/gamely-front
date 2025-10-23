@@ -40,7 +40,7 @@ export default function HomePage() {
                   </span>
                 </div>
 
-                <h1 className='text-5xl md:text-7xl font-black leading-tight'>
+                <h1 className='text-5xl flex flex-col rtl:flex-col-reverse md:text-7xl font-black leading-tight'>
                   {t('home.levelUpYour')}
                   <span className='block gradient-gaming-text text-glow'>
                     {t('home.gamingExperience')}
@@ -55,10 +55,10 @@ export default function HomePage() {
                   <Link to={routes.posts.index}>
                     <Button
                       size='lg'
-                      className='gradient-gaming font-bold uppercase tracking-wide glow-effect hover:glow-effect-strong text-lg px-8 py-6'
+                      className='gradient-gaming flex font-bold uppercase tracking-wide glow-effect hover:glow-effect-strong text-lg px-8 py-6'
                     >
                       {t('home.exploreNews')}
-                      <ArrowRight className='ml-2 h-5 w-5 rtl:rotate-180' />
+                      <ArrowRight className='ms-2 h-5 w-5 rtl:rotate-180' />
                     </Button>
                   </Link>
                   <Link to={routes.games.index}>
@@ -143,7 +143,7 @@ export default function HomePage() {
               <Link to='/games'>
                 <Button variant='ghost' className='group'>
                   {t('common.viewAll')}
-                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
+                  <ArrowRight className='ms-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
                 </Button>
               </Link>
             </div>
@@ -193,7 +193,7 @@ export default function HomePage() {
               <Link to='/posts'>
                 <Button variant='ghost' className='group'>
                   {t('common.viewAll')}
-                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
+                  <ArrowRight className='ms-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
                 </Button>
               </Link>
             </div>

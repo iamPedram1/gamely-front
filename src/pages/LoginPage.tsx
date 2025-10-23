@@ -1,11 +1,8 @@
-'use client';
-
 import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type Zod from 'zod';
 
 // Custom Hooks
 import useAuth from '@/hooks/useAuth';
@@ -35,31 +32,41 @@ import {
   generateEmailSchema,
   generateStringSchema,
 } from '@/validations/common';
+import { useMemo } from 'react';
+import { t } from 'i18next';
 
-const registerFormSchema = object({
-  email: generateEmailSchema(),
-  name: generateStringSchema('name'),
-  password: generateStringSchema('password', 8, 255),
-  confirmPassword: generateStringSchema('confirm password'),
-});
-const loginFormSchema = object({
-  email: generateEmailSchema(),
-  password: generateStringSchema('password', 8, 255),
-});
+type LoginFormProps = Zod.infer<ReturnType<typeof createLoginFormSchema>>;
+type RegisterFormProps = Zod.infer<ReturnType<typeof createRegisterFormSchema>>;
 
-type LoginFormProps = Zod.infer<typeof loginFormSchema>;
-type RegisterFormProps = Zod.infer<typeof registerFormSchema>;
+const createRegisterFormSchema = () =>
+  object({
+    email: generateEmailSchema(),
+    name: generateStringSchema('name'),
+    password: generateStringSchema('password', 8, 255),
+    confirmPassword: generateStringSchema('confirmPassword'),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('validation.passwordMismatch'),
+    path: ['confirmPassword'],
+  });
+
+const createLoginFormSchema = () =>
+  object({
+    email: generateEmailSchema(),
+    password: generateStringSchema('password', 8, 255),
+  });
 
 export default function LoginPage() {
   // Custom Hooks
-  const { loading } = useLoadingStore();
   const { signin } = useAuth();
-  const { t } = useTranslation();
+  const { loading } = useLoadingStore();
+  const { t, i18n } = useTranslation();
+  const loginSchema = useMemo(createLoginFormSchema, [i18n.language]);
+  const registerSchema = useMemo(createRegisterFormSchema, [i18n.language]);
   const loginForm = useForm<LoginFormProps>({
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(loginSchema),
   });
   const registerForm = useForm<RegisterFormProps>({
-    resolver: zodResolver(registerFormSchema),
+    resolver: zodResolver(registerSchema),
   });
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
@@ -93,8 +100,12 @@ export default function LoginPage() {
         <div className='w-full max-w-md'>
           <Tabs defaultValue='login' className='w-full'>
             <TabsList className='grid w-full grid-cols-2'>
-              <TabsTrigger value='login'>{t('auth.login')}</TabsTrigger>
-              <TabsTrigger value='register'>{t('auth.register')}</TabsTrigger>
+              <TabsTrigger disabled={loading} value='login'>
+                {t('auth.login')}
+              </TabsTrigger>
+              <TabsTrigger disabled={loading} value='register'>
+                {t('auth.register')}
+              </TabsTrigger>
             </TabsList>
             <TabsContent value='login'>
               <Card>

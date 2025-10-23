@@ -1,4 +1,3 @@
-'use client';
 import type { QueryFunction } from '@tanstack/react-query';
 
 // Custom Hooks

@@ -1,4 +1,3 @@
-'use client';
 import { MutationFunction } from '@tanstack/react-query';
 
 // Custom Hooks

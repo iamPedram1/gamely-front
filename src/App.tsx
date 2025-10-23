@@ -43,90 +43,88 @@ function App() {
           </div>
         }
       >
-        <>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path={routes.posts.index} element={<PostListPage />} />
-            <Route
-              path={routes.posts.details(':id')}
-              element={<PostDetailPage />}
-            />
-            <Route path={routes.games.index} element={<GameListPage />} />
-            <Route path={routes.tags.index} element={<TagListPage />} />
-            <Route
-              path={routes.categories.details(':id')}
-              element={<CategoryPostsPage />}
-            />
-            <Route path={routes.login} element={<LoginPage />} />
-            <Route path={routes.profile.index} element={<ProfilePage />} />
-            <Route
-              path={routes.passwordRecovery}
-              element={<RecoverPasswordPage />}
-            />
-            <Route
-              path={`${routes.passwordRecovery}/:id`}
-              element={<ChangePasswordPage />}
-            />
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path={routes.posts.index} element={<PostListPage />} />
+          <Route
+            path={routes.posts.details(':id')}
+            element={<PostDetailPage />}
+          />
+          <Route path={routes.games.index} element={<GameListPage />} />
+          <Route path={routes.tags.index} element={<TagListPage />} />
+          <Route
+            path={routes.categories.details(':id')}
+            element={<CategoryPostsPage />}
+          />
+          <Route path={routes.login} element={<LoginPage />} />
+          <Route path={routes.profile.index} element={<ProfilePage />} />
+          <Route
+            path={routes.passwordRecovery}
+            element={<RecoverPasswordPage />}
+          />
+          <Route
+            path={`${routes.passwordRecovery}/:id`}
+            element={<ChangePasswordPage />}
+          />
 
-            {/* Admin Routes */}
-            <Route path='/dashboard' element={<AdminLayout />}>
-              <Route
-                path={routes.dashboard.posts.index}
-                element={<PostsListPage />}
-              />
-              <Route
-                path={routes.dashboard.posts.add}
-                element={<MutatePostPage />}
-              />
-              <Route
-                path={routes.dashboard.posts.edit(':id')}
-                element={<MutatePostPage />}
-              />
-              <Route
-                path={routes.dashboard.games.index}
-                element={<GamesListPage />}
-              />
-              <Route
-                path={routes.dashboard.games.add}
-                element={<MutateGamePage />}
-              />
-              <Route
-                path={routes.dashboard.games.edit(':id')}
-                element={<MutateGamePage />}
-              />
-              <Route
-                path={routes.dashboard.categories.index}
-                element={<CategoriesPage />}
-              />
-              <Route
-                path={routes.dashboard.tags.index}
-                element={<TagsListPage />}
-              />
-              <Route
-                path={routes.dashboard.tags.add}
-                element={<MutateTagPage />}
-              />
-              <Route
-                path={routes.dashboard.tags.edit(':id')}
-                element={<MutateTagPage />}
-              />
-              <Route
-                path={routes.dashboard.users.index}
-                element={<UsersListPage />}
-              />
-              <Route
-                path={routes.dashboard.users.edit(':id')}
-                element={<UserDetailPage />}
-              />
-              <Route
-                path={routes.dashboard.comments}
-                element={<CommentsListPage />}
-              />
-            </Route>
-          </Routes>
-          <NotificationProvider />
-        </>
+          {/* Admin Routes */}
+          <Route path='/dashboard' element={<AdminLayout />}>
+            <Route
+              path={routes.dashboard.posts.index}
+              element={<PostsListPage />}
+            />
+            <Route
+              path={routes.dashboard.posts.add}
+              element={<MutatePostPage />}
+            />
+            <Route
+              path={routes.dashboard.posts.edit(':id')}
+              element={<MutatePostPage />}
+            />
+            <Route
+              path={routes.dashboard.games.index}
+              element={<GamesListPage />}
+            />
+            <Route
+              path={routes.dashboard.games.add}
+              element={<MutateGamePage />}
+            />
+            <Route
+              path={routes.dashboard.games.edit(':id')}
+              element={<MutateGamePage />}
+            />
+            <Route
+              path={routes.dashboard.categories.index}
+              element={<CategoriesPage />}
+            />
+            <Route
+              path={routes.dashboard.tags.index}
+              element={<TagsListPage />}
+            />
+            <Route
+              path={routes.dashboard.tags.add}
+              element={<MutateTagPage />}
+            />
+            <Route
+              path={routes.dashboard.tags.edit(':id')}
+              element={<MutateTagPage />}
+            />
+            <Route
+              path={routes.dashboard.users.index}
+              element={<UsersListPage />}
+            />
+            <Route
+              path={routes.dashboard.users.edit(':id')}
+              element={<UserDetailPage />}
+            />
+            <Route
+              path={routes.dashboard.comments}
+              element={<CommentsListPage />}
+            />
+          </Route>
+        </Routes>
       </Suspense>
+      <NotificationProvider />
     </ThemeProvider>
   );
 }

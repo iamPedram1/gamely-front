@@ -1,5 +1,3 @@
-'use client';
-import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -35,10 +33,12 @@ import useLoadingStore from '@/store/loading';
 import routes from '@/utilities/routes';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/category';
+import dayjs from 'dayjs';
+import { getDate } from '@/utilities';
 
 export default function PostsListPage() {
   // Context
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { loading } = useLoadingStore();
 
   // Hooks
@@ -66,7 +66,7 @@ export default function PostsListPage() {
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 mr-2' />
+            <Plus className='h-4 w-4 me-2' />
             {t('dashboard.addPost')}
           </Button>
         </Link>
@@ -118,7 +118,7 @@ export default function PostsListPage() {
                 <TableHead className='text-center'>
                   {t('post.publishedAt')}
                 </TableHead>
-                <TableHead className='text-right'>
+                <TableHead className='text-end'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -152,7 +152,7 @@ export default function PostsListPage() {
                     {post.author.name}
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>
-                    {dayjs(post.createdAt).format('MMMM D, YYYY')}
+                    {getDate(post.createdAt, i18n.language)}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>

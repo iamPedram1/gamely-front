@@ -53,7 +53,7 @@ export default function GamesListPage() {
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 mr-2' />
+            <Plus className='h-4 w-4 me-2' />
             {t('dashboard.addGame')}
           </Button>
         </Link>

@@ -16,7 +16,7 @@ export const useGamesQuery = useAppQuery(
 
 export const useGamesSummariesQuery = useAppQuery(
   () => apiHandler.get<SummaryProps[]>('/games/summaries'),
-  [gamesQueryKey]
+  [gamesQueryKey, 'summaries']
 );
 
 export const useGameQuery = makeUseFetchQuery(

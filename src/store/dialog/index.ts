@@ -1,4 +1,3 @@
-'use client';
 import useDialogStore from './slice';
 
 export * from './slice';

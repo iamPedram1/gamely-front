@@ -1,12 +1,11 @@
-'use client';
-
 import { object } from 'zod';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Save } from 'lucide-react';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -44,46 +43,60 @@ import {
   generateStringSchema,
   generateStringArraySchema,
 } from '@/validations/common';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { supportedLanguages } from '@/utilities/helperPack';
 
-const postSchema = object({
-  title: generateStringSchema('title', 3, 255),
-  abstract: generateStringSchema('abstract', 1, 150),
-  slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-  content: generateStringSchema('content', 1),
-  category: generateStringSchema('category'),
-  game: generateStringSchema('game'),
-  tags: generateStringArraySchema('tags'),
-  readingTime: generateNumberSchema('reading time', 1),
-  coverImage: generateFileSchema('cover image'),
-});
+const createPostSchema = () =>
+  object({
+    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    category: generateStringSchema('category'),
+    game: generateStringSchema('game'),
+    tags: generateStringArraySchema('tags'),
+    translations: object({
+      en: object({
+        title: generateStringSchema('title', 3, 255),
+        abstract: generateStringSchema('abstract', 1, 150),
+        content: generateStringSchema('content', 1),
+      }),
+      fa: object({
+        title: generateStringSchema('title', 3, 255),
+        abstract: generateStringSchema('abstract', 1, 150),
+        content: generateStringSchema('content', 1),
+      }),
+    }),
+    readingTime: generateNumberSchema('reading time', 1),
+    coverImage: generateFileSchema('cover image'),
+  });
 
-type FormSchema = (typeof postSchema)['_type'];
+type FormSchema = Zod.infer<ReturnType<typeof createPostSchema>>;
 
 export default function MutatePostPage() {
   // Context
   const { loading } = useLoadingStore();
+  const { t, i18n } = useTranslation();
 
   // Hooks
-  const { t } = useTranslation();
   const params = useParams();
   const isEditMode = 'id' in params;
-  const { control, handleSubmit, reset } = useForm<FormSchema>({
-    mode: 'onTouched',
-    resolver: zodResolver(postSchema),
-  });
   const tags = useTagsSummariesQuery();
   const games = useGamesSummariesQuery();
   const categories = useCategoriesSummariesQuery();
+  const schema = useMemo(createPostSchema, [i18n.language]);
+  const { control, handleSubmit, reset } = useForm<FormSchema>({
+    mode: 'onTouched',
+    resolver: zodResolver(schema),
+  });
+  console.log(tags.data);
 
   const post = usePostQuery({
-    initialParams: params.id,
+    initialParams: params?.id,
     enabled: isEditMode,
     onFetch: (doc) =>
       reset({
         ...doc,
         game: doc.game?.id || undefined,
-        category: doc.category.id,
-        tags: doc.tags.map((tag) => tag.id),
+        category: doc?.category?.id,
+        tags: doc?.tags?.map?.((tag) => tag.id),
       }),
   });
 
@@ -123,7 +136,7 @@ export default function MutatePostPage() {
       <div className='flex items-center gap-4'>
         <Link to={routes.dashboard.posts.index}>
           <Button variant='ghost' size='icon'>
-            <ArrowLeft className='h-5 w-5' />
+            <ArrowLeft className='h-5 w-5 rtl:rotate-180' />
           </Button>
         </Link>
         <div>
@@ -145,23 +158,28 @@ export default function MutatePostPage() {
             <CardTitle>{t('dashboard.postDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
-            <div className='space-y-2'>
-              <Label htmlFor='title'>
-                {t('post.title')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='title'
-                render={({ field }) => (
-                  <Input
-                    id='title'
-                    placeholder={t('post.enterPostTitle')}
-                    required
-                    {...field}
+            <div className='grid grid-cols-2 gap-4'>
+              {supportedLanguages.map((lng) => (
+                <div className='space-y-2'>
+                  <Label htmlFor={`${lng}-title`}>
+                    {t('post.title')} {`(${t(`common.${lng}`)}) `}
+                    {t('form.required')}
+                  </Label>
+                  <Controller
+                    defaultValue=''
+                    control={control}
+                    name={`translations.${lng}.title`}
+                    render={({ field }) => (
+                      <Input
+                        id={`${lng}-title`}
+                        placeholder={t('post.enterPostTitle')}
+                        required
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
+                </div>
+              ))}
             </div>
 
             <div className='grid grid-cols-2 gap-4'>
@@ -277,6 +295,27 @@ export default function MutatePostPage() {
                   )}
                 />
               </div>
+              <Controller
+                defaultValue={[]}
+                control={control}
+                name='tags'
+                render={({ field }) => (
+                  <div className='space-y-2'>
+                    <Label htmlFor='tag'>
+                      {t('common.tags')} {t('form.required')}
+                    </Label>
+                    <MultiSelect
+                      placeholder={t('post.selectTag')}
+                      selected={field.value}
+                      onChange={field.onChange}
+                      options={tags?.data?.map?.((tag) => ({
+                        label: tag.title,
+                        value: tag.id,
+                      }))}
+                    />
+                  </div>
+                )}
+              />
               <div className='space-y-2'>
                 <Label htmlFor='game'>
                   {t('post.game')} {t('form.required')}
@@ -305,48 +344,57 @@ export default function MutatePostPage() {
                 />
               </div>
             </div>
-            <div className='space-y-2'>
-              <Label htmlFor='excerpt'>
-                {t('post.abstract')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='abstract'
-                render={({ field }) => (
-                  <Textarea
-                    id='abstract'
-                    placeholder={t('post.briefDescription')}
-                    rows={3}
-                    {...field}
+            <div className='grid grid-cols-2 gap-4'>
+              {supportedLanguages.map((lng) => (
+                <div className='space-y-2'>
+                  <Label htmlFor={`${lng}-abstract`}>
+                    {t('post.abstract')} {`(${t(`common.${lng}`)}) `}
+                    {t('form.required')}
+                  </Label>
+                  <Controller
+                    defaultValue=''
+                    control={control}
+                    name={`translations.${lng}.abstract`}
+                    render={({ field }) => (
+                      <Textarea
+                        id={`${lng}-abstract`}
+                        placeholder={t('post.briefDescription')}
+                        rows={3}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-            <div className='space-y-2'>
-              <Label htmlFor='content'>
-                {t('post.content')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='content'
-                render={({ field }) => (
-                  <Textarea
-                    id='content'
-                    placeholder={t('post.writeContent')}
-                    rows={12}
-                    {...field}
+                </div>
+              ))}
+              {supportedLanguages.map((lng) => (
+                <div className='space-y-2'>
+                  <Label htmlFor={`${lng}-content`}>
+                    {t('post.content')} {`(${t(`common.${lng}`)}) `}
+                    {t('form.required')}
+                  </Label>
+                  <Controller
+                    defaultValue=''
+                    control={control}
+                    name={`translations.${lng}.content`}
+                    render={({ field }) => (
+                      <Textarea
+                        id={`${lng}-content`}
+                        placeholder={t('post.writeContent')}
+                        rows={12}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
+                </div>
+              ))}
             </div>
+
             <div className='flex gap-4 pt-4'>
               <Button
                 type='submit'
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
               >
-                <Save className='h-4 w-4 mr-2' />
+                <Save className='h-4 w-4 ms-2' />
                 {isEditMode ? t('post.updatePost') : t('post.createPost')}
               </Button>
               <Link to={routes.dashboard.posts.index}>

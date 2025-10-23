@@ -101,24 +101,24 @@ export default function Footer() {
 
           <div className='space-y-4'>
             <h4 className='font-bold text-lg uppercase tracking-wide'>
-              {t('nav.followUs')}
+              {t('nav.followUs')} ❤️
             </h4>
             <div className='flex gap-3'>
               <a
                 href='#'
-                className='p-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all hover:scale-110 glow-effect'
+                className='p-3 rounded-lg bg-primary/20 hover:bg-primary/35 text-primary transition-all hover:scale-110 glow-effect'
               >
                 <Twitter className='h-5 w-5' />
               </a>
               <a
                 href='#'
-                className='p-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all hover:scale-110 glow-effect'
+                className='p-3 rounded-lg bg-primary/20 hover:bg-primary/35 text-primary transition-all hover:scale-110 glow-effect'
               >
                 <Youtube className='h-5 w-5' />
               </a>
               <a
                 href='#'
-                className='p-3 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-all hover:scale-110 glow-effect'
+                className='p-3 rounded-lg bg-primary/20 hover:bg-primary/35 text-primary transition-all hover:scale-110 glow-effect'
               >
                 <Github className='h-5 w-5' />
               </a>
@@ -132,7 +132,7 @@ export default function Footer() {
             <span className='gradient-gaming-text font-semibold'>
               {t('appName')}
             </span>
-            . {t('footer.allRightsReserved')}
+            {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

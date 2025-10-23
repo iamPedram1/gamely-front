@@ -1,4 +1,3 @@
-'use client';
 import { DependencyList, useEffect } from 'react';
 import useTimeoutFn from './useTimeoutFn';
 

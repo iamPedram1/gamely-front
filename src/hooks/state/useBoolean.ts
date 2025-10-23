@@ -1,4 +1,3 @@
-'use client';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
 export interface UseBooleanReturnProps {

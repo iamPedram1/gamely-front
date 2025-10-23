@@ -397,3 +397,5 @@ export const toSafeNumber = (v: any) => {
 
   return Number.isFinite(n) ? n : 0;
 };
+
+export const supportedLanguages = ['fa', 'en'] as const;

@@ -1,4 +1,3 @@
-'use client';
 import { useCallback, useLayoutEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';

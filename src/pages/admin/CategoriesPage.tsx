@@ -1,5 +1,3 @@
-'use client';
-
 import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
@@ -63,7 +61,7 @@ export default function CategoriesPage() {
           onClick={isMutateDialogOpen.setTrue}
           className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
         >
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className='h-4 w-4 me-2' />
           {t('dashboard.addCategory')}
         </Button>
       </div>

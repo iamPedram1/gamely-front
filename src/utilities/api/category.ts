@@ -16,7 +16,7 @@ export const useCategoriesQuery = useAppQuery(
 
 export const useCategoriesSummariesQuery = useAppQuery(
   () => apiHandler.get<SummaryProps[]>('/categories/summaries'),
-  [categoriesQueryKey]
+  [categoriesQueryKey, 'summaries']
 );
 
 export const useCategoryQuery = makeUseFetchQuery(

@@ -1,4 +1,3 @@
-'use client';
 import { SeverityType } from '@/store/alert';
 import useDialogStore, { DialogSlice, SubmitHandler } from './slice';
 

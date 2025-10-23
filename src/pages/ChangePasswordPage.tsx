@@ -1,8 +1,8 @@
-'use client';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -28,16 +28,16 @@ import { generatePasswordConfirmSchema } from '@/validations/common';
 import { usePasswordChangeMutation } from '@/utilities/api/auth';
 
 // Types
-const resetPasswordSchema = generatePasswordConfirmSchema();
 
-type FormSchema = Zod.infer<typeof resetPasswordSchema>;
+type FormSchema = Zod.infer<ReturnType<typeof generatePasswordConfirmSchema>>;
 
 export default function ChangePasswordPage() {
   // Hooks
   const params = useParams();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(generatePasswordConfirmSchema, [i18n.language]);
   const { control, handleSubmit } = useForm<FormSchema>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(schema),
   });
   const changePassword = usePasswordChangeMutation({
     redirectMethod: 'replace',
@@ -61,7 +61,7 @@ export default function ChangePasswordPage() {
               variant='ghost'
               className='mb-6'
             >
-              <ArrowLeft className='h-4 w-4 mr-2 rtl:rotate-180' />
+              <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
               {t('auth.backToLogin')}
             </Button>
           </Link>

@@ -1,17 +1,16 @@
 import { object } from 'zod';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useParams } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Components
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-// Icon Components
 
 // Context
 import useLoadingStore from '@/store/loading';
@@ -25,25 +24,26 @@ import {
   generateStringSchema,
 } from '@/validations/common';
 
-const tagSchema = object({
-  title: generateStringSchema('title', 3, 255, true),
-  slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-});
+const createTagSchema = () =>
+  object({
+    title: generateStringSchema('title', 3, 255, true),
+    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  });
 
-type FormSchema = Zod.infer<typeof tagSchema>;
+type FormSchema = Zod.infer<ReturnType<typeof createTagSchema>>;
 
 export default function MutateTagPage() {
   // Context
+  const { t, i18n } = useTranslation();
   const { loading } = useLoadingStore();
-
-  const { t } = useTranslation();
 
   // Hooks
   const params = useParams();
   const isEditMode = 'id' in params;
+  const schema = useMemo(createTagSchema, [i18n.language]);
   const { control, handleSubmit, reset } = useForm<FormSchema>({
     mode: 'onTouched',
-    resolver: zodResolver(tagSchema),
+    resolver: zodResolver(schema),
   });
 
   const tag = useTagQuery({
@@ -76,7 +76,7 @@ export default function MutateTagPage() {
       <div className='flex items-center gap-4'>
         <Link to={routes.dashboard.tags.index}>
           <Button disabled={disabled} variant='ghost' size='icon'>
-            <ArrowLeft className='h-5 w-5' />
+            <ArrowLeft className='h-5 w-5 rtl:rotate-180' />
           </Button>
         </Link>
         <div>
@@ -141,7 +141,7 @@ export default function MutateTagPage() {
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
                 disabled={disabled}
               >
-                <Save className='h-4 w-4 mr-2' />
+                <Save className='h-4 w-4 me-2' />
                 {isEditMode ? t('tag.updateTag') : t('tag.createTag')}
               </Button>
               <Link to={routes.dashboard.tags.index}>

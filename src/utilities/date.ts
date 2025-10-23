@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import jalaliday from 'jalaliday/dayjs';
+dayjs.extend(jalaliday);
 
 /**
  * Returns a date that is a month later than the current date, rounded to 2 PM.
@@ -133,3 +135,10 @@ export function minutesLeftToTarget(targetTime: string): number {
 
   return target.diff(now, 'minutes');
 }
+
+export const getDate = (date: string, locale: string, format?: string) => {
+  return dayjs(date)
+    .locale(locale)
+    .calendar(locale === 'fa' ? 'jalali' : 'gregory')
+    .format(format ? format : locale === 'fa' ? 'D MMM YYYY' : 'MMMM D, YYYY');
+};

@@ -1,4 +1,3 @@
-'use client';
 import { useEffectOnce } from '.';
 
 export const useMount = (fn: () => void) => {

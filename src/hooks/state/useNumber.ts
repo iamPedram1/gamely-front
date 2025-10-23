@@ -1,4 +1,3 @@
-'use client';
 import { useState, Dispatch, SetStateAction, useCallback } from 'react';
 
 /**

@@ -138,3 +138,7 @@
     background-clip: text;
   }
 }
+
+[dir] .text-center {
+  text-align: center !important;
+}

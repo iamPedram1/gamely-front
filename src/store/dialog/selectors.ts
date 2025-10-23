@@ -1,4 +1,3 @@
-'use client';
 import { useStore } from 'zustand';
 import useDialogStore, { SubmitHandler } from './slice';
 

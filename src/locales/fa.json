@@ -1,6 +1,8 @@
 {
-  "appName": "گیم‌لی",
+  "appName": "گیم‌لی ",
   "common": {
+    "fa": "فارسی",
+    "en": "انگلیسی",
     "name": "نام",
     "slug": "اسلاگ",
     "game": "بازی",
@@ -49,7 +51,8 @@
     "toggleTheme": "تغییر تم",
     "backToPosts": "بازگشت به مقالات",
     "inThisCategory": "در این دسته‌بندی",
-    "noPostsInCategory": "هیچ مقاله‌ای در این دسته‌بندی یافت نشد"
+    "noPostsInCategory": "هیچ مقاله‌ای در این دسته‌بندی یافت نشد",
+    "replyToComment": "پاسخ به نظر"
   },
   "auth": {
     "login": "ورود",
@@ -151,7 +154,8 @@
     "editUserDetails": "ویرایش جزئیات کاربر",
     "enterName": "نام را وارد کنید",
     "enterEmail": "ایمیل را وارد کنید",
-    "userBio": "بیوگرافی کاربر"
+    "userBio": "بیوگرافی کاربر",
+    "unauthorized": "غیرمجاز"
   },
   "comment": {
     "comment": "نظر",
@@ -191,6 +195,7 @@
     "readingTimeMinutes": "زمان مطالعه (دقیقه)",
     "coverImageUrl": "آدرس تصویر کاور",
     "selectCategory": "انتخاب دسته‌بندی",
+    "selectTag": "انتخاب برچسب",
     "selectGame": "انتخاب بازی",
     "abstract": "خلاصه",
     "briefDescription": "توضیح مختصر مقاله",
@@ -268,6 +273,27 @@
       "imageUrl": "https://example.com/image.jpg"
     }
   },
+  "fields": {
+    "name": "نام",
+    "email": "ایمیل",
+    "password": "رمز عبور",
+    "confirmPassword": "تایید رمز عبور",
+    "title": "عنوان",
+    "slug": "اسلاگ",
+    "parentId": "شناسه والد",
+    "comment": "نظر",
+    "replyToId": "پاسخ به شناسه",
+    "description": "توضیحات",
+    "releaseDate": "تاریخ انتشار",
+    "abstract": "خلاصه",
+    "content": "محتوا",
+    "category": "دسته‌بندی",
+    "game": "بازی",
+    "readingTime": "زمان مطالعه",
+    "bio": "بیوگرافی",
+    "coverImage": "تصویر کاور",
+    "tags": "برچسب‌ها"
+  },
   "pagination": {
     "showing": "نمایش",
     "to": "تا",
@@ -279,7 +305,9 @@
     "myProfile": "پروفایل من",
     "manageAccount": "مدیریت اطلاعات حساب کاربری",
     "profileInformation": "اطلاعات پروفایل",
-    "updateProfile": "به‌روزرسانی پروفایل"
+    "updateProfile": "به‌روزرسانی پروفایل",
+    "avatarRecommendation": "توصیه می‌شود: تصویر مربعی، حداقل 200x200 پیکسل",
+    "bioDescription": "توضیح مختصر برای پروفایل شما. حداکثر 500 کاراکتر."
   },
   "validation": {
     "required": "{{field}} الزامی است",
@@ -295,6 +323,11 @@
     "minItems": "{{field}} باید حداقل {{min}} مورد داشته باشد",
     "maxItems": "{{field}} نمی‌تواند بیشتر از {{max}} مورد داشته باشد",
     "uploadFile": "لطفا {{field}} را آپلود کنید",
-    "passwordMismatch": "رمزهای عبور مطابقت ندارند"
+    "passwordMismatch": "کلمه عبور و تکرار کلمه عبور مطابقت ندارد"
+  },
+  "multiSelect": {
+    "selectItems": "انتخاب موارد...",
+    "noItemsFound": "موردی یافت نشد.",
+    "search": "جستجو..."
   }
 }
