@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -7,10 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-// Utilities
+// Custom Utilities
 import { useTagsQuery } from '@/utilities/api/tag';
 
 export default function TagListPage() {
+  const { t } = useTranslation();
   const tags = useTagsQuery();
 
   return (
@@ -19,8 +21,8 @@ export default function TagListPage() {
 
       <main className='flex-1 container py-8'>
         <div className='mb-8'>
-          <h1 className='text-4xl font-bold mb-2'>Tags</h1>
-          <p className='text-muted-foreground'>Browse posts by tags</p>
+          <h1 className='text-4xl font-bold mb-2'>{t('common.tags')}</h1>
+          <p className='text-muted-foreground'>{t('tag.browseByTags')}</p>
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
@@ -36,7 +38,10 @@ export default function TagListPage() {
                   </CardHeader>
                   <CardContent>
                     <p className='text-sm text-muted-foreground'>
-                      {tag.postsCount} {tag.postsCount === 1 ? 'post' : 'posts'}
+                      {tag.postsCount}{' '}
+                      {tag.postsCount === 1
+                        ? t('common.post')
+                        : t('common.posts')}
                     </p>
                   </CardContent>
                 </Card>

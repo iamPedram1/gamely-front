@@ -3,8 +3,8 @@
 import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Mail } from 'lucide-react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -20,11 +20,13 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 
-// Utilities
+// Icon Components
+import { ArrowLeft, Mail } from 'lucide-react';
+
+// Custom Utilities
 import { generateEmailSchema } from '@/validations/common';
 import { usePasswordRecoveryMutation } from '@/utilities/api/auth';
 import { createOnErrorHandler } from '@/utilities';
-import { zodResolver } from '@hookform/resolvers/zod';
 import routes from '@/utilities/routes';
 
 const recoverPasswordSchema = object({
@@ -59,7 +61,7 @@ export default function RecoverPasswordPage() {
               variant='ghost'
               className='mb-6'
             >
-              <ArrowLeft className='h-4 w-4 mr-2' />
+              <ArrowLeft className='h-4 w-4 mr-2 rtl:rotate-180' />
               {t('auth.backToLogin')}
             </Button>
           </Link>
@@ -70,7 +72,9 @@ export default function RecoverPasswordPage() {
                   {t('auth.passwordRecovery')}
                 </span>
               </CardTitle>
-              <CardDescription>{t('auth.enterEmail')}</CardDescription>
+              <CardDescription>
+                {t('auth.enterEmailForRecovery')}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {recoverPassword.status !== 'success' ? (
@@ -79,7 +83,7 @@ export default function RecoverPasswordPage() {
                   className='space-y-6'
                 >
                   <div className='space-y-2'>
-                    <Label htmlFor='email'>{t('auth.email')} *</Label>
+                    <Label htmlFor='email'>{t('common.email')} *</Label>
                     <div className='relative'>
                       <Mail className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                       <Controller
@@ -89,7 +93,7 @@ export default function RecoverPasswordPage() {
                           <Input
                             id='email'
                             type='email'
-                            placeholder='your@email.com'
+                            placeholder={t('auth.emailPlaceholder')}
                             className='pl-10'
                             disabled={recoverPassword.isPending}
                             {...field}
@@ -116,7 +120,7 @@ export default function RecoverPasswordPage() {
                       {t('auth.checkEmail')}
                     </h3>
                     <p className='text-sm text-muted-foreground'>
-                      We've sent a password reset link to{' '}
+                      {t('auth.resetLinkSent')}{' '}
                       <strong>{recoverPassword.variables.email}</strong>
                     </p>
                   </div>

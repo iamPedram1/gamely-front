@@ -1,13 +1,24 @@
+'use client';
+
 import { useParams, Link } from 'react-router-dom';
-import { mockPosts } from '@/data/mockData';
+import { useTranslation } from 'react-i18next';
+
+// Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
+
+// Icon Components
 import { ArrowLeft } from 'lucide-react';
+
+// Custom Utilities
 import routes from '@/utilities/routes';
+import { mockPosts } from '@/data/mockData';
 
 export default function CategoryPostsPage() {
+  // Hooks
+  const { t } = useTranslation();
   const { slug } = useParams();
   const posts = mockPosts.filter((post) => post.category.slug === slug);
   const categoryName = posts[0]?.category.title || slug;
@@ -18,24 +29,25 @@ export default function CategoryPostsPage() {
 
       <main className='flex-1 container py-8'>
         <Link to={routes.posts.index}>
-          <Button variant='ghost' className='mb-6'>
+          <Button variant='ghost' className='mb-6 rtl:flex-row-reverse'>
             <ArrowLeft className='h-4 w-4 mr-2' />
-            Back to Posts
+            {t('common.backToPosts')}
           </Button>
         </Link>
 
         <div className='mb-8'>
           <h1 className='text-4xl font-bold mb-2 capitalize'>{categoryName}</h1>
           <p className='text-muted-foreground'>
-            {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this
-            category
+            {posts.length}{' '}
+            {posts.length === 1 ? t('common.post') : t('common.posts')}{' '}
+            {t('common.inThisCategory')}
           </p>
         </div>
 
         {posts.length === 0 ? (
           <div className='text-center py-12'>
             <p className='text-muted-foreground'>
-              No posts found in this category.
+              {t('common.noPostsInCategory')}
             </p>
           </div>
         ) : (

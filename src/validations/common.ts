@@ -190,7 +190,6 @@ export const generateEmailSchema = (required = true) => {
     required_error: t('required', { field: 'email' }),
     invalid_type_error: t('invalidString', { field: 'email' }),
   }).email(t('invalidEmail'));
-  console.log(t('invalidEmail'));
 
   return required ? schema : schema.optional();
 };

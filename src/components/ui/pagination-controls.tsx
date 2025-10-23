@@ -1,3 +1,14 @@
+'use client';
+import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
+
+// Components
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -6,20 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PaginationProps } from '@/utilities/pagination';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import type { PaginationProps } from '@/utilities/pagination';
 
 interface PaginationControlsProps {
   pagination: PaginationProps;
 }
 
 function PaginationControls({ pagination }: PaginationControlsProps) {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page') ?? 1);
   const pageSize = Number(searchParams.get('limit') ?? 20);
@@ -42,10 +47,13 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
     <div className='mt-8 flex items-center justify-center flex-wrap gap-5 px-2 lg:justify-between'>
       <div className='flex items-center gap-4'>
         <p className='text-sm text-muted-foreground'>
-          Showing {startItem} to {endItem} of {pagination.totalDocs} results
+          {t('pagination.showing')} {startItem} {t('pagination.to')} {endItem}{' '}
+          {t('pagination.of')} {pagination.totalDocs} {t('pagination.results')}
         </p>
         <div className='flex items-center gap-2'>
-          <span className='text-sm text-muted-foreground'>Items per page:</span>
+          <span className='text-sm text-muted-foreground'>
+            {t('pagination.itemsPerPage')}:
+          </span>
           <Select value={pageSize.toString()} onValueChange={handleSizeChange}>
             <SelectTrigger className='w-20'>
               <SelectValue />
@@ -71,7 +79,7 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           onClick={() => handlePageChange(1)}
           disabled={currentPage === 1}
         >
-          <ChevronsLeft className='h-4 w-4' />
+          <ChevronsLeft className='h-4 w-4 rtl:rotate-180' />
         </Button>
         <Button
           variant='outline'
@@ -79,7 +87,7 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          <ChevronLeft className='h-4 w-4' />
+          <ChevronLeft className='h-4 w-4 rtl:rotate-180' />
         </Button>
 
         <div className='flex items-center gap-1'>
@@ -118,7 +126,7 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === pagination.totalPages}
         >
-          <ChevronRight className='h-4 w-4' />
+          <ChevronRight className='h-4 w-4 rtl:rotate-180' />
         </Button>
         <Button
           variant='outline'
@@ -126,7 +134,7 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           onClick={() => handlePageChange(pagination.totalPages)}
           disabled={currentPage === pagination.totalPages}
         >
-          <ChevronsRight className='h-4 w-4' />
+          <ChevronsRight className='h-4 w-4 rtl:rotate-180' />
         </Button>
       </div>
     </div>

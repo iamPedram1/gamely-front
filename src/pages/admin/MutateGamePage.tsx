@@ -2,11 +2,11 @@
 
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { object } from 'zod';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Save } from 'lucide-react';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -15,19 +15,19 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Context
+import useLoadingStore, { setLoadingState } from '@/store/loading';
+
+// Custom Utilities
+import routes from '@/utilities/routes';
+import { uploadFile } from '@/utilities/uploader';
+import { createOnErrorHandler } from '@/utilities';
 import {
   useCreateGame,
   useGameQuery,
   useUpdateGame,
 } from '@/utilities/api/game';
-
-// Context
-import useLoadingStore, { setLoadingState } from '@/store/loading';
-
-// Utilities
-import routes from '@/utilities/routes';
-import { uploadFile } from '@/utilities/uploader';
-import { createOnErrorHandler } from '@/utilities';
 import {
   generateFileSchema,
   generateRegexStringSchema,
@@ -35,7 +35,6 @@ import {
 } from '@/validations/common';
 
 // Types
-
 const gameSchema = object({
   title: generateStringSchema('title', 3, 255),
   slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),

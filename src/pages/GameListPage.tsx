@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
-import { Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -14,11 +14,15 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 
-// Utilities
+// Icon Components
+import { Calendar } from 'lucide-react';
+
+// Custom Utilities
 import { useGamesQuery } from '@/utilities/api/game';
 
 export default function GameListPage() {
   // Hooks
+  const { t } = useTranslation();
   const games = useGamesQuery();
 
   // Render
@@ -27,10 +31,8 @@ export default function GameListPage() {
       <Header />
       <main className='flex-1 container py-8'>
         <div className='mb-8'>
-          <h1 className='text-4xl font-bold mb-2'>Games</h1>
-          <p className='text-muted-foreground'>
-            Browse all games featured on our blog
-          </p>
+          <h1 className='text-4xl font-bold mb-2'>{t('common.games')}</h1>
+          <p className='text-muted-foreground'>{t('game.browseAllGames')}</p>
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -44,7 +46,7 @@ export default function GameListPage() {
                   {game.coverImage && (
                     <img
                       alt={game.title}
-                      src={game.coverImage.url}
+                      src={game.coverImage.url || '/placeholder.svg'}
                       className='w-full h-full object-cover hover:scale-105 transition-transform duration-300'
                     />
                   )}
@@ -67,7 +69,7 @@ export default function GameListPage() {
                 <div className='flex items-center gap-1 text-sm text-muted-foreground'>
                   <Calendar className='h-4 w-4' />
                   <span>
-                    {dayjs(game.releaseDate).format('YYYY/MM/DDD-HH:MM')}
+                    {dayjs(game.releaseDate).format('YYYY/MM/DD-HH:mm')}
                   </span>
                 </div>
                 <Link to={`/game/${game.slug}`}>
@@ -75,7 +77,7 @@ export default function GameListPage() {
                     variant='outline'
                     className='hover:bg-accent cursor-pointer'
                   >
-                    View Posts
+                    {t('game.viewPosts')}
                   </Badge>
                 </Link>
               </CardFooter>

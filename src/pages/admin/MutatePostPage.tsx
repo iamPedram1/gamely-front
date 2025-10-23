@@ -1,12 +1,12 @@
 'use client';
 
 import { object } from 'zod';
-import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Save } from 'lucide-react';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,7 @@ import {
 // Context
 import useLoadingStore, { setLoadingState } from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
 import { uploadFile } from '@/utilities/uploader';
 import { useTagsSummariesQuery } from '@/utilities/api/tag';
@@ -344,7 +344,7 @@ export default function MutatePostPage() {
             <div className='flex gap-4 pt-4'>
               <Button
                 type='submit'
-                className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+                className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
               >
                 <Save className='h-4 w-4 mr-2' />
                 {isEditMode ? t('post.updatePost') : t('post.createPost')}

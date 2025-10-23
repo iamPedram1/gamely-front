@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { Calendar, Clock } from "lucide-react"
+
+// Components
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Clock } from "lucide-react"
+
+// Types
 import type { PostProps } from "@/types/blog"
 
 interface PostCardProps {
@@ -11,8 +15,10 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post }: PostCardProps) {
+  // Custom Hooks
   const { t, i18n } = useTranslation()
 
+  // Custom Utilities
   const formatDate = (dateString: string) => {
     const locale = i18n.language === "fa" ? "fa-IR" : "en-US"
     return new Date(dateString).toLocaleDateString(locale, {
@@ -22,6 +28,7 @@ export default function PostCard({ post }: PostCardProps) {
     })
   }
 
+  // Render
   return (
     <Card className="flex flex-col overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group">
       {post.coverImage && (

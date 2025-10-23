@@ -1,7 +1,15 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+
+// Components
+import AdminLayout from '@/components/admin/AdminLayout';
+import NotificationProvider from '@/components/ui/notification';
+
+// Context
 import { ThemeProvider } from '@/contexts/ThemeContext';
+
+// Custom Utilities
+import routes from '@/utilities/routes';
 
 // Pages
 import HomePage from '@/pages/HomePage';
@@ -16,7 +24,6 @@ import TagsListPage from '@/pages/admin/TagsListPage';
 import MutateGamePage from '@/pages/admin/MutateGamePage';
 import PostsListPage from '@/pages/admin/PostsListPage';
 import GamesListPage from '@/pages/admin/GamesListPage';
-import AdminLayout from '@/components/admin/AdminLayout';
 import CategoryPostsPage from '@/pages/CategoryPostsPage';
 import CategoriesPage from '@/pages/admin/CategoriesPage';
 import RecoverPasswordPage from '@/pages/RecoverPasswordPage';
@@ -24,11 +31,7 @@ import ChangePasswordPage from '@/pages/ChangePasswordPage';
 import UsersListPage from '@/pages/admin/UsersListPage';
 import UserDetailPage from '@/pages/admin/UserDetailPage';
 import CommentsListPage from '@/pages/admin/CommentsListPage';
-
-// Components
-import NotificationProvider from '@/components/ui/notification';
 import ProfilePage from '@/pages/ProfilePage';
-import routes from '@/utilities/routes';
 
 function App() {
   return (

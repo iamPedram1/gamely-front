@@ -1,9 +1,8 @@
 'use client';
-import { ArrowLeft, Lock } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -19,7 +18,10 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 
-// Utilities
+// Icon Components
+import { ArrowLeft, Lock } from 'lucide-react';
+
+// Custom Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
 import { generatePasswordConfirmSchema } from '@/validations/common';
@@ -59,7 +61,7 @@ export default function ChangePasswordPage() {
               variant='ghost'
               className='mb-6'
             >
-              <ArrowLeft className='h-4 w-4 mr-2' />
+              <ArrowLeft className='h-4 w-4 mr-2 rtl:rotate-180' />
               {t('auth.backToLogin')}
             </Button>
           </Link>
@@ -71,7 +73,7 @@ export default function ChangePasswordPage() {
                   {t('auth.resetPassword')}
                 </span>
               </CardTitle>
-              <CardDescription>Enter your new password</CardDescription>
+              <CardDescription>{t('auth.enterNewPassword')}</CardDescription>
             </CardHeader>
             <CardContent>
               <form
@@ -90,7 +92,7 @@ export default function ChangePasswordPage() {
                           disabled={changePassword.isPending}
                           id='password'
                           type='password'
-                          placeholder='Enter new password'
+                          placeholder={t('auth.enterNewPassword')}
                           className='pl-10'
                           {...field}
                         />
@@ -113,7 +115,7 @@ export default function ChangePasswordPage() {
                           disabled={changePassword.isPending}
                           id='confirmPassword'
                           type='password'
-                          placeholder='Confirm new password'
+                          placeholder={t('auth.confirmNewPassword')}
                           className='pl-10'
                           {...field}
                         />

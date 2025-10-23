@@ -4,7 +4,9 @@
     "name": "نام",
     "slug": "اسلاگ",
     "game": "بازی",
+    "games": "بازی‌ها",
     "tag": "برچسب",
+    "tags": "برچسب‌ها",
     "all": "همه",
     "category": "دسته‌بندی",
     "comment": "نظر",
@@ -30,6 +32,7 @@
     "allPosts": "همه مقالات",
     "user": "کاربر",
     "post": "مقاله",
+    "posts": "مقالات",
     "status": "وضعیت",
     "date": "تاریخ",
     "update": "به‌روزرسانی",
@@ -38,7 +41,15 @@
     "viewAll": "مشاهده همه",
     "min": "دقیقه",
     "filterByCategory": "فیلتر بر اساس دسته‌بندی",
-    "searchInPosts": "جستجو در مقالات..."
+    "searchInPosts": "جستجو در مقالات...",
+    "searchInGames": "جستجو در بازی‌ها...",
+    "searchInTags": "جستجو در برچسب‌ها...",
+    "email": "ایمیل",
+    "password": "رمز عبور",
+    "toggleTheme": "تغییر تم",
+    "backToPosts": "بازگشت به مقالات",
+    "inThisCategory": "در این دسته‌بندی",
+    "noPostsInCategory": "هیچ مقاله‌ای در این دسته‌بندی یافت نشد"
   },
   "auth": {
     "login": "ورود",
@@ -54,7 +65,20 @@
     "backToLogin": "بازگشت به صفحه ورود",
     "passwordRecovery": "بازیابی رمز عبور",
     "enterEmail": "آدرس ایمیل خود را وارد کنید",
-    "checkEmail": "ایمیل خود را برای لینک بازنشانی بررسی کنید"
+    "checkEmail": "ایمیل خود را برای لینک بازنشانی بررسی کنید",
+    "loginDescription": "اطلاعات خود را برای دسترسی به حساب کاربری وارد کنید",
+    "createAccount": "ایجاد حساب کاربری",
+    "registerDescription": "یک حساب کاربری جدید برای شروع ایجاد کنید",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "نام شما",
+    "enterEmailForRecovery": "آدرس ایمیل خود را وارد کنید تا لینک بازنشانی رمز عبور برای شما ارسال شود",
+    "resetLinkSent": "لینک بازنشانی رمز عبور به آدرس زیر ارسال شد",
+    "enterNewPassword": "رمز عبور جدید خود را وارد کنید",
+    "confirmNewPassword": "رمز عبور جدید خود را تایید کنید",
+    "changePassword": "تغییر رمز عبور",
+    "currentPassword": "رمز عبور فعلی",
+    "updatePassword": "به‌روزرسانی رمز عبور"
   },
   "nav": {
     "home": "خانه",
@@ -80,6 +104,7 @@
     "addGame": "افزودن بازی",
     "editGame": "ویرایش بازی",
     "addTag": "افزودن برچسب",
+    "addTags": "افزودن برچسب‌ها",
     "editTag": "ویرایش برچسب",
     "addCategory": "افزودن دسته‌بندی",
     "editCategory": "ویرایش دسته‌بندی",
@@ -88,10 +113,15 @@
     "allTags": "همه برچسب‌ها",
     "allUsers": "همه کاربران",
     "allComments": "همه نظرات",
+    "allCategories": "همه دسته‌بندی‌ها",
     "postDetails": "جزئیات مقاله",
     "gameDetails": "جزئیات بازی",
     "tagDetails": "جزئیات برچسب",
-    "categoryDetails": "جزئیات دسته‌بندی"
+    "categoryDetails": "جزئیات دسته‌بندی",
+    "admin": "پنل مدیریت",
+    "backToSite": "بازگشت به سایت",
+    "manageAllGames": "مدیریت همه بازی‌ها در پایگاه داده",
+    "manageAllTags": "مدیریت همه برچسب‌ها در پایگاه داده"
   },
   "user": {
     "name": "نام",
@@ -108,9 +138,23 @@
     "block": "مسدود کردن",
     "unblock": "رفع مسدودیت",
     "changeRole": "تغییر نقش",
-    "userDetails": "جزئیات کاربر"
+    "userDetails": "جزئیات کاربر",
+    "joined": "تاریخ عضویت",
+    "userNotFound": "کاربر یافت نشد",
+    "backToUsers": "بازگشت به کاربران",
+    "manageUserInfo": "مدیریت اطلاعات و مجوزهای کاربر",
+    "userInformation": "اطلاعات کاربر",
+    "blockUser": "مسدود کردن کاربر",
+    "unblockUser": "رفع مسدودیت کاربر",
+    "blockUserDescription": "آیا مطمئن هستید که می‌خواهید این کاربر را مسدود کنید؟",
+    "unblockUserDescription": "آیا مطمئن هستید که می‌خواهید مسدودیت این کاربر را رفع کنید؟",
+    "editUserDetails": "ویرایش جزئیات کاربر",
+    "enterName": "نام را وارد کنید",
+    "enterEmail": "ایمیل را وارد کنید",
+    "userBio": "بیوگرافی کاربر"
   },
   "comment": {
+    "comment": "نظر",
     "comments": "نظرات",
     "approve": "تایید",
     "reject": "رد",
@@ -124,9 +168,12 @@
     "addNewComment": "افزودن نظر جدید",
     "editComment": "ویرایش نظر",
     "addComment": "افزودن نظر",
+    "add": "افزودن نظر",
     "createNewComment": "ایجاد نظر جدید در این مقاله",
     "editCommentInPost": "ویرایش نظر در این مقاله",
-    "whatsUp": "چه خبر؟"
+    "whatsUp": "چه خبر؟",
+    "noComments": "هنوز نظری ثبت نشده است. اولین نفر باشید!",
+    "reply": "پاسخ"
   },
   "post": {
     "title": "عنوان",
@@ -151,7 +198,10 @@
     "createPost": "ایجاد مقاله",
     "updatePost": "به‌روزرسانی مقاله",
     "addNewPost": "افزودن مقاله جدید به پایگاه داده",
-    "updatePostInDb": "به‌روزرسانی مقاله در پایگاه داده"
+    "updatePostInDb": "به‌روزرسانی مقاله در پایگاه داده",
+    "postNotFound": "مقاله یافت نشد",
+    "latestPosts": "آخرین مقالات",
+    "discoverLatest": "آخرین اخبار و مقالات بازی را کشف کنید"
   },
   "category": {
     "updateCategory": "به‌روزرسانی دسته‌بندی",
@@ -176,7 +226,9 @@
     "coverImageUrl": "آدرس تصویر کاور",
     "releaseDate": "تاریخ انتشار",
     "description": "توضیحات",
-    "briefGameDescription": "توضیح مختصر بازی"
+    "briefGameDescription": "توضیح مختصر بازی",
+    "browseAllGames": "مرور همه بازی‌ها در مجموعه ما",
+    "viewPosts": "مشاهده مقالات"
   },
   "tag": {
     "updateTag": "به‌روزرسانی برچسب",
@@ -185,7 +237,8 @@
     "updateTagInDb": "به‌روزرسانی برچسب در پایگاه داده",
     "tagDetails": "جزئیات برچسب",
     "tagTitle": "عنوان برچسب",
-    "exampleRPG": "مثال: نقش‌آفرینی"
+    "exampleRPG": "مثال: نقش‌آفرینی",
+    "browseByTags": "مرور مقالات بر اساس برچسب"
   },
   "home": {
     "latestGamingNews": "آخرین اخبار بازی",
@@ -202,11 +255,31 @@
     "stayUpdated": "با دنیای بازی به‌روز بمانید",
     "featured": "ویژه"
   },
+  "footer": {
+    "description": "مقصد نهایی شما برای اخبار، نقدها و راهنماهای بازی.",
+    "reviews": "نقد و بررسی",
+    "news": "اخبار",
+    "guides": "راهنماها",
+    "allRightsReserved": "تمامی حقوق محفوظ است"
+  },
   "form": {
     "required": "*",
     "placeholder": {
       "imageUrl": "https://example.com/image.jpg"
     }
+  },
+  "pagination": {
+    "showing": "نمایش",
+    "to": "تا",
+    "of": "از",
+    "results": "نتیجه",
+    "itemsPerPage": "تعداد در هر صفحه"
+  },
+  "profile": {
+    "myProfile": "پروفایل من",
+    "manageAccount": "مدیریت اطلاعات حساب کاربری",
+    "profileInformation": "اطلاعات پروفایل",
+    "updateProfile": "به‌روزرسانی پروفایل"
   },
   "validation": {
     "required": "{{field}} الزامی است",

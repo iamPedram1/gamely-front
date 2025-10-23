@@ -6,7 +6,7 @@ import {
 } from '@radix-ui/react-icons';
 
 import { cn } from '@/utilities/tailwind';
-import { ButtonProps, buttonVariants } from '@/components/ui/button';
+import { type ButtonProps, buttonVariants } from '@/components/ui/button';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -73,7 +73,7 @@ const PaginationPrevious = ({
     className={cn('gap-1 pl-2.5', className)}
     {...props}
   >
-    <ChevronLeftIcon className='h-4 w-4' />
+    <ChevronLeftIcon className='h-4 w-4 rtl:rotate-180' />
     <span>Previous</span>
   </PaginationLink>
 );
@@ -90,7 +90,7 @@ const PaginationNext = ({
     {...props}
   >
     <span>Next</span>
-    <ChevronRightIcon className='h-4 w-4' />
+    <ChevronRightIcon className='h-4 w-4 rtl:rotate-180' />
   </PaginationLink>
 );
 PaginationNext.displayName = 'PaginationNext';

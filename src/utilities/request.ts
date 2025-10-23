@@ -3,7 +3,8 @@
  * @param {number} status - The status code to check.
  * @returns {boolean} Returns true if the status code is between 200 and 210 (inclusive), indicating success. Otherwise, returns false.
  */
-export const isSucceed = (status: number): boolean => status >= 200 && status <= 210;
+export const isSucceed = (status: number): boolean =>
+  status >= 200 && status <= 210;
 
 /**
  * Constructs a URL with an optional query string.

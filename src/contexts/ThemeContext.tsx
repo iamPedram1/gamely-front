@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { DirectionProvider } from '@radix-ui/react-direction';
 import {
   createContext,
   useContext,
@@ -33,17 +34,22 @@ export function ThemeProvider({
   storageKey = 'game-blog-theme',
   ...props
 }: ThemeProviderProps) {
+  // States
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
+
+  // Custom Hooks
   const { i18n } = useTranslation();
 
   useLayoutEffect(() => {
-    document.documentElement.lang = i18n.language;
-    document.documentElement.dir = i18n.language === 'fa' ? 'rtl' : 'ltr';
+    document.title = i18n.language === 'fa' ? 'گیم‌لی' : 'Gamely';
+    const root = window.document.documentElement;
+    root.lang = i18n.language;
+    root.dir = i18n.language === 'fa' ? 'rtl' : 'ltr';
   }, [i18n.language]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = window.document.documentElement;
 
     root.classList.remove('light', 'dark');
@@ -70,9 +76,11 @@ export function ThemeProvider({
   };
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
-    </ThemeProviderContext.Provider>
+    <DirectionProvider dir={i18n.language === 'fa' ? 'rtl' : 'ltr'}>
+      <ThemeProviderContext.Provider {...props} value={value}>
+        {children}
+      </ThemeProviderContext.Provider>
+    </DirectionProvider>
   );
 }
 

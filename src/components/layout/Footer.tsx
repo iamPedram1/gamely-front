@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Youtube, Gamepad2 } from 'lucide-react';
-import routes from '@/utilities/routes';
 import { useTranslation } from 'react-i18next';
+import { Github, Twitter, Youtube, Gamepad2 } from 'lucide-react';
+
+// Custom Utilities
+import routes from '@/utilities/routes';
 
 export default function Footer() {
+  // Custom Hooks
   const { t } = useTranslation();
 
+  // Render
   return (
     <footer className='border-t border-primary/20 bg-accent/30 backdrop-blur'>
       <div className='container py-16'>
@@ -21,8 +25,7 @@ export default function Footer() {
               <span className='gradient-gaming-text'>{t('appName')}</span>
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed'>
-              Your ultimate destination for gaming news, reviews, and guides.
-              Level up your gaming experience.
+              {t('footer.description')}
             </p>
           </div>
 
@@ -72,7 +75,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  Reviews
+                  {t('footer.reviews')}
                 </Link>
               </li>
               <li>
@@ -81,7 +84,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  News
+                  {t('footer.news')}
                 </Link>
               </li>
               <li>
@@ -90,7 +93,7 @@ export default function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-center gap-2'
                 >
                   <span className='w-1 h-1 rounded-full bg-primary' />
-                  Guides
+                  {t('footer.guides')}
                 </Link>
               </li>
             </ul>
@@ -129,7 +132,7 @@ export default function Footer() {
             <span className='gradient-gaming-text font-semibold'>
               {t('appName')}
             </span>
-            . All rights reserved.
+            . {t('footer.allRightsReserved')}
           </p>
         </div>
       </div>

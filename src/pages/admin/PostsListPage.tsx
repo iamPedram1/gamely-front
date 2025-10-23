@@ -2,7 +2,6 @@
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 // Components
 import { Badge } from '@/components/ui/badge';
@@ -26,9 +25,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-// Utilities
-import routes from '@/utilities/routes';
+// Icon Components
+import { Plus, Edit, Trash2, Eye } from 'lucide-react';
+
+// Context
 import useLoadingStore from '@/store/loading';
+
+// Custom Utilities
+import routes from '@/utilities/routes';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/category';
 
@@ -49,7 +53,7 @@ export default function PostsListPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
+          <h1 className='text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
             <span className='gradient-gaming-text'>{t('dashboard.posts')}</span>{' '}
             {t('dashboard.management')}
           </h1>
@@ -60,7 +64,7 @@ export default function PostsListPage() {
         <Link to={routes.dashboard.posts.add}>
           <Button
             disabled={disabled}
-            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
             <Plus className='h-4 w-4 mr-2' />
             {t('dashboard.addPost')}

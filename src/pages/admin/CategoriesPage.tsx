@@ -1,7 +1,9 @@
+'use client';
+
 import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 
-// Hooks
+// Custom Hooks
 import { useBoolean, useString } from '@/hooks/state';
 
 // Components
@@ -20,7 +22,7 @@ import {
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import {
   useCategoriesQuery,
   useDeleteCategory,
@@ -48,15 +50,18 @@ export default function CategoriesPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>Categories</span> Management
+          <h1 className='text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
+            <span className='gradient-gaming-text'>
+              {t('dashboard.categories')}
+            </span>{' '}
+            {t('dashboard.management')}
           </h1>
           <p className='text-muted-foreground mt-2'>Manage post categories</p>
         </div>
         <Button
           disabled={disabled}
           onClick={isMutateDialogOpen.setTrue}
-          className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+          className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
         >
           <Plus className='h-4 w-4 mr-2' />
           {t('dashboard.addCategory')}

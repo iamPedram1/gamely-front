@@ -1,19 +1,22 @@
+'use client';
+
+import type React from 'react';
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Moon, Sun, Gamepad2, Search, User } from 'lucide-react';
+import { Gamepad2, Search, User } from 'lucide-react';
 
-// Hooks
+// Custom Hooks
 import useAuth from '@/hooks/useAuth';
-import { useTheme } from '@/contexts/ThemeContext';
 
 // Components
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-// Utilties
 import routes from '@/utilities/routes';
+import DarkModeToggle from '@/components/DarkModeToggle';
 
 export default function Header() {
   // States
@@ -21,7 +24,6 @@ export default function Header() {
 
   // Hooks
   const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
   const { isAuthorized, isAuthLoading } = useAuth();
 
   // Utilities
@@ -30,6 +32,7 @@ export default function Header() {
     console.log('Search:', searchQuery);
   };
 
+  // Render
   return (
     <header className='sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60'>
       <div className='container flex h-20 items-center justify-between'>
@@ -83,17 +86,7 @@ export default function Header() {
             </div>
           </form>
           <LanguageSwitcher />
-          <Button
-            variant='ghost'
-            size='icon'
-            className='hover:bg-primary/10'
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            <Sun className='h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-            <Moon className='absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
-            <span className='sr-only'>Toggle theme</span>
-          </Button>
-
+          <DarkModeToggle />
           {isAuthorized ? (
             <Link to={routes.profile.index}>
               <Button

@@ -23,8 +23,8 @@ export const useAppQuery = <TData>(
     return useBaseQuery({
       ...options,
       queryFn,
-      initialData:
-        options?.initialData ||
+      placeholderData:
+        options?.placeholderData ||
         ({ docs: [], pagination: initialPagination } as TData),
       queryKey: [...(queryKey || []), ...(options?.queryKey || [])],
     });

@@ -1,11 +1,14 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { mockPosts } from '@/data/mockData';
+
+// Custom Hooks
+import { useBoolean } from '@/hooks/state';
+
+// Components
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -31,8 +34,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import PaginationControls from '@/components/ui/pagination-controls';
-import { useBoolean } from '@/hooks/state';
 
+// Icon Components
+import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+
+// Custom Utilities
+import { mockPosts } from '@/data/mockData';
+
+// Types
 interface CommentWithMeta {
   id: string;
   content: string;
@@ -193,7 +202,7 @@ export default function CommentsListPage() {
                 }}
               >
                 <SelectTrigger className='w-[150px]'>
-                  <SelectValue placeholder='Status' />
+                  <SelectValue placeholder={t('user.status')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all'>{t('common.allStatus')}</SelectItem>
@@ -215,11 +224,11 @@ export default function CommentsListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User</TableHead>
-                <TableHead>Comment</TableHead>
-                <TableHead>Post</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>{t('user.name')}</TableHead>
+                <TableHead>{t('comment.comment')}</TableHead>
+                <TableHead>{t('common.post')}</TableHead>
+                <TableHead>{t('user.status')}</TableHead>
+                <TableHead>{t('common.date')}</TableHead>
                 <TableHead className='text-right'>
                   {t('common.actions')}
                 </TableHead>
@@ -232,7 +241,7 @@ export default function CommentsListPage() {
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8 border-2 border-primary/20'>
                         <AvatarImage
-                          src={comment.avatar}
+                          src={comment.avatar || '/placeholder.svg'}
                           alt={comment.username}
                         />
                         <AvatarFallback className='bg-primary/10 text-primary font-bold text-xs'>
@@ -299,12 +308,12 @@ export default function CommentsListPage() {
       {/* Comment Actions Dialog */}
       <Dialog
         open={isDialogOpen.state}
-        onOpenChange={(open) => !open && isDialogOpen.setTrue()}
+        onOpenChange={(open) => !open && isDialogOpen.setFalse()}
       >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t('comment.commentActions')}</DialogTitle>
-            <DialogDescription>Manage this comment</DialogDescription>
+            <DialogDescription>{t('comment.manageComment')}</DialogDescription>
           </DialogHeader>
 
           {selectedComment && (
@@ -312,7 +321,7 @@ export default function CommentsListPage() {
               <div className='flex items-center gap-3'>
                 <Avatar className='h-10 w-10'>
                   <AvatarImage
-                    src={selectedComment.avatar}
+                    src={selectedComment.avatar || '/placeholder.svg'}
                     alt={selectedComment.username}
                   />
                   <AvatarFallback>{selectedComment.username[0]}</AvatarFallback>
@@ -330,7 +339,7 @@ export default function CommentsListPage() {
               </div>
 
               <div className='text-sm text-muted-foreground'>
-                <strong>Post:</strong> {selectedComment.postTitle}
+                <strong>{t('common.post')}:</strong> {selectedComment.postTitle}
               </div>
             </div>
           )}

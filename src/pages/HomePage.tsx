@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, TrendingUp, Zap, Trophy } from 'lucide-react';
-import { mockPosts, mockGames } from '@/data/mockData';
 import { useTranslation } from 'react-i18next';
+import { ArrowRight, TrendingUp, Zap, Trophy } from 'lucide-react';
 
 // Components
 import Header from '@/components/layout/Header';
@@ -10,14 +9,19 @@ import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
+import { mockPosts, mockGames } from '@/data/mockData';
 
 export default function HomePage() {
+  // Custom Hooks
   const { t } = useTranslation();
+
+  // Custom Utilities
   const featuredPost = mockPosts[0];
   const recentPosts = mockPosts.slice(1);
 
+  // Render
   return (
     <div className='min-h-screen flex flex-col bg-background'>
       <Header />
@@ -54,7 +58,7 @@ export default function HomePage() {
                       className='gradient-gaming font-bold uppercase tracking-wide glow-effect hover:glow-effect-strong text-lg px-8 py-6'
                     >
                       {t('home.exploreNews')}
-                      <ArrowRight className='ml-2 h-5 w-5' />
+                      <ArrowRight className='ml-2 h-5 w-5 rtl:rotate-180' />
                     </Button>
                   </Link>
                   <Link to={routes.games.index}>
@@ -139,7 +143,7 @@ export default function HomePage() {
               <Link to='/games'>
                 <Button variant='ghost' className='group'>
                   {t('common.viewAll')}
-                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
+                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
                 </Button>
               </Link>
             </div>
@@ -189,7 +193,7 @@ export default function HomePage() {
               <Link to='/posts'>
                 <Button variant='ghost' className='group'>
                   {t('common.viewAll')}
-                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform' />
+                  <ArrowRight className='ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
                 </Button>
               </Link>
             </div>

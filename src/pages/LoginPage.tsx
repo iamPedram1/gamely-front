@@ -1,8 +1,11 @@
+'use client';
+
 import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type Zod from 'zod';
 
 // Custom Hooks
 import useAuth from '@/hooks/useAuth';
@@ -23,7 +26,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
 import { createOnErrorHandler } from '@/utilities';
@@ -48,10 +51,8 @@ type LoginFormProps = Zod.infer<typeof loginFormSchema>;
 type RegisterFormProps = Zod.infer<typeof registerFormSchema>;
 
 export default function LoginPage() {
-  // Context
+  // Custom Hooks
   const { loading } = useLoadingStore();
-
-  // Hooks
   const { signin } = useAuth();
   const { t } = useTranslation();
   const loginForm = useForm<LoginFormProps>({
@@ -71,7 +72,7 @@ export default function LoginPage() {
     onSuccess: ({ data }) => signin(data.token, data.refreshToken),
   });
 
-  // Utilities
+  // Custom Utilities
   const handleLogin = async (data: Required<LoginFormProps>) => {
     login(data);
   };
@@ -92,15 +93,15 @@ export default function LoginPage() {
         <div className='w-full max-w-md'>
           <Tabs defaultValue='login' className='w-full'>
             <TabsList className='grid w-full grid-cols-2'>
-              <TabsTrigger value='login'>Login</TabsTrigger>
-              <TabsTrigger value='register'>Register</TabsTrigger>
+              <TabsTrigger value='login'>{t('auth.login')}</TabsTrigger>
+              <TabsTrigger value='register'>{t('auth.register')}</TabsTrigger>
             </TabsList>
             <TabsContent value='login'>
               <Card>
                 <CardHeader>
-                  <CardTitle>Login</CardTitle>
+                  <CardTitle>{t('auth.login')}</CardTitle>
                   <CardDescription>
-                    Enter your email and password to access your account
+                    {t('auth.loginDescription')}
                   </CardDescription>
                 </CardHeader>
                 <form
@@ -111,7 +112,7 @@ export default function LoginPage() {
                 >
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
-                      <Label htmlFor='login-email'>Email</Label>
+                      <Label htmlFor='login-email'>{t('common.email')}</Label>
                       <Controller
                         control={loginForm.control}
                         name='email'
@@ -120,14 +121,16 @@ export default function LoginPage() {
                             disabled={loading}
                             id='login-email'
                             type='email'
-                            placeholder='you@example.com'
+                            placeholder={t('auth.emailPlaceholder')}
                             {...field}
                           />
                         )}
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='login-password'>Password</Label>
+                      <Label htmlFor='login-password'>
+                        {t('common.password')}
+                      </Label>
                       <Controller
                         control={loginForm.control}
                         name='password'
@@ -136,7 +139,7 @@ export default function LoginPage() {
                             disabled={loading}
                             id='login-password'
                             type='password'
-                            placeholder='••••••••'
+                            placeholder={t('auth.passwordPlaceholder')}
                             {...field}
                           />
                         )}
@@ -145,14 +148,14 @@ export default function LoginPage() {
                   </CardContent>
                   <CardFooter className='flex flex-col gap-4'>
                     <Button disabled={loading} type='submit' className='w-full'>
-                      Login
+                      {t('auth.login')}
                     </Button>
                     <p className='text-sm text-muted-foreground text-center'>
                       <Link
                         to={routes.passwordRecovery}
                         className='hover:text-foreground transition-colors'
                       >
-                        Forgot your password?
+                        {t('auth.forgotPassword')}
                       </Link>
                     </p>
                   </CardFooter>
@@ -162,9 +165,9 @@ export default function LoginPage() {
             <TabsContent value='register'>
               <Card>
                 <CardHeader>
-                  <CardTitle>Create Account</CardTitle>
+                  <CardTitle>{t('auth.createAccount')}</CardTitle>
                   <CardDescription>
-                    Enter your details to create a new account
+                    {t('auth.registerDescription')}
                   </CardDescription>
                 </CardHeader>
                 <form
@@ -184,14 +187,16 @@ export default function LoginPage() {
                             disabled={loading}
                             id='register-name'
                             type='text'
-                            placeholder='John Doe'
+                            placeholder={t('auth.namePlaceholder')}
                             {...field}
                           />
                         )}
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='register-email'>Email</Label>
+                      <Label htmlFor='register-email'>
+                        {t('common.email')}
+                      </Label>
                       <Controller
                         control={registerForm.control}
                         name='email'
@@ -200,14 +205,16 @@ export default function LoginPage() {
                             disabled={loading}
                             id='register-email'
                             type='email'
-                            placeholder='you@example.com'
+                            placeholder={t('auth.emailPlaceholder')}
                             {...field}
                           />
                         )}
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='register-password'>Password</Label>
+                      <Label htmlFor='register-password'>
+                        {t('common.password')}
+                      </Label>
                       <Controller
                         control={registerForm.control}
                         name='password'
@@ -216,7 +223,7 @@ export default function LoginPage() {
                             disabled={loading}
                             id='register-password'
                             type='password'
-                            placeholder='••••••••'
+                            placeholder={t('auth.passwordPlaceholder')}
                             {...field}
                           />
                         )}
@@ -224,7 +231,7 @@ export default function LoginPage() {
                     </div>
                     <div className='space-y-2'>
                       <Label htmlFor='register-confirm-password'>
-                        Confirm Password
+                        {t('auth.confirmPassword')}
                       </Label>
                       <Controller
                         control={registerForm.control}
@@ -234,7 +241,7 @@ export default function LoginPage() {
                             disabled={loading}
                             id='register-confirm-password'
                             type='password'
-                            placeholder='••••••••'
+                            placeholder={t('auth.passwordPlaceholder')}
                             {...field}
                           />
                         )}
@@ -243,7 +250,7 @@ export default function LoginPage() {
                   </CardContent>
                   <CardFooter>
                     <Button disabled={loading} type='submit' className='w-full'>
-                      Create Account
+                      {t('auth.createAccount')}
                     </Button>
                   </CardFooter>
                 </form>

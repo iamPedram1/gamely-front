@@ -1,7 +1,10 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-export const useUpdateEffect = (callback: () => void, dependencies: unknown[]): void => {
+export const useUpdateEffect = (
+  callback: () => void,
+  dependencies: unknown[]
+): void => {
   const firstRenderRef = useRef(true);
 
   useEffect(() => {

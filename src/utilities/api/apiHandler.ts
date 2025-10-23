@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import { CommonResponseProps } from '@/types/api';
 import { getAppBaseURL } from '@/utilities/appVariables';
 import { getCookie } from '@/utilities/cookie';
@@ -108,6 +109,7 @@ async function appFetch<T = any>(
       credentials: 'include',
       ...(typeof window !== 'undefined' && { signal }),
       headers: {
+        'Accept-Language': i18n.language,
         ...(token && { 'X-API-KEY': getCookie('Token') }),
         'Content-Type': 'application/json; charset=utf-8',
         ...reqInit?.headers,

@@ -21,7 +21,7 @@ import {
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import { createOnErrorHandler } from '@/utilities';
 import {
   useCategoryQuery,
@@ -64,7 +64,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
   // Context
   const { loading } = useLoadingStore();
 
-  // Hooks
+  // Custom Hooks
   const category = useCategoryQuery({
     initialParams: categoryId,
     enabled: Boolean(isEditMode && categoryId),
@@ -86,7 +86,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
     autoAlert: { mode: 'update', name: 'Category' },
   });
 
-  // Utilities
+  // Custom Utilities
   const onSubmit = (data: Required<FormSchema>) => {
     if (isEditMode) updateCategory.mutate({ id: categoryId, ...data });
     else createCategory.mutate(data);

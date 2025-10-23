@@ -1,4 +1,7 @@
+'use client';
+
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   FileText,
@@ -11,26 +14,24 @@ import {
   MessageSquare,
 } from 'lucide-react';
 
-// Hooks
+// Custom Hooks
 import { useBoolean } from '@/hooks/state';
 
 // Components
 import { Button } from '@/components/ui/button';
-
-// Utilities
-import routes from '@/utilities/routes';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { useTranslation } from 'react-i18next';
+
+// Custom Utilities
+import routes from '@/utilities/routes';
+import DarkModeToggle from '@/components/DarkModeToggle';
 
 export default function AdminLayout() {
-  // States
+  // Custom Hooks
   const sidebarOpen = useBoolean();
-
-  // Hooks
   const { t } = useTranslation();
   const location = useLocation();
 
-  // Utilities
+  // Custom Utilities
   const isActive = (path: string) => location.pathname.startsWith(path);
   const navItems = [
     { path: '/dashboard/posts', icon: FileText, label: t('dashboard.posts') },
@@ -66,11 +67,13 @@ export default function AdminLayout() {
               <LayoutDashboard className='h-6 w-6 text-white' />
             </div>
             {sidebarOpen.state && (
-              <span className='gradient-gaming-text'>ADMIN</span>
+              <span className='gradient-gaming-text'>
+                {t('dashboard.admin')}
+              </span>
             )}
           </Link>
         </div>
-        <nav className='flex-1 p-4 space-y-2'>
+        <nav className='flex flex-col p-4 gap-2'>
           {navItems.map((item) => (
             <Link key={item.path} to={item.path}>
               <Button
@@ -96,7 +99,7 @@ export default function AdminLayout() {
               className='w-full justify-start gap-3 hover:bg-primary/10'
             >
               <LogOut className='h-5 w-5' />
-              {sidebarOpen.state && <span>Back to Site</span>}
+              {sidebarOpen.state && <span>{t('dashboard.backToSite')}</span>}
             </Button>
           </Link>
         </div>
@@ -108,6 +111,7 @@ export default function AdminLayout() {
               <Menu className='h-5 w-5' />
             </Button>
             <LanguageSwitcher />
+            <DarkModeToggle />
           </div>
           <div className='flex items-center gap-4'>
             <span className='text-sm text-muted-foreground'>

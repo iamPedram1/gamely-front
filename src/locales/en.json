@@ -20,12 +20,15 @@
     "allPosts": "All Posts",
     "user": "User",
     "post": "Post",
+    "posts": "Posts",
     "status": "Status",
     "date": "Date",
     "name": "Name",
     "slug": "Slug",
     "game": "Game",
+    "games": "Games",
     "tag": "Tag",
+    "tags": "Tags",
     "all": "All",
     "category": "Category",
     "comment": "Comment",
@@ -38,7 +41,15 @@
     "viewAll": "View All",
     "min": "min",
     "filterByCategory": "Filter by category",
-    "searchInPosts": "Search in posts..."
+    "searchInPosts": "Search in posts...",
+    "searchInGames": "Search in games...",
+    "searchInTags": "Search in tags...",
+    "email": "Email",
+    "password": "Password",
+    "toggleTheme": "Toggle theme",
+    "backToPosts": "Back to Posts",
+    "inThisCategory": "in this category",
+    "noPostsInCategory": "No posts found in this category"
   },
   "auth": {
     "login": "Sign In",
@@ -54,7 +65,20 @@
     "backToLogin": "Back to Login",
     "passwordRecovery": "Password Recovery",
     "enterEmail": "Enter your email address",
-    "checkEmail": "Check your email for reset link"
+    "checkEmail": "Check your email for reset link",
+    "loginDescription": "Enter your credentials to access your account",
+    "createAccount": "Create Account",
+    "registerDescription": "Create a new account to get started",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "••••••••",
+    "namePlaceholder": "Your name",
+    "enterEmailForRecovery": "Enter your email address and we'll send you a link to reset your password",
+    "resetLinkSent": "We've sent a password reset link to",
+    "enterNewPassword": "Enter your new password",
+    "confirmNewPassword": "Confirm your new password",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "updatePassword": "Update Password"
   },
   "nav": {
     "home": "Home",
@@ -80,6 +104,7 @@
     "addGame": "Add Game",
     "editGame": "Edit Game",
     "addTag": "Add Tag",
+    "addTags": "Add Tags",
     "editTag": "Edit Tag",
     "addCategory": "Add Category",
     "editCategory": "Edit Category",
@@ -89,10 +114,15 @@
     "allUsers": "All Users",
     "allStatus": "All Status",
     "allComments": "All Comments",
+    "allCategories": "All Categories",
     "postDetails": "Post Details",
     "gameDetails": "Game Details",
     "tagDetails": "Tag Details",
-    "categoryDetails": "Category Details"
+    "categoryDetails": "Category Details",
+    "admin": "Admin Panel",
+    "backToSite": "Back to Site",
+    "manageAllGames": "Manage all games in the database",
+    "manageAllTags": "Manage all tags in the database"
   },
   "user": {
     "name": "Name",
@@ -109,9 +139,23 @@
     "block": "Block",
     "unblock": "Unblock",
     "changeRole": "Change Role",
-    "userDetails": "User Details"
+    "userDetails": "User Details",
+    "joined": "Joined",
+    "userNotFound": "User not found",
+    "backToUsers": "Back to Users",
+    "manageUserInfo": "Manage user information and permissions",
+    "userInformation": "User Information",
+    "blockUser": "Block User",
+    "unblockUser": "Unblock User",
+    "blockUserDescription": "Are you sure you want to block this user?",
+    "unblockUserDescription": "Are you sure you want to unblock this user?",
+    "editUserDetails": "Edit User Details",
+    "enterName": "Enter name",
+    "enterEmail": "Enter email",
+    "userBio": "User bio"
   },
   "comment": {
+    "comment": "Comment",
     "comments": "Comments",
     "approve": "Approve",
     "reject": "Reject",
@@ -125,9 +169,12 @@
     "addNewComment": "Add New Comment",
     "editComment": "Edit Comment",
     "addComment": "Add Comment",
+    "add": "Add Comment",
     "createNewComment": "Create a new Comment in this post",
     "editCommentInPost": "Edit Comment in this post",
-    "whatsUp": "Whats up?"
+    "whatsUp": "Whats up?",
+    "noComments": "No comments yet. Be the first to comment!",
+    "reply": "Reply"
   },
   "post": {
     "title": "Title",
@@ -152,7 +199,10 @@
     "createPost": "Create Post",
     "updatePost": "Update Post",
     "addNewPost": "Add a new blog post to database",
-    "updatePostInDb": "Update post in the database"
+    "updatePostInDb": "Update post in the database",
+    "postNotFound": "Post not found",
+    "latestPosts": "Latest Posts",
+    "discoverLatest": "Discover the latest gaming news and articles"
   },
   "category": {
     "updateCategory": "Update category",
@@ -177,7 +227,9 @@
     "coverImageUrl": "Cover Image URL",
     "releaseDate": "Release Date",
     "description": "Description",
-    "briefGameDescription": "Brief description of the game"
+    "briefGameDescription": "Brief description of the game",
+    "browseAllGames": "Browse all games in our collection",
+    "viewPosts": "View Posts"
   },
   "tag": {
     "updateTag": "Update Tag",
@@ -186,7 +238,8 @@
     "updateTagInDb": "Update a tag in the database",
     "tagDetails": "Tag Details",
     "tagTitle": "Tag Title",
-    "exampleRPG": "e.g., RPG"
+    "exampleRPG": "e.g., RPG",
+    "browseByTags": "Browse posts by tags"
   },
   "home": {
     "latestGamingNews": "Latest Gaming News",
@@ -203,11 +256,31 @@
     "stayUpdated": "Stay updated with the gaming world",
     "featured": "Featured"
   },
+  "footer": {
+    "description": "Your ultimate destination for gaming news, reviews, and guides.",
+    "reviews": "Reviews",
+    "news": "News",
+    "guides": "Guides",
+    "allRightsReserved": "All rights reserved"
+  },
   "form": {
     "required": "*",
     "placeholder": {
       "imageUrl": "https://example.com/image.jpg"
     }
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "results": "results",
+    "itemsPerPage": "Items per page"
+  },
+  "profile": {
+    "myProfile": "My Profile",
+    "manageAccount": "Manage your account information",
+    "profileInformation": "Profile Information",
+    "updateProfile": "Update Profile"
   },
   "validation": {
     "required": "{{field}} is required",

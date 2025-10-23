@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -15,13 +15,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+// Icon Components
+import { Plus, Edit, Trash2 } from 'lucide-react';
+
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
 import { useDeleteTag, useTagsQuery } from '@/utilities/api/tag';
-import { useTranslation } from 'react-i18next';
 
 export default function TagsListPage() {
   // Context
@@ -39,18 +41,18 @@ export default function TagsListPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
+          <h1 className='text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
             <span className='gradient-gaming-text'>{t('dashboard.tags')}</span>{' '}
             {t('dashboard.management')}
           </h1>
-          <p className='text-muted-foreground mt-2'>{`${t(
-            'dashboard.management'
-          )} ${t('common.all')} ${t('dashboard.tags').toLowerCase()}`}</p>
+          <p className='text-muted-foreground mt-2'>
+            {t('dashboard.manageAllTags')}
+          </p>
         </div>
         <Link to={routes.dashboard.tags.add}>
           <Button
             disabled={disabled}
-            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
             <Plus className='h-4 w-4 mr-2' />
             {t('dashboard.addTags')}
@@ -65,7 +67,7 @@ export default function TagsListPage() {
               )
             </h2>
             <div className='flex items-center gap-3'>
-              <Searchbar placeholder='Search in tags...' />
+              <Searchbar placeholder={t('common.searchInTags')} />
             </div>
           </div>
         </CardHeader>

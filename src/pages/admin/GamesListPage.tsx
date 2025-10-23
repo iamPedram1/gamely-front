@@ -15,13 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Searchbar from '@/components/ui/searchbar';
 
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
-import Searchbar from '@/components/ui/searchbar';
 import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
 
 export default function GamesListPage() {
@@ -33,24 +33,25 @@ export default function GamesListPage() {
   const games = useGamesQuery();
   const deleteGame = useDeleteGame();
   const disabled = loading || deleteGame.isPending;
+  console.log(games);
 
   // Render
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>{t('dashboard.games')}</span>
+          <h1 className='text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
+            <span className='gradient-gaming-text'>{t('dashboard.games')}</span>{' '}
             {t('dashboard.management')}
           </h1>
-          <p className='text-muted-foreground mt-2'>{`${t(
-            'dashboard.management'
-          )} ${t('common.all')} ${t('dashboard.games')}`}</p>
+          <p className='text-muted-foreground mt-2'>
+            {t('dashboard.manageAllGames')}
+          </p>
         </div>
         <Link to={routes.dashboard.games.add}>
           <Button
             disabled={disabled}
-            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+            className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
             <Plus className='h-4 w-4 mr-2' />
             {t('dashboard.addGame')}
@@ -66,7 +67,7 @@ export default function GamesListPage() {
               {games?.data?.pagination?.totalDocs || 0})
             </h2>
             <div className='flex items-center gap-3'>
-              <Searchbar placeholder='Search in games...' />
+              <Searchbar placeholder={t('common.searchInGames')} />
             </div>
           </div>
         </CardHeader>
@@ -74,9 +75,9 @@ export default function GamesListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead> {t('dashboard.management')}</TableHead>
+                <TableHead>{t('game.gameTitle')}</TableHead>
                 <TableHead>{t('common.description')}</TableHead>
-                <TableHead> {t('common.releaseDate')}</TableHead>
+                <TableHead>{t('common.releaseDate')}</TableHead>
                 <TableHead className='text-right'>
                   {t('common.actions')}
                 </TableHead>
@@ -89,7 +90,7 @@ export default function GamesListPage() {
                     <div className='flex items-center gap-3'>
                       {game.coverImage && (
                         <img
-                          src={game.coverImage.url}
+                          src={game.coverImage.url || '/placeholder.svg'}
                           alt={game.title}
                           className='w-16 h-16 object-cover rounded'
                         />

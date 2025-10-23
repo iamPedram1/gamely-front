@@ -1,11 +1,9 @@
-'use client';
-
 import { object } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Save } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -13,10 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+// Icon Components
+
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Utilities
+// Custom Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
 import { useCreateTag, useTagQuery, useUpdateTag } from '@/utilities/api/tag';
