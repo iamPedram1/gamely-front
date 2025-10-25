@@ -1,5 +1,7 @@
-import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 
 // Custom Hooks
 import { useBoolean } from '@/hooks/state';
@@ -35,79 +37,43 @@ import {
 } from '@/components/ui/dialog';
 import PaginationControls from '@/components/ui/pagination-controls';
 
-// Icon Components
-import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
-
 // Utilities
-import { mockPosts } from '@/data/mockData';
-import { useCommentsQuery } from '@/utilities/api/management/comment';
+import routes from '@/utilities/routes';
+import { getDate } from '@/utilities';
+import { truncateText } from '@/utilities/helperPack';
+import { usePostsQuery } from '@/utilities/api/management/post';
+import {
+  useCommentsQuery,
+  useUpdateComment,
+} from '@/utilities/api/management/comment';
 
 // Types
-interface CommentWithMeta {
-  id: string;
-  content: string;
-  username: string;
-  avatar: string;
-  createdDate: string;
-  postId: string;
-  postTitle: string;
-  userId: string;
-  status: 'pending' | 'approved' | 'rejected';
-}
+import { CommentProps, CommentStatusType } from '@/types/management/blog';
 
 export default function CommentsListPage() {
   const { t, i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(12);
   const [searchQuery, setSearchQuery] = useState('');
   const [postFilter, setPostFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const isDialogOpen = useBoolean(false);
-  const [selectedComment, setSelectedComment] =
-    useState<CommentWithMeta | null>(null);
+  const [selectedComment, setSelectedComment] = useState<CommentProps | null>(
+    null
+  );
 
-  // Flatten comments from all posts
+  const posts = usePostsQuery();
   const comments = useCommentsQuery();
+  const updateComment = useUpdateComment();
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    setCurrentPage(1);
-  };
-
-  const handleOpenDialog = (comment: CommentWithMeta) => {
+  const handleOpenDialog = (comment: CommentProps) => {
     setSelectedComment(comment);
     isDialogOpen.setTrue();
   };
 
-  const handleApprove = () => {
+  const handleUpdateStatus = (status: CommentStatusType) => {
     console.log('Approve comment:', selectedComment?.id);
-    // TODO: Implement approve API call
-    isDialogOpen.setFalse();
-  };
 
-  const handleReject = () => {
-    console.log('Reject comment:', selectedComment?.id);
-    // TODO: Implement reject API call
-    isDialogOpen.setFalse();
-  };
-
-  const handleDelete = () => {
-    console.log('Delete comment:', selectedComment?.id);
-    // TODO: Implement delete API call
+    updateComment.mutate({ commentId: selectedComment.id, data: { status } });
     isDialogOpen.setFalse();
   };
 
@@ -131,8 +97,8 @@ export default function CommentsListPage() {
         <CardHeader>
           <div className='flex items-center justify-between gap-4 flex-wrap'>
             <h2 className='text-xl font-bold'>
-              {t('dashboard.allComments')} ({comments.data.pagination.totalDocs}
-              )
+              {t('dashboard.allComments')} (
+              {comments.data?.pagination?.totalDocs})
             </h2>
             <div className='flex items-center gap-3 flex-wrap'>
               <div className='relative'>
@@ -159,9 +125,10 @@ export default function CommentsListPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value='all'>{t('dashboard.allPosts')}</SelectItem>
-                  {mockPosts.map((post) => (
+                  {posts.data.docs?.map?.((post) => (
                     <SelectItem key={post.id} value={post.id}>
-                      {post.title.substring(0, 30)}...
+                      {post.translations[i18n.language].title.substring(0, 30)}
+                      ...
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -196,42 +163,62 @@ export default function CommentsListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('user.name')}</TableHead>
-                <TableHead>{t('comment.comment')}</TableHead>
-                <TableHead>{t('common.post')}</TableHead>
-                <TableHead>{t('user.status')}</TableHead>
-                <TableHead>{t('common.date')}</TableHead>
-                <TableHead className='text-right'>
+                <TableHead className='text-start'>{t('user.name')}</TableHead>
+                <TableHead className='text-start'>
+                  {t('comment.comment')}
+                </TableHead>
+                <TableHead className='text-center'>
+                  {t('common.post')}
+                </TableHead>
+                <TableHead className='text-center'>
+                  {t('user.status')}
+                </TableHead>
+                <TableHead className='text-center'>
+                  {t('common.date')}
+                </TableHead>
+                <TableHead className='text-center'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {comments.data.docs.map((comment) => (
+              {comments?.data?.docs?.map?.((comment) => (
                 <TableRow key={comment.id}>
                   <TableCell className='font-medium'>
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8 border-2 border-primary/20'>
                         <AvatarImage
-                          src={comment?.avatar?.url || '/placeholder.svg'}
-                          alt={comment.username}
+                          alt={comment.creator.name}
+                          src={
+                            comment?.creator.avatar?.url || '/placeholder.svg'
+                          }
                         />
                         <AvatarFallback className='bg-primary/10 text-primary font-bold text-xs'>
-                          {comment.username[0]}
+                          {comment.creator.name[0]}
                         </AvatarFallback>
                       </Avatar>
-                      <span className='text-sm'>{comment.username}</span>
+                      <Link
+                        to={routes.dashboard.users.edit(comment.creator.id)}
+                        className='text-sm underline'
+                      >
+                        {comment.creator.name}
+                      </Link>
                     </div>
                   </TableCell>
                   <TableCell className='max-w-md'>
-                    <p className='text-sm line-clamp-2'>{comment.content}</p>
-                  </TableCell>
-                  <TableCell className='max-w-xs'>
-                    <p className='text-sm text-muted-foreground line-clamp-1'>
-                      {'postTitle'}
+                    <p className='text-sm line-clamp-2'>
+                      {truncateText(comment.content, 25)}
                     </p>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className='text-center max-w-xs'>
+                    <Link
+                      to={routes.dashboard.posts.edit(comment.post.id)}
+                      className='underline text-sm text-muted-foreground line-clamp-1'
+                    >
+                      {comment.post.translations[i18n.language].title}
+                    </Link>
+                  </TableCell>
+                  <TableCell className='text-center'>
                     <Badge
                       variant={
                         comment.status === 'approved'
@@ -249,12 +236,16 @@ export default function CommentsListPage() {
                       {t(`comment.${comment.status}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell className='text-muted-foreground text-sm'>
-                    {formatDate(comment.createdDate)}
+                  <TableCell className='text-center text-muted-foreground text-sm'>
+                    {getDate(
+                      comment.createDate,
+                      i18n.language,
+                      'YYYY/MM/DD - HH:MM'
+                    )}
                   </TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className='text-center'>
                     <Button
-                      variant='ghost'
+                      variant='outline'
                       size='sm'
                       onClick={() => handleOpenDialog(comment)}
                     >
@@ -266,7 +257,7 @@ export default function CommentsListPage() {
             </TableBody>
           </Table>
 
-          <PaginationControls pagination={comments.data.pagination} />
+          <PaginationControls pagination={comments.data?.pagination} />
         </CardContent>
       </Card>
 
@@ -286,15 +277,21 @@ export default function CommentsListPage() {
               <div className='flex items-center gap-3'>
                 <Avatar className='h-10 w-10'>
                   <AvatarImage
-                    src={selectedComment.avatar || '/placeholder.svg'}
-                    alt={selectedComment.username}
+                    src={
+                      selectedComment.creator?.avatar?.url || '/placeholder.svg'
+                    }
+                    alt={selectedComment.creator.name}
                   />
-                  <AvatarFallback>{selectedComment.username[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    {selectedComment.creator.name[0]}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className='font-semibold'>{selectedComment.username}</p>
+                  <p className='font-semibold'>
+                    {selectedComment.creator.name}
+                  </p>
                   <p className='text-xs text-muted-foreground'>
-                    {formatDate(selectedComment.createdDate)}
+                    {getDate(selectedComment.createDate, i18n.language)}
                   </p>
                 </div>
               </div>
@@ -304,29 +301,36 @@ export default function CommentsListPage() {
               </div>
 
               <div className='text-sm text-muted-foreground'>
-                <strong>{t('common.post')}:</strong> {selectedComment.postTitle}
+                <strong>{t('common.post')}:</strong>{' '}
+                {selectedComment.post.translations[i18n.language].title}
               </div>
             </div>
           )}
 
           <DialogFooter className='flex gap-2'>
             <Button
+              disabled={updateComment.isPending}
               variant='outline'
               className='border-green-500/50 text-green-500 hover:bg-green-500/10'
-              onClick={handleApprove}
+              onClick={() => handleUpdateStatus('approved')}
             >
               <CheckCircle className='h-4 w-4 me-2' />
               {t('comment.approve')}
             </Button>
             <Button
+              disabled={updateComment.isPending}
               variant='outline'
               className='border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10'
-              onClick={handleReject}
+              onClick={() => handleUpdateStatus('rejected')}
             >
               <XCircle className='h-4 w-4 me-2' />
               {t('comment.reject')}
             </Button>
-            <Button variant='destructive' onClick={handleDelete}>
+            <Button
+              disabled={updateComment.isPending}
+              variant='destructive'
+              onClick={() => handleUpdateStatus('rejected')}
+            >
               <Trash2 className='h-4 w-4 me-2' />
               {t('common.delete')}
             </Button>

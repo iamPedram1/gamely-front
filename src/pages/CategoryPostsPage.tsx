@@ -1,14 +1,10 @@
-import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useParams, Link } from 'react-router-dom';
 
 // Components
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
-
-// Icon Components
-import { ArrowLeft } from 'lucide-react';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -23,7 +19,6 @@ export default function CategoryPostsPage() {
 
   return (
     <div className='min-h-screen flex flex-col bg-background'>
-      <Header />
       <main className='flex-1 container py-8'>
         <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6 rtl:flex-row-reverse'>
@@ -55,7 +50,6 @@ export default function CategoryPostsPage() {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 }

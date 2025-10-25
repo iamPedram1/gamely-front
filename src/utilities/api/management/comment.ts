@@ -6,8 +6,8 @@ import { useAppMutation } from '@/hooks/api/useMutation';
 import endpoints from '@/utilities/endpoints';
 
 // Types
-import type { CommentProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
+import type { CommentProps } from '@/types/management/blog';
 
 const commentsQueryKey = 'comments';
 
@@ -22,16 +22,12 @@ export const useCommentsQuery = useAppQuery(
 
 export const useUpdateComment = useAppMutation(
   (payload: {
-    postId: string;
     commentId: string;
-    comment: string;
-    replyToCommentId?: string;
+    data: Partial<Pick<CommentProps, 'status' | 'content'>>;
   }) =>
-    apiHandler.post(`${endpoints.management.comments}/${payload.commentId}`, {
-      comment: payload.comment,
-      ...(payload.replyToCommentId && {
-        replyToCommentId: payload.replyToCommentId,
-      }),
-    }),
+    apiHandler.patch(
+      `${endpoints.management.comments}/${payload.commentId}`,
+      payload.data
+    ),
   [commentsQueryKey]
 );

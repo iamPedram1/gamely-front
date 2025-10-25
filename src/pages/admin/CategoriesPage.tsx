@@ -82,7 +82,7 @@ export default function CategoriesPage() {
               <TableRow>
                 <TableHead>{t('common.name')}</TableHead>
                 <TableHead>{t('common.slug')}</TableHead>
-                <TableHead className='text-right'>
+                <TableHead className='ltr:text-end rtl:text-end'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -91,12 +91,12 @@ export default function CategoriesPage() {
               {categories?.data?.docs?.map?.((category) => (
                 <TableRow key={category.id}>
                   <TableCell className='font-medium'>
-                    {category.title}
+                    {category.translations[i18n.language].title}
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
                     {category.slug}
                   </TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className='text-end'>
                     <div className='flex items-center justify-end gap-2'>
                       <Button
                         size='icon'

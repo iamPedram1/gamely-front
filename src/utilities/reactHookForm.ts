@@ -38,20 +38,33 @@ export const getErrorAndHelperText = (
 });
 
 /**
+ * Recursively extracts all error messages from nested React Hook Form errors.
+ */
+function extractMessages(errors: Record<string, any>): string[] {
+  const messages: string[] = [];
+
+  for (const key in errors) {
+    const err = errors[key];
+    if (!err) continue;
+
+    if (err.message) messages.push(err.message);
+    if (typeof err === 'object') {
+      messages.push(...extractMessages(err));
+    }
+  }
+
+  return messages;
+}
+
+/**
  * Creates a reusable onError handler for React Hook Form.
  *
- * @param setAlert - function to show alerts (title, severity)
+ * @param setAlertState - function to show alerts (title, severity)
  */
 export const createOnErrorHandler: SubmitErrorHandler<any> = (errors) => {
-  console.log(errors);
-  const messages = Object.values(errors)
-    .map((err: any) => err?.message || '')
-    .filter(Boolean);
+  const messages = extractMessages(errors).filter(Boolean);
 
-  if (messages.length > 0) {
-    console.log(messages);
-    setAlertState(messages[0], 'error');
-  }
+  if (messages.length > 0) setAlertState(messages[0], 'error');
 };
 
 /**

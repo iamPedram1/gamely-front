@@ -12,12 +12,10 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Context
-import useLoadingStore from '@/store/loading';
-
 // Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
+import { supportedLanguages } from '@/utilities/helperPack';
 import {
   useCreateTag,
   useTagQuery,
@@ -27,11 +25,15 @@ import {
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
+import { useSelectLoading } from '@/store/loading';
 
 const createTagSchema = () =>
   object({
-    title: generateStringSchema('title', 3, 255, true),
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    translations: object({
+      en: object({ title: generateStringSchema('title', 3, 255) }),
+      fa: object({ title: generateStringSchema('title', 3, 255) }),
+    }).required(),
   });
 
 type FormSchema = Zod.infer<ReturnType<typeof createTagSchema>>;
@@ -39,7 +41,7 @@ type FormSchema = Zod.infer<ReturnType<typeof createTagSchema>>;
 export default function MutateTagPage() {
   // Context
   const { t, i18n } = useTranslation();
-  const { loading } = useLoadingStore();
+  const loading = useSelectLoading();
 
   // Hooks
   const params = useParams();
@@ -50,24 +52,18 @@ export default function MutateTagPage() {
     resolver: zodResolver(schema),
   });
 
-  const tag = useTagQuery({
-    enabled: isEditMode,
-    onFetch: (doc) => reset(doc),
-  });
-
+  const tag = useTagQuery({ enabled: isEditMode, onFetch: reset });
   const createTag = useCreateTag({
     stayOnLoadingAfterSuccessMutate: true,
     redirectAfterSuccessTo: routes.dashboard.tags.index,
     autoAlert: { mode: 'add', name: 'Tag' },
   });
-  const updateTag = useUpdateTag({
-    autoAlert: { mode: 'update', name: 'Tag' },
-  });
+  const updateTag = useUpdateTag();
 
   // Utilities
   const onSubmit = async (data: Required<FormSchema>) => {
-    if (isEditMode) updateTag.mutate({ id: params.id, ...data });
-    else createTag.mutate(data);
+    if (isEditMode) updateTag.mutate({ id: params.id, data: data as any });
+    else createTag.mutate(data as any);
   };
 
   const disabled =
@@ -102,24 +98,25 @@ export default function MutateTagPage() {
             <CardTitle>{t('tag.tagDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
-            <div className='space-y-2'>
-              <Label htmlFor='title'>
-                {t('tag.tagTitle')} {t('form.required')}
-              </Label>
-              <Controller
-                control={control}
-                name='title'
-                render={({ field }) => (
-                  <Input
-                    id='title'
-                    placeholder={t('tag.exampleRPG')}
-                    required
-                    disabled={disabled}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
+            {supportedLanguages.map((lng) => (
+              <div className='space-y-2'>
+                <Label htmlFor={`title-${lng}`}>
+                  {t('common.title')} {t(`common.${lng}`)} {t('form.required')}
+                </Label>
+                <Controller
+                  control={control}
+                  name={`translations.${lng}.title`}
+                  render={({ field }) => (
+                    <Input
+                      id={`title-${lng}`}
+                      placeholder={t(`tag.tagTitlePlaceholder.${lng}`)}
+                      disabled={disabled}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            ))}
             <div className='space-y-2'>
               <Label htmlFor='slug'>
                 {t('common.slug')} {t('form.required')}
@@ -130,8 +127,7 @@ export default function MutateTagPage() {
                 render={({ field }) => (
                   <Input
                     id='slug'
-                    placeholder={t('tag.exampleRPG')}
-                    required
+                    placeholder={t('tag.tagSlugPlaceholder')}
                     disabled={disabled}
                     {...field}
                   />

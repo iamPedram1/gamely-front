@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 // Components
 import { Badge } from '@/components/ui/badge';
@@ -22,9 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-// Icon Components
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 // Context
 import useLoadingStore from '@/store/loading';
@@ -92,7 +90,7 @@ export default function PostsListPage() {
                     <>
                       {categories?.data?.map?.((ctg) => (
                         <SelectItem key={ctg.id} value={ctg.id}>
-                          {ctg.title}
+                          {ctg?.translations?.[i18n.language]?.title}
                         </SelectItem>
                       ))}
                     </>
@@ -136,14 +134,16 @@ export default function PostsListPage() {
                         variant='secondary'
                         className='bg-primary/10 text-primary'
                       >
-                        {post.category.title}
+                        {post.category.translations[i18n.language].title}
                       </Badge>
                     </Link>
                   </TableCell>
                   <TableCell className='text-center'>
                     {post.game ? (
                       <Link to={routes.dashboard.games.edit(post.game.id)}>
-                        <Badge variant='outline'>{post.game.title}</Badge>
+                        <Badge variant='outline'>
+                          {post?.game?.translations?.[i18n.language]?.title}
+                        </Badge>
                       </Link>
                     ) : (
                       '-'
@@ -153,7 +153,7 @@ export default function PostsListPage() {
                     {post.author.name}
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>
-                    {getDate(post.createdDate, i18n.language)}
+                    {getDate(post.createDate, i18n.language)}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>

@@ -7,7 +7,7 @@ export interface PostProps {
   abstract: string;
   id: string;
   coverImage: FileProps | null;
-  createdDate: string;
+  createDate: string;
   updateDate: string;
   readingTime: number;
   author: UserProps;
@@ -40,7 +40,7 @@ export interface UserProps {
   bio: string;
   role: 'superAdmin' | 'admin' | 'author' | 'user';
   status?: 'active' | 'blocked';
-  createdDate?: string;
+  createDate?: string;
 }
 
 export interface TagProps {
@@ -79,6 +79,6 @@ export interface CommentProps {
   username: string;
   content: string;
   avatar: FileProps;
-  createdDate: string;
+  createDate: string;
   status: CommentStatusType;
 }

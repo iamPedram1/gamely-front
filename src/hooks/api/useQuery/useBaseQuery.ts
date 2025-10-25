@@ -170,6 +170,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
 
     const data =
       'docs' in (query.data || {}) ? (query.data as any).docs : query.data;
+    console.log(data, query.data);
 
     if (
       query.isFetched &&

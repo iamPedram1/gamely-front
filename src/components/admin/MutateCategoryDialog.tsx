@@ -1,8 +1,8 @@
 import { object } from 'zod';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -17,11 +17,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-// Context
-import useLoadingStore from '@/store/loading';
-
 // Utilities
-import { createOnErrorHandler } from '@/utilities';
+import { supportedLanguages } from '@/utilities/helperPack';
+import { createOnErrorHandler, getChangedFields } from '@/utilities';
 import {
   useCategoryQuery,
   useCreateCategory,
@@ -39,14 +37,17 @@ interface MutateCategoryDialogProps {
 
 const createCategorySchema = () =>
   object({
-    title: generateStringSchema('title', 3, 255),
+    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    translations: object({
+      en: object({ title: generateStringSchema('title', 3, 255) }),
+      fa: object({ title: generateStringSchema('title', 3, 255) }),
+    }),
     parentId: generateStringSchema(
       'parentId',
       undefined,
       undefined,
       false
     ).nullable(),
-    slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   });
 
 type FormSchema = Zod.infer<ReturnType<typeof createCategorySchema>>;
@@ -60,9 +61,6 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
 
   // Translation
   const { t, i18n } = useTranslation();
-
-  // Context
-  const { loading } = useLoadingStore();
 
   // Custom Hooks
   const schema = useMemo(createCategorySchema, [i18n.language]);
@@ -87,12 +85,16 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
 
   // Utilities
   const onSubmit = (data: Required<FormSchema>) => {
-    if (isEditMode) updateCategory.mutate({ id: categoryId, ...data });
-    else createCategory.mutate(data);
+    if (isEditMode)
+      updateCategory.mutate({
+        id: categoryId,
+        data: getChangedFields(category.data, data) as any,
+      });
+    else createCategory.mutate(data as any);
   };
 
   const disabled =
-    loading ||
+    !category.isFetched ||
     (isEditMode
       ? updateCategory.isPending || !category.isFetched
       : createCategory.isPending);
@@ -115,24 +117,26 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
           <div className='space-y-4 py-4'>
-            <div className='space-y-2'>
-              <Label htmlFor='title'>
-                {t('category.categoryTitle')} {t('form.required')}
-              </Label>
-              <Controller
-                control={control}
-                name='title'
-                render={({ field }) => (
-                  <Input
-                    id='title'
-                    placeholder={t('category.exampleReviews')}
-                    required
-                    disabled={disabled}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
+            {supportedLanguages.map((lng) => (
+              <div key={`ctg-${lng}`} className='space-y-2'>
+                <Label htmlFor='title'>
+                  {t('common.title')} {t(`common.${lng}`)} {t('form.required')}
+                </Label>
+                <Controller
+                  control={control}
+                  name={`translations.${lng}.title`}
+                  render={({ field }) => (
+                    <Input
+                      id='title'
+                      placeholder={t(`category.exampleReviews.${lng}`)}
+                      required
+                      disabled={disabled}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            ))}
             <div className='space-y-2'>
               <Label htmlFor='slug'>
                 {t('category.slug')} {t('form.required')}

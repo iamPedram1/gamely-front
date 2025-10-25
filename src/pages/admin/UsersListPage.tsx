@@ -1,8 +1,7 @@
-'use client';
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Eye, Search } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -27,11 +26,9 @@ import {
 } from '@/components/ui/table';
 import PaginationControls from '@/components/ui/pagination-controls';
 
-// Icon Components
-import { Eye, Search } from 'lucide-react';
-
 // Utilities
 import { useUsersQuery } from '@/utilities/api/management/user';
+import { getDate } from '@/utilities';
 
 export default function UsersListPage() {
   const { t, i18n } = useTranslation();
@@ -42,15 +39,6 @@ export default function UsersListPage() {
 
   // Hooks
   const users = useUsersQuery();
-
-  // Utilities
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
 
   // Render
   return (
@@ -183,7 +171,7 @@ export default function UsersListPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {formatDate(user.createdDate)}
+                    {getDate(user.createDate, i18n.language)}
                   </TableCell>
                   <TableCell className='text-center'>
                     <Link to={`/dashboard/users/${user.id}`}>

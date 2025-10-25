@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 // Components
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -32,8 +32,15 @@ import UsersListPage from '@/pages/admin/UsersListPage';
 import UserDetailPage from '@/pages/admin/UserDetailPage';
 import CommentsListPage from '@/pages/admin/CommentsListPage';
 import ProfilePage from '@/pages/ProfilePage';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 function App() {
+  // Hooks
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/dashboard');
+
+  // Render
   return (
     <ThemeProvider defaultTheme='system' storageKey='game-blog-theme'>
       <Suspense
@@ -43,6 +50,7 @@ function App() {
           </div>
         }
       >
+        {!isDashboard && <Header />}
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path={routes.posts.index} element={<PostListPage />} />
@@ -123,6 +131,7 @@ function App() {
             />
           </Route>
         </Routes>
+        {!isDashboard && <Footer />}
       </Suspense>
       <NotificationProvider />
     </ThemeProvider>

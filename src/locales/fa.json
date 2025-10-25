@@ -52,7 +52,8 @@
     "backToPosts": "بازگشت به مقالات",
     "inThisCategory": "در این دسته‌بندی",
     "noPostsInCategory": "هیچ مقاله‌ای در این دسته‌بندی یافت نشد",
-    "replyToComment": "پاسخ به نظر"
+    "replyToComment": "پاسخ به نظر",
+    "loginForAction": "لطفا ابتدا وارد حساب خود شوید"
   },
   "auth": {
     "login": "ورود",
@@ -219,8 +220,9 @@
     "categoryTitle": "عنوان دسته‌بندی",
     "slug": "اسلاگ",
     "createCategory": "ایجاد دسته‌بندی",
-    "exampleReviews": "مثال: نقد و بررسی",
-    "exampleReviewsSlug": "مثال: naghd-va-barresi"
+    "exampleReviews.en": "e.g., Horror",
+    "exampleReviews.fa": "e.g., ترسناک",
+    "exampleReviewsSlug": "e.g., horror"
   },
   "game": {
     "updateGame": "به‌روزرسانی بازی",
@@ -245,7 +247,9 @@
     "updateTagInDb": "به‌روزرسانی برچسب در پایگاه داده",
     "tagDetails": "جزئیات برچسب",
     "tagTitle": "عنوان برچسب",
-    "exampleRPG": "مثال: نقش‌آفرینی",
+    "tagTitlePlaceholder.en": "مثال: Outlast Series",
+    "tagTitlePlaceholder.fa": "مثال: سری اوت لست",
+    "tagSlugPlaceholder": "مثال: outlast-series",
     "browseByTags": "مرور مقالات بر اساس برچسب"
   },
   "home": {

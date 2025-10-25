@@ -49,95 +49,89 @@ export default function RecoverPasswordPage() {
 
   // Render
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
-      <Header />
-      <main className='flex-1 container py-16 flex items-center justify-center'>
-        <div className='w-full max-w-md'>
-          <Link to={routes.login}>
-            <Button
-              disabled={recoverPassword.isPending}
-              variant='ghost'
-              className='mb-6'
-            >
-              <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
-              {t('auth.backToLogin')}
-            </Button>
-          </Link>
-          <Card className='border-primary/20'>
-            <CardHeader>
-              <CardTitle className='text-3xl font-black'>
-                <span className='gradient-gaming-text'>
-                  {t('auth.passwordRecovery')}
-                </span>
-              </CardTitle>
-              <CardDescription>
-                {t('auth.enterEmailForRecovery')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {recoverPassword.status !== 'success' ? (
-                <form
-                  onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}
-                  className='space-y-6'
-                >
-                  <div className='space-y-2'>
-                    <Label htmlFor='email'>{t('common.email')} *</Label>
-                    <div className='relative'>
-                      <Mail className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                      <Controller
-                        control={control}
-                        name='email'
-                        render={({ field }) => (
-                          <Input
-                            id='email'
-                            type='email'
-                            placeholder={t('auth.emailPlaceholder')}
-                            className='pl-10'
-                            disabled={recoverPassword.isPending}
-                            {...field}
-                          />
-                        )}
-                      />
-                    </div>
+    <main className='flex-1 container py-16 items-center justify-center'>
+      <div className='w-full max-w-md'>
+        <Link to={routes.login}>
+          <Button
+            disabled={recoverPassword.isPending}
+            variant='ghost'
+            className='mb-6'
+          >
+            <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
+            {t('auth.backToLogin')}
+          </Button>
+        </Link>
+        <Card className='border-primary/20'>
+          <CardHeader>
+            <CardTitle className='text-3xl font-black'>
+              <span className='gradient-gaming-text'>
+                {t('auth.passwordRecovery')}
+              </span>
+            </CardTitle>
+            <CardDescription>{t('auth.enterEmailForRecovery')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {recoverPassword.status !== 'success' ? (
+              <form
+                onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}
+                className='space-y-6'
+              >
+                <div className='space-y-2'>
+                  <Label htmlFor='email'>{t('common.email')} *</Label>
+                  <div className='relative'>
+                    <Mail className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
+                    <Controller
+                      control={control}
+                      name='email'
+                      render={({ field }) => (
+                        <Input
+                          id='email'
+                          type='email'
+                          placeholder={t('auth.emailPlaceholder')}
+                          className='pl-10'
+                          disabled={recoverPassword.isPending}
+                          {...field}
+                        />
+                      )}
+                    />
                   </div>
-
-                  <Button
-                    type='submit'
-                    className='w-full gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
-                  >
-                    {t('auth.sendResetLink')}
-                  </Button>
-                </form>
-              ) : (
-                <div className='text-center space-y-4 py-6'>
-                  <div className='w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center'>
-                    <Mail className='h-8 w-8 text-primary' />
-                  </div>
-                  <div>
-                    <h3 className='text-xl font-bold mb-2'>
-                      {t('auth.checkEmail')}
-                    </h3>
-                    <p className='text-sm text-muted-foreground'>
-                      {t('auth.resetLinkSent')}{' '}
-                      <strong>{recoverPassword.variables.email}</strong>
-                    </p>
-                  </div>
-                  <Link to='/login'>
-                    <Button
-                      disabled={recoverPassword.isPending}
-                      variant='outline'
-                      className='mt-4'
-                    >
-                      {t('auth.backToLogin')}
-                    </Button>
-                  </Link>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-      <Footer />
-    </div>
+
+                <Button
+                  type='submit'
+                  className='w-full gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+                >
+                  {t('auth.sendResetLink')}
+                </Button>
+              </form>
+            ) : (
+              <div className='text-center space-y-4 py-6'>
+                <div className='w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center'>
+                  <Mail className='h-8 w-8 text-primary' />
+                </div>
+                <div>
+                  <h3 className='text-xl font-bold mb-2'>
+                    {t('auth.checkEmail')}
+                  </h3>
+                  <p className='text-sm text-muted-foreground'>
+                    {t('auth.resetLinkSent')}{' '}
+                    <strong>{recoverPassword.variables.email}</strong>
+                  </p>
+                </div>
+                <Link to='/login'>
+                  <Button
+                    disabled={recoverPassword.isPending}
+                    variant='outline'
+                    className='mt-4'
+                  >
+                    {t('auth.backToLogin')}
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }

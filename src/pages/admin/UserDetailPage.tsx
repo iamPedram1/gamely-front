@@ -50,7 +50,7 @@ const createUserSchema = () =>
     status: zodEnum(['active', 'blocked']).optional(),
     role: zodEnum(['user', 'author', 'admin', 'superAdmin']).optional(),
     bio: generateStringSchema('bio', 10, 500, false),
-    createdDate: generateStringSchema(
+    createDate: generateStringSchema(
       'create date',
       undefined,
       undefined,
@@ -190,7 +190,7 @@ export default function UserDetailPage() {
               </div>
               <p className='text-xs text-muted-foreground'>
                 {t('user.joined')}{' '}
-                {getDate(user.data?.createdDate, i18n.language)}
+                {getDate(user.data?.createDate, i18n.language)}
               </p>
             </div>
             <AlertDialog>

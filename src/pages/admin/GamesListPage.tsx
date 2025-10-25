@@ -91,11 +91,11 @@ export default function GamesListPage() {
                       {game.coverImage && (
                         <img
                           src={game.coverImage.url || '/placeholder.svg'}
-                          alt={game.translations[i18n.language].title}
+                          alt={game?.translations?.[i18n.language]?.title}
                           className='w-16 h-16 object-cover rounded'
                         />
                       )}
-                      <span>{game.translations[i18n.language].title}</span>
+                      <span>{game?.translations?.[i18n.language]?.title}</span>
                     </div>
                   </TableCell>
                   <TableCell className='max-w-md'>

@@ -8,7 +8,7 @@ import apiHandler from '@/utilities/safeApiHandler';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { SummaryProps, TagProps } from '@/types/blog';
+import type { SummaryProps, TagProps } from '@/types/management/blog';
 
 const tagsQueryKey = 'tags';
 
@@ -40,16 +40,16 @@ export const useTagQuery = makeUseFetchQuery(
 );
 
 export const useCreateTag = useAppMutation(
-  (payload: Pick<TagProps, 'title' | 'slug'>) =>
+  (payload: Pick<TagProps, 'translations' | 'slug'>) =>
     apiHandler.post(endpoints.management.tags, payload),
   [tagsQueryKey]
 );
 
 export const useUpdateTag = useAppMutation(
-  (payload: Pick<TagProps, 'id' | 'title' | 'slug'>, context) =>
+  (payload: { id: string; data: Partial<TagProps> }, context) =>
     apiHandler.patch(
       `${endpoints.management.tags}/${payload.id}`,
-      payload,
+      payload.data,
       context
     ),
   [tagsQueryKey]

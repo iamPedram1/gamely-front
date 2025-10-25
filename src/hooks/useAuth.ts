@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
+import { useCallback, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 // Custom Hooks
 import { useBoolean } from '@/hooks/state';
@@ -20,14 +20,15 @@ import type { UserProps } from '@/types/blog';
 
 const useAuth = () => {
   const isAuthorized = useBoolean();
-
+  const location = useLocation();
   const token = getToken();
-
   const navigate = useNavigate();
   const profile = useProfileQuery({
     enabled: Boolean(token),
     onFetch: isAuthorized.setTrue,
-    onFetchFailed: () => logout(),
+    onFetchFailed: (err) => {
+      if (err.statusCode === 403 || err.statusCode === 401) logout();
+    },
     placeholderData: null,
   });
 
@@ -38,6 +39,12 @@ const useAuth = () => {
     isAuthorized.setFalse();
     navigate(redirectTo || '/');
   }, []);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token && profile.data) isAuthorized.setTrue();
+    else isAuthorized.setFalse();
+  }, [profile.data, location]);
 
   const signin = useCallback((token: string, refreshToken: string) => {
     setToken(token);

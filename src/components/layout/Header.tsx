@@ -51,15 +51,6 @@ export default function Header() {
     navigate('/');
   };
 
-  const getUserInitials = (name: string = '') => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   const getRoleLabel = (role: string) => {
     return t(`user.${role}`);
   };
@@ -133,7 +124,7 @@ export default function Header() {
                       alt={profile.name}
                     />
                     <AvatarFallback className='bg-gradient-gaming text-xs font-semibold'>
-                      {getUserInitials(profile.name)}
+                      {profile.name[0]}
                     </AvatarFallback>
                   </Avatar>
                   <ChevronDown className='h-4 w-4 text-muted-foreground rtl:rotate-180' />

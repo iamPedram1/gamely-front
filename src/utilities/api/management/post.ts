@@ -8,7 +8,7 @@ import apiHandler from '@/utilities/safeApiHandler';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import { PostProps, PostSummaryProps } from '@/types/management/blog';
+import type { PostProps, PostSummaryProps } from '@/types/management/blog';
 
 const postsQueryKey = 'posts';
 
@@ -46,8 +46,8 @@ export const useCreatePost = useAppMutation(
 );
 
 export const useUpdatePost = useAppMutation(
-  (payload: { id: string; title: string; coverImage: string }, reqInit) =>
-    apiHandler.patch(`/posts/${payload.id}`, payload, reqInit),
+  (payload: { id: string; data: Partial<PostProps> }, reqInit) =>
+    apiHandler.patch(`/posts/${payload.id}`, payload.data, reqInit),
   [postsQueryKey]
 );
 export const useDeletePost = useAppMutation(

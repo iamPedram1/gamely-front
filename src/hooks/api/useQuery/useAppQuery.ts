@@ -3,7 +3,7 @@ import type { QueryFunction } from '@tanstack/react-query';
 // Custom Hooks
 import useBaseQuery from './useBaseQuery';
 
-// Utilities
+// Custom Utilities
 import initialPagination from '@/utilities/pagination';
 
 // Custom Types

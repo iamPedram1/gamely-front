@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -15,9 +16,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-// Icon Components
-import { Plus, Edit, Trash2 } from 'lucide-react';
-
 // Context
 import useLoadingStore from '@/store/loading';
 
@@ -30,10 +28,9 @@ export default function TagsListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const { t, i18n } = useTranslation();
   const tags = useTagsQuery();
   const deleteTag = useDeleteTag();
-
+  const { t, i18n } = useTranslation();
   const disabled = loading || deleteTag.isPending;
 
   // Render
@@ -77,7 +74,7 @@ export default function TagsListPage() {
               <TableRow>
                 <TableHead>{t('common.name')}</TableHead>
                 <TableHead>{t('common.slug')}</TableHead>
-                <TableHead className='text-right'>
+                <TableHead className='ltr:text-end rtl:text-end'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -85,11 +82,13 @@ export default function TagsListPage() {
             <TableBody>
               {tags?.data?.docs?.map?.((tag) => (
                 <TableRow key={tag.id}>
-                  <TableCell className='font-medium'>#{tag.title}</TableCell>
+                  <TableCell className='font-medium'>
+                    #{tag.translations[i18n.language].title}
+                  </TableCell>
                   <TableCell className='text-muted-foreground'>
                     {tag.slug}
                   </TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className='text-end'>
                     <div className='flex items-center justify-end gap-2'>
                       <Link to={routes.dashboard.tags.edit(tag.id)}>
                         <Button disabled={disabled} variant='ghost' size='icon'>
@@ -97,6 +96,7 @@ export default function TagsListPage() {
                         </Button>
                       </Link>
                       <Button
+                        onClick={() => deleteTag.mutate(tag.id)}
                         disabled={disabled}
                         variant='ghost'
                         size='icon'

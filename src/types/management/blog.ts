@@ -1,6 +1,7 @@
 import type { FileProps } from '@/types/api';
 import type { WithDictionary } from '@/types/translation';
 
+// <----------------   POST   ---------------->
 interface PostTranslation {
   title: string;
   abstract: string;
@@ -15,7 +16,7 @@ interface PostBaseProps {
 
 export interface PostProps extends PostBaseProps {
   coverImage: FileProps | null;
-  createdDate: string;
+  createDate: string;
   updateDate: string;
   readingTime: number;
   author: UserProps;
@@ -27,6 +28,7 @@ export interface PostProps extends PostBaseProps {
 
 export interface PostSummaryProps extends PostBaseProps {}
 
+// <----------------   USER   ---------------->
 export interface UserProps {
   id: string;
   name: string;
@@ -35,21 +37,31 @@ export interface UserProps {
   bio: string;
   role: 'admin' | 'author' | 'user';
   status?: 'active' | 'blocked';
-  createdDate?: string;
+  createDate?: string;
+}
+
+// <----------------   TAG   ---------------->
+export interface TagTranslationProps {
+  title: string;
 }
 
 export interface TagProps {
   id: string;
-  postsCount: number;
-  title: string;
   slug: string;
+  postsCount: number;
+  translations: WithDictionary<TagTranslationProps>;
+}
+
+// <----------------   CATEGORY   ---------------->
+export interface CategoryTranslation {
+  title: string;
 }
 
 export interface CategoryProps {
   id: string;
-  title: string;
   slug: string;
   parentId: string;
+  translations: WithDictionary<CategoryTranslation>;
 }
 
 export interface SummaryProps {
@@ -58,21 +70,28 @@ export interface SummaryProps {
   slug?: string;
 }
 
+// <----------------   GAME   ---------------->
+export interface GameTranslation {
+  title: string;
+  description: string;
+}
+
 export interface GameProps {
   id: string;
   slug: string;
   coverImage: FileProps;
-  translations: WithDictionary<{ title: string; description: string }>;
+  translations: WithDictionary<GameTranslation>;
   releaseDate: string;
 }
 
-type CommentStatusType = 'approved' | 'reject' | 'pending';
+// <----------------   COMMENT   ---------------->
+export type CommentStatusType = 'approved' | 'rejected' | 'pending';
 
 export interface CommentProps {
   id: string;
-  username: string;
+  creator: UserProps;
   content: string;
-  avatar: FileProps;
-  createdDate: string;
+  createDate: string;
   status: CommentStatusType;
+  post: SummaryProps;
 }

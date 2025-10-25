@@ -127,7 +127,7 @@ export const generateFileSchema = (fieldKey = 'coverImage'): ZodType => {
       size: number().optional().nullable(),
       mimetype: string().optional().nullable(),
       url: string().optional().nullable(),
-      createdDate: string().optional().nullable(),
+      createDate: string().optional().nullable(),
       updateDate: string().optional().nullable(),
     })
   );

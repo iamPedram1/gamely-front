@@ -12,6 +12,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+// Utilities
+import { getDate } from '@/utilities';
+
 // Types
 import type { PostProps } from '@/types/blog';
 
@@ -23,21 +26,11 @@ export default function PostCard({ post }: PostCardProps) {
   // Custom Hooks
   const { t, i18n } = useTranslation();
 
-  // Utilities
-  const formatDate = (dateString: string) => {
-    const locale = i18n.language === 'fa' ? 'fa-IR' : 'en-US';
-    return new Date(dateString).toLocaleDateString(locale, {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
   // Render
   return (
     <Card className='flex flex-col overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group'>
       {post.coverImage && (
-        <Link to={`/post/${post.slug}`}>
+        <Link to={`/posts/${post.slug}`}>
           <div className='aspect-video overflow-hidden relative'>
             <img
               src={post.coverImage.url || '/placeholder.svg'}
@@ -66,7 +59,7 @@ export default function PostCard({ post }: PostCardProps) {
             </Badge>
           )}
         </div>
-        <Link to={`/post/${post.slug}`}>
+        <Link to={`/posts/${post.slug}`}>
           <h3 className='text-xl font-bold hover:text-primary transition-colors line-clamp-2 leading-tight'>
             {post.title}
           </h3>
@@ -112,7 +105,7 @@ export default function PostCard({ post }: PostCardProps) {
         <div className='flex items-center gap-3 text-xs text-muted-foreground'>
           <div className='flex items-center gap-1'>
             <Calendar className='h-3 w-3' />
-            <span>{formatDate(post.createdDate)}</span>
+            <span> {getDate(post.createDate, i18n.language)}</span>
           </div>
           <div className='flex items-center gap-1'>
             <Clock className='h-3 w-3' />

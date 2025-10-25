@@ -1,8 +1,8 @@
 {
   "appName": "GameLy",
   "common": {
-    "fa": "Persian",
-    "en": "English",
+    "fa": "(Persian)",
+    "en": "(English)",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -52,7 +52,8 @@
     "backToPosts": "Back to Posts",
     "inThisCategory": "in this category",
     "noPostsInCategory": "No posts found in this category",
-    "replyToComment": "Reply to Comment"
+    "replyToComment": "Reply to Comment",
+    "loginForAction": "You should login for this action"
   },
   "auth": {
     "login": "Sign In",
@@ -209,7 +210,8 @@
     "updatePostInDb": "Update post in the database",
     "postNotFound": "Post not found",
     "latestPosts": "Latest Posts",
-    "discoverLatest": "Discover the latest gaming news and articles"
+    "discoverLatest": "Discover the latest gaming news and articles",
+    "minRead": "min read"
   },
   "category": {
     "updateCategory": "Update category",
@@ -219,8 +221,9 @@
     "categoryTitle": "Category Title",
     "slug": "Slug",
     "createCategory": "Create Category",
-    "exampleReviews": "e.g., Reviews",
-    "exampleReviewsSlug": "e.g., reviews"
+    "exampleReviews.en": "e.g., Horror",
+    "exampleReviews.fa": "e.g., ترسناک",
+    "exampleReviewsSlug": "e.g., horror"
   },
   "game": {
     "updateGame": "Update Game",
@@ -233,7 +236,6 @@
     "gameUrlSlug": "game-url-slug",
     "coverImageUrl": "Cover Image URL",
     "releaseDate": "Release Date",
-    "minRead": "min read",
     "description": "Description",
     "briefGameDescription": "Brief description of the game",
     "browseAllGames": "Browse all games in our collection",
@@ -246,6 +248,9 @@
     "updateTagInDb": "Update a tag in the database",
     "tagDetails": "Tag Details",
     "tagTitle": "Tag Title",
+    "tagTitlePlaceholder.en": "e.g., Outlast Series",
+    "tagTitlePlaceholder.fa": "e.g., سری اوت لست",
+    "tagSlugPlaceholder": "e.g, outlast-series",
     "exampleRPG": "e.g., RPG",
     "browseByTags": "Browse posts by tags"
   },

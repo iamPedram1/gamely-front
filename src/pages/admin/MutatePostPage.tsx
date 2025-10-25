@@ -29,7 +29,10 @@ import routes from '@/utilities/routes';
 import { uploadFile } from '@/utilities/api/uploader';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { supportedLanguages } from '@/utilities/helperPack';
-import { createOnErrorHandler } from '@/utilities/reactHookForm';
+import {
+  createOnErrorHandler,
+  getChangedFields,
+} from '@/utilities/reactHookForm';
 import { useTagsSummariesQuery } from '@/utilities/api/management/tag';
 import { useGamesSummariesQuery } from '@/utilities/api/management/game';
 import { useCategoriesSummariesQuery } from '@/utilities/api/management/category';
@@ -86,7 +89,6 @@ export default function MutatePostPage() {
     mode: 'onTouched',
     resolver: zodResolver(schema),
   });
-  console.log(tags.data);
 
   const post = usePostQuery({
     initialParams: params?.id,
@@ -120,7 +122,11 @@ export default function MutatePostPage() {
       payload.coverImage = data.coverImage.id;
     }
 
-    if (isEditMode) updatePost.mutate({ id: params.id, ...payload });
+    if (isEditMode)
+      updatePost.mutate({
+        id: params.id,
+        data: getChangedFields(post.data, data as any),
+      });
     else createPost.mutate(payload);
   };
 
@@ -287,7 +293,7 @@ export default function MutatePostPage() {
                       <SelectContent>
                         {categories.data?.map?.((cat) => (
                           <SelectItem key={cat.id} value={cat.id}>
-                            {cat.title}
+                            {cat.translations[i18n.language].title}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -309,8 +315,8 @@ export default function MutatePostPage() {
                       selected={field.value}
                       onChange={field.onChange}
                       options={tags?.data?.map?.((tag) => ({
-                        label: tag.title,
                         value: tag.id,
+                        label: tag.translations[i18n.language].title,
                       }))}
                     />
                   </div>
@@ -346,7 +352,7 @@ export default function MutatePostPage() {
             </div>
             <div className='grid grid-cols-2 gap-4'>
               {supportedLanguages.map((lng) => (
-                <div className='space-y-2'>
+                <div key={`abstract-${lng}`} className='space-y-2'>
                   <Label htmlFor={`${lng}-abstract`}>
                     {t('post.abstract')} {`(${t(`common.${lng}`)}) `}
                     {t('form.required')}
@@ -367,7 +373,7 @@ export default function MutatePostPage() {
                 </div>
               ))}
               {supportedLanguages.map((lng) => (
-                <div className='space-y-2'>
+                <div key={`content-${lng}`} className='space-y-2'>
                   <Label htmlFor={`${lng}-content`}>
                     {t('post.content')} {`(${t(`common.${lng}`)}) `}
                     {t('form.required')}

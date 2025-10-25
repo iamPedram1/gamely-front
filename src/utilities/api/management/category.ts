@@ -8,7 +8,7 @@ import apiHandler from '@/utilities/safeApiHandler';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { CategoryProps, SummaryProps } from '@/types/blog';
+import type { CategoryProps, SummaryProps } from '@/types/management/blog';
 
 const categoriesQueryKey = 'categories';
 
@@ -35,7 +35,7 @@ export const useCategoryQuery = makeUseFetchQuery(
       reqInit
     ),
   [categoriesQueryKey],
-  { placeholderData: { id: '', title: '', slug: '', parentId: null } }
+  { placeholderData: null }
 );
 
 export const useCreateCategory = useAppMutation(
@@ -45,16 +45,16 @@ export const useCreateCategory = useAppMutation(
 );
 
 export const useUpdateCategory = useAppMutation(
-  (payload: CategoryProps) =>
+  (payload: { id: string; data: Partial<CategoryProps> }) =>
     apiHandler.patch(
       `${endpoints.management.categories}/${payload.id}`,
-      payload
+      payload.data
     ),
   [categoriesQueryKey]
 );
 
 export const useDeleteCategory = useAppMutation(
-  (gameId: string) =>
-    apiHandler.delete(`${endpoints.management.categories}/${gameId}`),
+  (categoryId: string) =>
+    apiHandler.delete(`${endpoints.management.categories}/${categoryId}`),
   [categoriesQueryKey]
 );
