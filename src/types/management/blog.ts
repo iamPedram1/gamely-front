@@ -1,11 +1,19 @@
 import type { FileProps } from '@/types/api';
+import type { WithDictionary } from '@/types/translation';
 
-export interface PostProps {
+interface PostTranslation {
   title: string;
-  slug: string;
-  content: string;
   abstract: string;
+  content: string;
+}
+
+interface PostBaseProps {
   id: string;
+  slug: string;
+  translations: WithDictionary<PostTranslation>;
+}
+
+export interface PostProps extends PostBaseProps {
   coverImage: FileProps | null;
   createdDate: string;
   updateDate: string;
@@ -17,20 +25,7 @@ export interface PostProps {
   comments: CommentProps[];
 }
 
-export interface PostSummaryProps {
-  id: string;
-  title: string;
-  slug: string;
-  abstract: string;
-  content: string;
-  coverImage: FileProps;
-  author: UserProps;
-  publishedAt: string;
-  tags: TagProps[];
-  category: CategoryProps;
-  game: GameProps;
-  comments: CommentProps[];
-}
+export interface PostSummaryProps extends PostBaseProps {}
 
 export interface UserProps {
   id: string;
@@ -38,7 +33,7 @@ export interface UserProps {
   email: string;
   avatar: FileProps;
   bio: string;
-  role: 'superAdmin' | 'admin' | 'author' | 'user';
+  role: 'admin' | 'author' | 'user';
   status?: 'active' | 'blocked';
   createdDate?: string;
 }
@@ -59,20 +54,19 @@ export interface CategoryProps {
 
 export interface SummaryProps {
   id: string;
-  title: string;
+  translations: WithDictionary<{ title: string }>;
   slug?: string;
 }
 
 export interface GameProps {
   id: string;
-  title: string;
   slug: string;
   coverImage: FileProps;
-  description: string;
+  translations: WithDictionary<{ title: string; description: string }>;
   releaseDate: string;
 }
 
-type CommentStatusType = 'approved' | 'rejected' | 'pending';
+type CommentStatusType = 'approved' | 'reject' | 'pending';
 
 export interface CommentProps {
   id: string;

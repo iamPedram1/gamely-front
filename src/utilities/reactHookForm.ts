@@ -1,3 +1,4 @@
+import equal from 'fast-deep-equal';
 import { setAlertState } from '@/store/alert';
 import { convertNumberToPersian } from '@/utilities/helperPack';
 import type { SubmitErrorHandler } from 'react-hook-form';
@@ -52,3 +53,22 @@ export const createOnErrorHandler: SubmitErrorHandler<any> = (errors) => {
     setAlertState(messages[0], 'error');
   }
 };
+
+/**
+ * Returns a new object containing only the keys that have changed
+ * between the old object and the new one.
+ */
+export function getChangedFields<T extends Record<string, any>>(
+  oldObj: T,
+  newObj: T
+): Partial<T> {
+  const changed: Partial<T> = {};
+
+  for (const key in newObj) {
+    if (!equal(oldObj[key], newObj[key])) {
+      changed[key] = newObj[key];
+    }
+  }
+
+  return changed;
+}

@@ -125,7 +125,9 @@
     "admin": "Admin Panel",
     "backToSite": "Back to Site",
     "manageAllGames": "Manage all games in the database",
-    "manageAllTags": "Manage all tags in the database"
+    "manageAllTags": "Manage all tags in the database",
+    "manageAllPosts": "Manage all posts in the database",
+    "manageAllCategories": "Manage all categories in the database"
   },
   "user": {
     "name": "Name",
@@ -231,6 +233,7 @@
     "gameUrlSlug": "game-url-slug",
     "coverImageUrl": "Cover Image URL",
     "releaseDate": "Release Date",
+    "minRead": "min read",
     "description": "Description",
     "briefGameDescription": "Brief description of the game",
     "browseAllGames": "Browse all games in our collection",
@@ -293,7 +296,8 @@
     "readingTime": "reading time",
     "bio": "bio",
     "coverImage": "cover image",
-    "tags": "tags"
+    "tags": "tags",
+    "avatar": "avatar"
   },
   "pagination": {
     "showing": "Showing",

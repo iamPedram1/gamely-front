@@ -1,4 +1,4 @@
-import i18n from '@/i18n';
+import i18n from '@/utilities/i18n';
 import {
   array,
   number,
@@ -11,6 +11,7 @@ import {
   type ZodType,
   type ZodTypeAny,
   instanceof as instanceof_,
+  ZodEffects,
 } from 'zod';
 
 /**
@@ -38,7 +39,7 @@ export const generateStringSchema = (
   min?: number,
   max?: number,
   required = true
-): ZodString | ZodOptional<ZodString> => {
+): ZodString | ZodOptional<ZodEffects<ZodString, string, string>> => {
   const label = tf(fieldKey);
 
   let schema: ZodString = string({
@@ -56,7 +57,9 @@ export const generateStringSchema = (
       message: t('maxLength', { field: label, max }),
     });
 
-  return required ? schema : schema.optional();
+  return required
+    ? schema
+    : schema.transform((val) => (val === '' ? undefined : val)).optional();
 };
 
 /**
@@ -124,8 +127,8 @@ export const generateFileSchema = (fieldKey = 'coverImage'): ZodType => {
       size: number().optional().nullable(),
       mimetype: string().optional().nullable(),
       url: string().optional().nullable(),
-      createdAt: string().optional().nullable(),
-      updatedAt: string().optional().nullable(),
+      createdDate: string().optional().nullable(),
+      updateDate: string().optional().nullable(),
     })
   );
 };

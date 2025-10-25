@@ -1,10 +1,10 @@
-'use client';
-
-import type React from 'react';
-
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { object, enum as zodEnum } from 'zod';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import { ArrowLeft, Save, Ban, CheckCircle } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -33,27 +33,72 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-// Icon Components
-import { ArrowLeft, Save, Ban, CheckCircle } from 'lucide-react';
-
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { mockUsers } from '@/data/mockData';
+import { createOnErrorHandler, getChangedFields, getDate } from '@/utilities';
+import { useUpdateUser, useUserQuery } from '@/utilities/api/management/user';
+import {
+  generateEmailSchema,
+  generateStringSchema,
+} from '@/validations/common';
+import useAuth from '@/hooks/useAuth';
+
+const createUserSchema = () =>
+  object({
+    name: generateStringSchema('title', 3, 255, false),
+    email: generateEmailSchema(),
+    status: zodEnum(['active', 'blocked']).optional(),
+    role: zodEnum(['user', 'author', 'admin', 'superAdmin']).optional(),
+    bio: generateStringSchema('bio', 10, 500, false),
+    createdDate: generateStringSchema(
+      'create date',
+      undefined,
+      undefined,
+      false
+    ),
+  });
+
+type FormSchema = Zod.infer<ReturnType<typeof createUserSchema>>;
 
 export default function UserDetailPage() {
-  const { t } = useTranslation();
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const user = mockUsers.find((u) => u.id === id);
+  // Translations
+  const { t, i18n } = useTranslation();
 
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    bio: user?.bio || '',
-    avatar: user?.avatar || '',
-    role: user?.role || 'user',
-    status: user?.status || 'active',
+  // Hooks
+  const { profile } = useAuth();
+  const updateUser = useUpdateUser();
+  const schema = useMemo(createUserSchema, [i18n.language]);
+  const formMethods = useForm<FormSchema>({ resolver: zodResolver(schema) });
+  const user = useUserQuery({ onFetch: formMethods.reset });
+  const status = useWatch<FormSchema>({
+    control: formMethods.control,
+    name: 'status',
   });
+  const disabled = updateUser.isPending || !user.isFetched;
+
+  // Utilities
+  const handleUpdate = (data: FormSchema) => {
+    updateUser.mutate({
+      userId: user.data.id,
+      data: getChangedFields(user.data, data),
+    });
+  };
+
+  const handleStatusToggle = () => {
+    const newStatus = status === 'active' ? 'blocked' : 'active';
+    updateUser.mutate({ userId: user.data.id, data: { status: newStatus } });
+  };
+
+  // Render
+  if (user.isFetching) {
+    return (
+      <div className='space-y-6 min-h-screen'>
+        <div className='text-center py-12'>
+          <h1 className='text-2xl font-bold mb-4'>{t('common.loading')}</h1>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -67,28 +112,6 @@ export default function UserDetailPage() {
       </div>
     );
   }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('[v0] Update user:', formData);
-    // TODO: Implement user update API call
-    navigate(routes.dashboard.users.index);
-  };
-
-  const handleStatusToggle = () => {
-    const newStatus = formData.status === 'active' ? 'blocked' : 'active';
-    setFormData({ ...formData, status: newStatus });
-    console.log('[v0] Toggle user status:', newStatus);
-    // TODO: Implement status toggle API call
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
 
   return (
     <div className='space-y-6 max-w-4xl'>
@@ -120,90 +143,102 @@ export default function UserDetailPage() {
             <div className='flex flex-col items-center text-center space-y-4'>
               <Avatar className='h-24 w-24 border-4 border-primary/20'>
                 <AvatarImage
-                  src={user.avatar.url || '/placeholder.svg'}
-                  alt={user.name}
+                  src={user?.data?.avatar?.url}
+                  alt={user?.data?.name}
                 />
                 <AvatarFallback className='bg-primary/10 text-primary text-2xl font-bold'>
-                  {user.name[0]}
+                  {user?.data?.name[0]}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className='text-xl font-bold'>{user.name}</h3>
-                <p className='text-sm text-muted-foreground'>{user.email}</p>
+                <h3 className='text-xl font-bold'>{user?.data?.name}</h3>
+                <p className='text-sm text-muted-foreground'>
+                  {user?.data?.email}
+                </p>
               </div>
               <div className='flex gap-2'>
                 <Badge
-                  variant={user.role === 'admin' ? 'default' : 'secondary'}
+                  variant={
+                    user?.data?.role === 'admin' ? 'default' : 'secondary'
+                  }
                   className={
-                    user.role === 'admin'
+                    user.data?.role === 'admin'
                       ? 'gradient-gaming'
                       : 'bg-primary/10 text-primary'
                   }
                 >
-                  {t(`user.${user.role}`)}
+                  {t(`user.${user.data?.role}`)}
                 </Badge>
-                <Badge
-                  variant={
-                    formData.status === 'active' ? 'default' : 'destructive'
-                  }
-                  className={
-                    formData.status === 'active'
-                      ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                      : ''
-                  }
-                >
-                  {t(`user.${formData.status}`)}
-                </Badge>
+                <Controller
+                  control={formMethods.control}
+                  name='status'
+                  render={({ field }) => (
+                    <Badge
+                      variant={
+                        field.value === 'active' ? 'default' : 'destructive'
+                      }
+                      className={
+                        field.value === 'active'
+                          ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                          : ''
+                      }
+                    >
+                      {t(`user.${field.value}`)}
+                    </Badge>
+                  )}
+                />
               </div>
               <p className='text-xs text-muted-foreground'>
-                {t('user.joined')} {formatDate(user.createdAt)}
+                {t('user.joined')}{' '}
+                {getDate(user.data?.createdDate, i18n.language)}
               </p>
             </div>
-
-            <div className='pt-4 space-y-2'>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant={
-                      formData.status === 'active' ? 'destructive' : 'default'
-                    }
-                    className='w-full'
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  disabled={disabled || user.data.id === profile.id}
+                  variant={status === 'active' ? 'destructive' : 'default'}
+                  className='w-full'
+                >
+                  {status === 'active' ? (
+                    <>
+                      <Ban className='h-4 w-4 me-2' />
+                      {t('user.block')}
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className='h-4 w-4 me-2' />
+                      {t('user.unblock')}
+                    </>
+                  )}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {status === 'active'
+                      ? t('user.blockUser')
+                      : t('user.unblockUser')}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {status === 'active'
+                      ? t('user.blockUserDescription')
+                      : t('user.unblockUserDescription')}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className='gap-2'>
+                  <AlertDialogCancel className='w-24'>
+                    {t('common.cancel')}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className='w-24'
+                    onClick={handleStatusToggle}
                   >
-                    {formData.status === 'active' ? (
-                      <>
-                        <Ban className='h-4 w-4 me-2' />
-                        {t('user.block')}
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle className='h-4 w-4 me-2' />
-                        {t('user.unblock')}
-                      </>
-                    )}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      {formData.status === 'active'
-                        ? t('user.blockUser')
-                        : t('user.unblockUser')}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {formData.status === 'active'
-                        ? t('user.blockUserDescription')
-                        : t('user.unblockUserDescription')}
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleStatusToggle}>
-                      {t('common.confirm')}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
+                    {t('common.confirm')}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardContent>
         </Card>
 
@@ -213,19 +248,28 @@ export default function UserDetailPage() {
             <CardTitle>{t('user.editUserDetails')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className='space-y-6'>
+            <form
+              onSubmit={formMethods.handleSubmit(
+                handleUpdate,
+                createOnErrorHandler
+              )}
+              className='space-y-6'
+            >
               <div className='space-y-2'>
                 <Label htmlFor='name'>
                   {t('user.name')} {t('form.required')}
                 </Label>
-                <Input
-                  id='name'
-                  placeholder={t('user.enterName')}
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
+                <Controller
+                  control={formMethods.control}
+                  name='name'
+                  render={({ field }) => (
+                    <Input
+                      id='name'
+                      placeholder={t('user.enterName')}
+                      disabled={disabled}
+                      {...field}
+                    />
+                  )}
                 />
               </div>
 
@@ -233,66 +277,71 @@ export default function UserDetailPage() {
                 <Label htmlFor='email'>
                   {t('user.email')} {t('form.required')}
                 </Label>
-                <Input
-                  id='email'
-                  type='email'
-                  placeholder={t('user.enterEmail')}
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
+                <Controller
+                  control={formMethods.control}
+                  name='email'
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Input
+                      id='email'
+                      type='email'
+                      placeholder={t('user.enterEmail')}
+                      disabled={disabled}
+                      {...field}
+                    />
+                  )}
                 />
               </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='avatar'>{t('user.avatar')} URL</Label>
-                <Input
-                  id='avatar'
-                  placeholder='https://example.com/avatar.jpg'
-                  value={formData.avatar}
-                  onChange={(e) =>
-                    setFormData({ ...formData, avatar: e.target.value })
-                  }
-                />
-              </div>
-
               <div className='space-y-2'>
                 <Label htmlFor='role'>
                   {t('user.role')} {t('form.required')}
                 </Label>
-                <Select
-                  value={formData.role}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, role: value as any })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='user'>{t('user.user')}</SelectItem>
-                    <SelectItem value='author'>{t('user.author')}</SelectItem>
-                    <SelectItem value='admin'>{t('user.admin')}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={formMethods.control}
+                  name='role'
+                  defaultValue='user'
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => field.onChange(value)}
+                      disabled={disabled || user.data.role !== 'superAdmin'}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='user'>{t('user.user')}</SelectItem>
+                        <SelectItem value='author'>
+                          {t('user.author')}
+                        </SelectItem>
+                        <SelectItem value='admin'>{t('user.admin')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <div className='space-y-2'>
                 <Label htmlFor='bio'>{t('user.bio')}</Label>
-                <Textarea
-                  id='bio'
-                  placeholder={t('user.userBio')}
-                  rows={4}
-                  value={formData.bio}
-                  onChange={(e) =>
-                    setFormData({ ...formData, bio: e.target.value })
-                  }
+                <Controller
+                  control={formMethods.control}
+                  name='bio'
+                  defaultValue=''
+                  render={({ field }) => (
+                    <Textarea
+                      id='bio'
+                      placeholder={t('user.userBio')}
+                      rows={4}
+                      disabled={disabled}
+                      {...field}
+                    />
+                  )}
                 />
               </div>
 
               <div className='flex gap-4 pt-4'>
                 <Button
+                  disabled={disabled}
                   type='submit'
                   className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
                 >
@@ -300,7 +349,7 @@ export default function UserDetailPage() {
                   {t('common.save')}
                 </Button>
                 <Link to={routes.dashboard.users.index}>
-                  <Button type='button' variant='outline'>
+                  <Button disabled={disabled} type='button' variant='outline'>
                     {t('common.cancel')}
                   </Button>
                 </Link>

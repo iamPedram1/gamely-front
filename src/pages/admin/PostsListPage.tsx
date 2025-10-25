@@ -29,12 +29,11 @@ import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { useDeletePost, usePostsQuery } from '@/utilities/api/post';
-import { useCategoriesSummariesQuery } from '@/utilities/api/category';
-import dayjs from 'dayjs';
 import { getDate } from '@/utilities';
+import { useDeletePost, usePostsQuery } from '@/utilities/api/management/post';
+import { useCategoriesSummariesQuery } from '@/utilities/api/management/category';
 
 export default function PostsListPage() {
   // Context
@@ -57,16 +56,16 @@ export default function PostsListPage() {
             <span className='gradient-gaming-text'>{t('dashboard.posts')}</span>{' '}
             {t('dashboard.management')}
           </h1>
-          <p className='text-muted-foreground mt-2'>{`${t(
-            'dashboard.management'
-          )} ${t('common.all')} ${t('dashboard.posts').toLowerCase()}`}</p>
+          <p className='text-muted-foreground mt-2'>
+            {t('dashboard.manageAllPosts')}
+          </p>
         </div>
         <Link to={routes.dashboard.posts.add}>
           <Button
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 me-2' />
+            <Plus className='h-4 w-4 ltr:me-2 rtl:ms-2' />
             {t('dashboard.addPost')}
           </Button>
         </Link>
@@ -118,7 +117,7 @@ export default function PostsListPage() {
                 <TableHead className='text-center'>
                   {t('post.publishedAt')}
                 </TableHead>
-                <TableHead className='text-end'>
+                <TableHead className='ltr:text-end rtl:text-end'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -127,7 +126,9 @@ export default function PostsListPage() {
               {posts?.data?.docs?.map?.((post) => (
                 <TableRow key={post.id}>
                   <TableCell className='font-medium max-w-md'>
-                    <span className='max-w-80 line-clamp-1'>{post.title}</span>
+                    <span className='max-w-80 line-clamp-1'>
+                      {post.translations[i18n.language].title}
+                    </span>
                   </TableCell>
                   <TableCell className='text-center'>
                     <Link to={routes.dashboard.categories.index}>
@@ -152,7 +153,7 @@ export default function PostsListPage() {
                     {post.author.name}
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>
-                    {getDate(post.createdAt, i18n.language)}
+                    {getDate(post.createdDate, i18n.language)}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>

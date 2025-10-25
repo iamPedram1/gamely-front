@@ -20,11 +20,11 @@ import {
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import {
   useCategoriesQuery,
   useDeleteCategory,
-} from '@/utilities/api/category';
+} from '@/utilities/api/management/category';
 
 export default function CategoriesPage() {
   // States
@@ -34,7 +34,7 @@ export default function CategoriesPage() {
   });
 
   // Context
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { loading } = useLoadingStore();
 
   // Hooks
@@ -54,7 +54,9 @@ export default function CategoriesPage() {
             </span>{' '}
             {t('dashboard.management')}
           </h1>
-          <p className='text-muted-foreground mt-2'>Manage post categories</p>
+          <p className='text-muted-foreground mt-2'>
+            {t('dashboard.manageAllCategories')}
+          </p>
         </div>
         <Button
           disabled={disabled}

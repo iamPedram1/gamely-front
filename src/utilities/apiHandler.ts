@@ -1,4 +1,4 @@
-import i18n from '@/i18n';
+import i18n from '@/utilities/i18n';
 import { CommonResponseProps } from '@/types/api';
 import { getAppBaseURL } from '@/utilities/appVariables';
 import { getCookie } from '@/utilities/cookie';
@@ -89,7 +89,6 @@ async function appFetch<T = any>(
       queryWhitelistKeyNames,
     } = reqInit || {};
 
-    console.log('api handler', reqInit);
     const query = noQuery
       ? {}
       : {

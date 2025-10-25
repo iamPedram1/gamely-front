@@ -1,5 +1,5 @@
 import endpoints from '@/utilities/endpoints';
-import apiHandler from '@/utilities/api/apiHandler';
+import apiHandler from '@/utilities/apiHandler';
 import { refreshToken } from '@/utilities/api/auth';
 import {
   getRefreshToken,
@@ -11,7 +11,7 @@ import {
 // Custom Types
 import type { CommonResponseProps } from '@/types/api';
 import type { AuthResponseProps } from '@/utilities/api/auth';
-import type { RequestInitPropsWithAdminIndicator } from '@/utilities/api/apiHandler';
+import type { RequestInitPropsWithAdminIndicator } from '@/utilities/apiHandler';
 
 export const inFlightRefreshes = new Map<
   string,

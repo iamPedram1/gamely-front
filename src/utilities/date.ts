@@ -140,5 +140,5 @@ export const getDate = (date: string, locale: string, format?: string) => {
   return dayjs(date)
     .locale(locale)
     .calendar(locale === 'fa' ? 'jalali' : 'gregory')
-    .format(format ? format : locale === 'fa' ? 'D MMM YYYY' : 'MMMM D, YYYY');
+    .format(format ? format : locale === 'fa' ? 'D MMMM YYYY' : 'MMMM D, YYYY');
 };

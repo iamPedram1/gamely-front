@@ -38,8 +38,9 @@ import PaginationControls from '@/components/ui/pagination-controls';
 // Icon Components
 import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 
-// Custom Utilities
+// Utilities
 import { mockPosts } from '@/data/mockData';
+import { useCommentsQuery } from '@/utilities/api/management/comment';
 
 // Types
 interface CommentWithMeta {
@@ -47,7 +48,7 @@ interface CommentWithMeta {
   content: string;
   username: string;
   avatar: string;
-  createdAt: string;
+  createdDate: string;
   postId: string;
   postTitle: string;
   userId: string;
@@ -55,7 +56,7 @@ interface CommentWithMeta {
 }
 
 export default function CommentsListPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,17 +67,7 @@ export default function CommentsListPage() {
     useState<CommentWithMeta | null>(null);
 
   // Flatten comments from all posts
-  const allComments: CommentWithMeta[] = useMemo(() => {
-    return mockPosts.flatMap((post) =>
-      post.comments.map((comment) => ({
-        ...comment,
-        postId: post.id,
-        postTitle: post.title,
-        userId: comment.username,
-        status: 'approved' as const,
-      }))
-    );
-  }, []);
+  const comments = useCommentsQuery();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -87,26 +78,6 @@ export default function CommentsListPage() {
       minute: '2-digit',
     });
   };
-
-  // Filter comments
-  const filteredComments = useMemo(() => {
-    return allComments.filter((comment) => {
-      const matchesSearch =
-        comment.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        comment.username.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesPost = postFilter === 'all' || comment.postId === postFilter;
-      const matchesStatus =
-        statusFilter === 'all' || comment.status === statusFilter;
-      return matchesSearch && matchesPost && matchesStatus;
-    });
-  }, [searchQuery, postFilter, statusFilter, allComments]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredComments.length / pageSize);
-  const paginatedComments = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return filteredComments.slice(startIndex, startIndex + pageSize);
-  }, [filteredComments, currentPage, pageSize]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -160,7 +131,8 @@ export default function CommentsListPage() {
         <CardHeader>
           <div className='flex items-center justify-between gap-4 flex-wrap'>
             <h2 className='text-xl font-bold'>
-              {t('dashboard.allComments')} ({filteredComments.length})
+              {t('dashboard.allComments')} ({comments.data.pagination.totalDocs}
+              )
             </h2>
             <div className='flex items-center gap-3 flex-wrap'>
               <div className='relative'>
@@ -235,13 +207,13 @@ export default function CommentsListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedComments.map((comment) => (
+              {comments.data.docs.map((comment) => (
                 <TableRow key={comment.id}>
                   <TableCell className='font-medium'>
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8 border-2 border-primary/20'>
                         <AvatarImage
-                          src={comment.avatar || '/placeholder.svg'}
+                          src={comment?.avatar?.url || '/placeholder.svg'}
                           alt={comment.username}
                         />
                         <AvatarFallback className='bg-primary/10 text-primary font-bold text-xs'>
@@ -256,7 +228,7 @@ export default function CommentsListPage() {
                   </TableCell>
                   <TableCell className='max-w-xs'>
                     <p className='text-sm text-muted-foreground line-clamp-1'>
-                      {comment.postTitle}
+                      {'postTitle'}
                     </p>
                   </TableCell>
                   <TableCell>
@@ -278,7 +250,7 @@ export default function CommentsListPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className='text-muted-foreground text-sm'>
-                    {formatDate(comment.createdAt)}
+                    {formatDate(comment.createdDate)}
                   </TableCell>
                   <TableCell className='text-right'>
                     <Button
@@ -294,14 +266,7 @@ export default function CommentsListPage() {
             </TableBody>
           </Table>
 
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={filteredComments.length}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-          />
+          <PaginationControls pagination={comments.data.pagination} />
         </CardContent>
       </Card>
 
@@ -329,7 +294,7 @@ export default function CommentsListPage() {
                 <div>
                   <p className='font-semibold'>{selectedComment.username}</p>
                   <p className='text-xs text-muted-foreground'>
-                    {formatDate(selectedComment.createdAt)}
+                    {formatDate(selectedComment.createdDate)}
                   </p>
                 </div>
               </div>

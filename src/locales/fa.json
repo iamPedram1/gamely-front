@@ -124,6 +124,8 @@
     "admin": "پنل مدیریت",
     "backToSite": "بازگشت به سایت",
     "manageAllGames": "مدیریت همه بازی‌ها در پایگاه داده",
+    "manageAllPosts": "مدیریت همه مقالات در پایگاه داده",
+    "manageAllCategories": "مدیریت همه دسته‌بندی‌ها در پایگاه داده",
     "manageAllTags": "مدیریت همه برچسب‌ها در پایگاه داده"
   },
   "user": {
@@ -149,8 +151,8 @@
     "userInformation": "اطلاعات کاربر",
     "blockUser": "مسدود کردن کاربر",
     "unblockUser": "رفع مسدودیت کاربر",
-    "blockUserDescription": "آیا مطمئن هستید که می‌خواهید این کاربر را مسدود کنید؟",
-    "unblockUserDescription": "آیا مطمئن هستید که می‌خواهید مسدودیت این کاربر را رفع کنید؟",
+    "blockUserDescription": "آیا از مسدود سازی این کاربر اطمینان دارید؟",
+    "unblockUserDescription": "آیا از رفع مسدودیت این کاربر اطمینان دارید؟",
     "editUserDetails": "ویرایش جزئیات کاربر",
     "enterName": "نام را وارد کنید",
     "enterEmail": "ایمیل را وارد کنید",
@@ -192,6 +194,7 @@
     "enterPostTitle": "عنوان مقاله را وارد کنید",
     "postUrlSlug": "اسلاگ-آدرس-مقاله",
     "readingTime": "زمان مطالعه",
+    "minRead": "دقیقه مطالعه",
     "readingTimeMinutes": "زمان مطالعه (دقیقه)",
     "coverImageUrl": "آدرس تصویر کاور",
     "selectCategory": "انتخاب دسته‌بندی",
@@ -292,7 +295,8 @@
     "readingTime": "زمان مطالعه",
     "bio": "بیوگرافی",
     "coverImage": "تصویر کاور",
-    "tags": "برچسب‌ها"
+    "tags": "برچسب‌ها",
+    "avatar": "آواتار"
   },
   "pagination": {
     "showing": "نمایش",

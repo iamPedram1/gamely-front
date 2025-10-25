@@ -1,7 +1,7 @@
-// Custom Utilities
+// Utilities
 import endpoints from '@/utilities/endpoints';
-import apiHandler from '@/utilities/api/apiHandler';
-import safeApiHandler from '@/utilities/api/safeApiHandler';
+import apiHandler from '@/utilities/apiHandler';
+import safeApiHandler from '@/utilities/safeApiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
@@ -19,7 +19,7 @@ const profileQueryKey = 'profile';
 
 export const useProfileQuery = useAppQuery(
   () => safeApiHandler.get<UserProps>(endpoints.profile),
-  [profileQueryKey]
+  [profileQueryKey, 'me']
 );
 
 export const useUpdateProfileMutation = useAppMutation(

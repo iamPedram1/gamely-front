@@ -22,6 +22,6 @@ export interface FileProps {
   size: number;
   mimetype: string;
   url: string;
-  createdAt: string;
-  updatedAt: string;
+  createdDate: string;
+  updateDate: string;
 }

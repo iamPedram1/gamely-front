@@ -7,7 +7,7 @@ export const setToken = (token: string) => {
 };
 
 export const deleteToken = () => {
-  deleteCookie('Token');
+  deleteCookie('Token', { path: '/' });
 };
 
 export const getToken = () => {
@@ -19,7 +19,7 @@ export const setRefreshToken = (token: string) => {
 };
 
 export const deleteRefreshToken = () => {
-  deleteCookie('Refresh-Token');
+  deleteCookie('Refresh-Token', { path: '/' });
 };
 
 export const getRefreshToken = () => {

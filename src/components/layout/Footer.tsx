@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Github, Twitter, Youtube, Gamepad2 } from 'lucide-react';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 
 export default function Footer() {
   // Custom Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Render
   return (

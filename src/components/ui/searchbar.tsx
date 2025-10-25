@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 //  Components
 import { Input } from '@/components/ui/input';
 
-// Custom Utilities
+// Utilities
 import { debounce } from '@/utilities/helperPack';
 
 // Custom Types

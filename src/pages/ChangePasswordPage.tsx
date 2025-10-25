@@ -21,7 +21,7 @@ import {
 // Icon Components
 import { ArrowLeft, Lock } from 'lucide-react';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
 import { generatePasswordConfirmSchema } from '@/validations/common';

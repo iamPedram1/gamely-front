@@ -1,4 +1,4 @@
-import apiHandler from '@/utilities/api/safeApiHandler';
+import apiHandler from '@/utilities/safeApiHandler';
 import { useAppMutation } from '@/hooks/api/useMutation';
 import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 

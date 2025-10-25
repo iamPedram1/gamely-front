@@ -37,7 +37,7 @@ export default function Header() {
 
   // Hooks
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isAuthorized, isAuthLoading, profile, logout } = useAuth();
 
   // Utilities
@@ -51,7 +51,7 @@ export default function Header() {
     navigate('/');
   };
 
-  const getUserInitials = (name: string) => {
+  const getUserInitials = (name: string = '') => {
     return name
       .split(' ')
       .map((n) => n[0])

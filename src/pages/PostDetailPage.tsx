@@ -4,6 +4,9 @@ import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 
+// States
+import { useBoolean } from '@/hooks/state';
+
 // Components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -14,34 +17,40 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { usePostQuery } from '@/utilities/api/post';
 import { useCommentsQuery } from '@/utilities/api/comment';
 
 // Types
 import type { CommentProps } from '@/types/blog';
+import { getDate } from '@/utilities';
 
 export default function PostDetailPage() {
   // States
+  const addComment = useBoolean();
   const [commentToEdit, setCommentToEdit] = useState<CommentProps | null>(null);
   const [commentToReply, setCommentToReply] = useState<CommentProps | null>(
     null
   );
 
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { slug } = useParams();
-  const post = usePostQuery({ initialParams: slug });
-  const comments = useCommentsQuery({
+  const post = usePostQuery({
     initialParams: slug,
-    enabled: post.isSuccess,
+    onFetch: (data) => comments.onChangeParams(data.id),
+  });
+  const comments = useCommentsQuery({
+    enabled: false,
+    initialParams: null,
   });
 
   // Utilities
   const handleCloseDialog = () => {
     setCommentToEdit(null);
     setCommentToReply(null);
+    addComment.setFalse();
   };
 
   // Render
@@ -113,18 +122,17 @@ export default function PostDetailPage() {
               <div className='flex items-center gap-3'>
                 <div className='flex items-center gap-1'>
                   <Calendar className='h-4 w-4' />
-                  <span>
-                    {dayjs(post.data.createdAt).format('MMMM DD, YYYY')}
-                  </span>
+                  <span>{getDate(post.data.createdDate, i18n.language)}</span>
                 </div>
                 <div className='flex items-center gap-1'>
                   <Clock className='h-4 w-4' />
-                  <span>{post.data.readingTime} min read</span>
+                  <span>
+                    {post.data.readingTime} {t('post.minRead')}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-
           <div className='aspect-video overflow-hidden rounded-lg mb-8'>
             <img
               src={post.data.coverImage.url || '/placeholder.svg'}
@@ -132,7 +140,6 @@ export default function PostDetailPage() {
               className='w-full h-full object-cover'
             />
           </div>
-
           <div className='prose prose-lg dark:prose-invert max-w-none mb-8'>
             {post.data.content.split('\n').map((paragraph, index) => (
               <p key={index} className='mb-4 whitespace-pre-wrap'>
@@ -140,7 +147,6 @@ export default function PostDetailPage() {
               </p>
             ))}
           </div>
-
           <div className='flex flex-wrap gap-2 mb-8'>
             {post.data.tags.map((tag) => (
               <Link key={tag.id} to={`/tag/${tag.slug}`}>
@@ -162,7 +168,9 @@ export default function PostDetailPage() {
                   : t('common.loading')}
                 )
               </h2>
-              <Button className='gradient-gaming'>{t('comment.add')}</Button>
+              <Button onClick={addComment.setTrue} className='gradient-gaming'>
+                {t('comment.add')}
+              </Button>
             </div>
             {comments.data.docs.length === 0 ? (
               <p className='text-muted-foreground'>{t('comment.noComments')}</p>
@@ -182,7 +190,7 @@ export default function PostDetailPage() {
                         <div>
                           <p className='font-semibold'>{comment.username}</p>
                           <p className='text-xs text-muted-foreground'>
-                            {dayjs(comment.createdAt).format(
+                            {dayjs(comment.createdDate).format(
                               'YYYY/MM/DD-HH:mm'
                             )}
                           </p>
@@ -205,14 +213,15 @@ export default function PostDetailPage() {
             )}
           </div>
         </article>
-        {post.data.id && (commentToEdit || commentToReply) && (
-          <MutateCommentDialog
-            commentToEdit={commentToEdit}
-            replyToComment={commentToReply}
-            onClose={handleCloseDialog}
-            postId={post.data.id}
-          />
-        )}
+        {post.data.id &&
+          (commentToEdit || commentToReply || addComment.state) && (
+            <MutateCommentDialog
+              commentToEdit={commentToEdit}
+              replyToComment={commentToReply}
+              onClose={handleCloseDialog}
+              postId={post.data.id}
+            />
+          )}
       </main>
       <Footer />
     </div>

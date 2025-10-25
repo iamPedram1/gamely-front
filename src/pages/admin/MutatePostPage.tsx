@@ -24,18 +24,20 @@ import {
 // Context
 import useLoadingStore, { setLoadingState } from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { uploadFile } from '@/utilities/uploader';
-import { useTagsSummariesQuery } from '@/utilities/api/tag';
-import { useGamesSummariesQuery } from '@/utilities/api/game';
+import { uploadFile } from '@/utilities/api/uploader';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { supportedLanguages } from '@/utilities/helperPack';
 import { createOnErrorHandler } from '@/utilities/reactHookForm';
-import { useCategoriesSummariesQuery } from '@/utilities/api/category';
+import { useTagsSummariesQuery } from '@/utilities/api/management/tag';
+import { useGamesSummariesQuery } from '@/utilities/api/management/game';
+import { useCategoriesSummariesQuery } from '@/utilities/api/management/category';
 import {
   useCreatePost,
-  usePostQuery,
   useUpdatePost,
-} from '@/utilities/api/post';
+  usePostQuery,
+} from '@/utilities/api/management/post';
 import {
   generateFileSchema,
   generateNumberSchema,
@@ -43,8 +45,6 @@ import {
   generateStringSchema,
   generateStringArraySchema,
 } from '@/validations/common';
-import { MultiSelect } from '@/components/ui/multi-select';
-import { supportedLanguages } from '@/utilities/helperPack';
 
 const createPostSchema = () =>
   object({
@@ -335,7 +335,7 @@ export default function MutatePostPage() {
                       <SelectContent>
                         {games.data?.map?.((game) => (
                           <SelectItem key={game.id} value={game.id}>
-                            {game.title}
+                            {game.translations[i18n.language].title}
                           </SelectItem>
                         ))}
                       </SelectContent>

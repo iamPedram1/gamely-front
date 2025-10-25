@@ -21,7 +21,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
-// Custom Utilities
+// Utilities
 import { cn } from '@/utilities/tailwind';
 
 export interface MultiSelectOption {
@@ -53,7 +53,7 @@ export function MultiSelect({
   maxSelected,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   console.log(options);
 
   const defaultPlaceholder = placeholder || t('multiSelect.selectItems');

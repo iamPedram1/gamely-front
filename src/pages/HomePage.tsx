@@ -9,15 +9,15 @@ import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { mockPosts, mockGames } from '@/data/mockData';
 
 export default function HomePage() {
   // Custom Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  // Custom Utilities
+  // Utilities
   const featuredPost = mockPosts[0];
   const recentPosts = mockPosts.slice(1);
 

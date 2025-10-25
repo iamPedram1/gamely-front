@@ -1,3 +1,4 @@
+import { useParams } from 'react-router';
 import { useMemo, useRef, useState } from 'react';
 
 // Hooks
@@ -9,7 +10,7 @@ import useBaseQuery from '@/hooks/api/useQuery/useBaseQuery';
 import { isSucceed } from '@/utilities';
 
 // Types
-import type { AppRequestInitProps } from '@/utilities/api/apiHandler';
+import type { AppRequestInitProps } from '@/utilities/apiHandler';
 import type { CommonResponseProps } from '@/types/api';
 import type { UseBaseQueryOptionsProps } from '@/hooks/api/useQuery/useBaseQuery';
 
@@ -52,9 +53,13 @@ export function useFetchApi<
   const { initialParams, onFetch, onFetchFailed, ...otherOptions } = (options ||
     {}) as OptionType<T, Params>;
 
+  const routerParams = useParams();
+
   // States
-  const [params, setParams] = useState<Params | undefined>(initialParams);
-  const enabled = useBoolean(otherOptions.enabled ?? !!params);
+  const [params, setParams] = useState<Params | undefined>(
+    initialParams || routerParams?.id
+  );
+  const enabled = useBoolean(otherOptions.enabled ?? Boolean(params));
   const isChanging = useBoolean();
 
   // Hooks

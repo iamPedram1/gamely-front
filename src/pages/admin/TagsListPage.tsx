@@ -21,16 +21,16 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { useDeleteTag, useTagsQuery } from '@/utilities/api/tag';
+import { useDeleteTag, useTagsQuery } from '@/utilities/api/management/tag';
 
 export default function TagsListPage() {
   // Context
   const { loading } = useLoadingStore();
 
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const tags = useTagsQuery();
   const deleteTag = useDeleteTag();
 
@@ -54,7 +54,7 @@ export default function TagsListPage() {
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 me-2' />
+            <Plus className='h-4 w-4 ltr:me-2 rtl:ms-2' />
             {t('dashboard.addTags')}
           </Button>
         </Link>

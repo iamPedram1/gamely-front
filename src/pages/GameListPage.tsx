@@ -6,20 +6,20 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
 import PaginationControls from '@/components/ui/pagination-controls';
+import { GameCardSkeleton } from '@/components/ui/loading-skeleton';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { GameCardSkeleton } from '@/components/ui/loading-skeleton';
 
 // Icon Components
 import { Calendar } from 'lucide-react';
 
 // Utilities
-import { useGamesQuery } from '@/utilities/api/game';
 import { getDate } from '@/utilities';
+import { useGamesQuery } from '@/utilities/api/game';
 
 export default function GameListPage() {
   // Hooks

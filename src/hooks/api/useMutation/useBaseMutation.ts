@@ -18,7 +18,7 @@ import {
   OpenDialogConfigType,
 } from '@/store/dialog';
 
-// Custom Utilities
+// Utilities
 import { setFailedCrudAlert, setSuccessCrudAlert } from '@/utilities';
 import { convertNumberToPersian } from '@/utilities/helperPack';
 

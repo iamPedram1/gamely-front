@@ -10,13 +10,13 @@ import { Button } from '@/components/ui/button';
 // Icon Components
 import { ArrowLeft } from 'lucide-react';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { mockPosts } from '@/data/mockData';
 
 export default function CategoryPostsPage() {
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { slug } = useParams();
   const posts = mockPosts.filter((post) => post.category.slug === slug);
   const categoryName = posts[0]?.category.title || slug;

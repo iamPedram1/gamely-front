@@ -23,7 +23,7 @@ interface PaginationControlsProps {
 }
 
 function PaginationControls({ pagination }: PaginationControlsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page') ?? 1);
   const pageSize = Number(searchParams.get('limit') ?? 20);
@@ -123,7 +123,9 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           variant='outline'
           size='icon'
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === pagination.totalPages}
+          disabled={
+            currentPage === pagination.totalPages || pagination.totalPages <= 1
+          }
         >
           <ChevronRight className='h-4 w-4 rtl:rotate-180' />
         </Button>
@@ -131,7 +133,9 @@ function PaginationControls({ pagination }: PaginationControlsProps) {
           variant='outline'
           size='icon'
           onClick={() => handlePageChange(pagination.totalPages)}
-          disabled={currentPage === pagination.totalPages}
+          disabled={
+            currentPage === pagination.totalPages || pagination.totalPages <= 1
+          }
         >
           <ChevronsRight className='h-4 w-4 rtl:rotate-180' />
         </Button>

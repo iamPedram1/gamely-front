@@ -1,5 +1,6 @@
-import { useTranslation } from 'react-i18next';
 import { Languages } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -9,20 +10,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useQueryClient } from '@tanstack/react-query';
 
 export function LanguageSwitcher() {
   // Custom Hooks
   const { i18n } = useTranslation();
-
   const queryClient = useQueryClient();
 
-  // Custom Utilities
+  // Utilities
   const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+    if (lng === i18n.language) return;
     document.documentElement.lang = lng;
     document.documentElement.dir = lng === 'fa' ? 'rtl' : 'ltr';
-    queryClient.refetchQueries();
+    i18n.changeLanguage(lng);
+
+    if (!window.location.pathname.startsWith('/dashboard'))
+      queryClient.refetchQueries();
   };
 
   // Render

@@ -5,6 +5,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
+import Searchbar from '@/components/ui/searchbar';
 import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -15,25 +16,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import Searchbar from '@/components/ui/searchbar';
 
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { useDeleteGame, useGamesQuery } from '@/utilities/api/game';
+import { useDeleteGame, useGamesQuery } from '@/utilities/api/management/game';
+import { getDate } from '@/utilities';
 
 export default function GamesListPage() {
   // Context
   const { loading } = useLoadingStore();
 
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const games = useGamesQuery();
   const deleteGame = useDeleteGame();
   const disabled = loading || deleteGame.isPending;
-  console.log(games);
 
   // Render
   return (
@@ -53,7 +53,7 @@ export default function GamesListPage() {
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 me-2' />
+            <Plus className='h-4 w-4 ltr:me-2 rtl:ms-2' />
             {t('dashboard.addGame')}
           </Button>
         </Link>
@@ -78,7 +78,7 @@ export default function GamesListPage() {
                 <TableHead>{t('game.gameTitle')}</TableHead>
                 <TableHead>{t('common.description')}</TableHead>
                 <TableHead>{t('common.releaseDate')}</TableHead>
-                <TableHead className='text-right'>
+                <TableHead className='ltr:text-center rtl:text-center'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -91,23 +91,23 @@ export default function GamesListPage() {
                       {game.coverImage && (
                         <img
                           src={game.coverImage.url || '/placeholder.svg'}
-                          alt={game.title}
+                          alt={game.translations[i18n.language].title}
                           className='w-16 h-16 object-cover rounded'
                         />
                       )}
-                      <span>{game.title}</span>
+                      <span>{game.translations[i18n.language].title}</span>
                     </div>
                   </TableCell>
                   <TableCell className='max-w-md'>
                     <span className='line-clamp-2 text-muted-foreground'>
-                      {game.description}
+                      {game.translations[i18n.language].description}
                     </span>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {dayjs(game.releaseDate).format('MMMM DD, YYYY')}
+                    {getDate(game.releaseDate, i18n.language)}
                   </TableCell>
-                  <TableCell className='text-right'>
-                    <div className='flex items-center justify-end gap-2'>
+                  <TableCell>
+                    <div className='flex items-center justify-center gap-2'>
                       <Link to={routes.dashboard.games.edit(game.id)}>
                         <Button disabled={disabled} variant='ghost' size='icon'>
                           <Edit className='h-4 w-4' />

@@ -12,7 +12,7 @@ import { usePostsQuery } from '@/utilities/api/post';
 
 export default function PostListPage() {
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const posts = usePostsQuery({ refetchOnQueryChange: true });
 
   // Render

@@ -9,7 +9,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 const DarkModeToggle = () => {
   // Hooks
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
 
   // Render

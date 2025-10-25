@@ -12,11 +12,3 @@ export const setAlertState = (
     duration: duration || 5000,
   });
 };
-
-export const reInitialAlert = (): void => {
-  useAlertStore.getState().reInitialAlert();
-};
-
-export const closeAlert = (): void => {
-  useAlertStore.getState().closeAlert();
-};

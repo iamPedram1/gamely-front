@@ -91,6 +91,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     onFetchFailed,
     ...otherOptions
   } = options;
+  const enabled = options?.enabled ?? false;
 
   // Hooks
   const navigate = useNavigate();
@@ -154,15 +155,8 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
   });
 
   useLayoutEffect(() => {
-    if ('enabled' in options ? options.enabled : true) {
-      if (autoLoading) setLoadingState(true);
-    }
-
-    if (
-      ('enabled' in options ? options.enabled : true) &&
-      (query.isStale || !query.isFetched)
-    )
-      query.refetch();
+    if (enabled && autoLoading) setLoadingState(true);
+    if (enabled && (query.isStale || !query.isFetched)) query.refetch();
   }, []);
 
   useUpdateEffect(() => {
@@ -198,7 +192,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
   }, [query.isFetching]);
 
   useUpdateEffect(() => {
-    if (query.data && options.onFetch) {
+    if (enabled && query.data && options.onFetch) {
       options.onFetch(query.data);
     }
   }, [query.data, query.isStale, query.dataUpdatedAt]);

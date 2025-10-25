@@ -3,7 +3,7 @@ import type { QueryFunction } from '@tanstack/react-query';
 // Custom Hooks
 import useBaseQuery from './useBaseQuery';
 
-// Custom Utilities
+// Utilities
 import initialPagination from '@/utilities/pagination';
 
 // Custom Types
@@ -23,8 +23,9 @@ export const useAppQuery = <TData>(
       ...options,
       queryFn,
       placeholderData:
-        options?.placeholderData ||
-        ({ docs: [], pagination: initialPagination } as TData),
+        options?.placeholderData !== undefined
+          ? options.placeholderData
+          : ({ docs: [], pagination: initialPagination } as TData),
       queryKey: [...(queryKey || []), ...(options?.queryKey || [])],
     });
   };

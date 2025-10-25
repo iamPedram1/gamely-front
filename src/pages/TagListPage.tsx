@@ -13,7 +13,7 @@ import { TagCardSkeleton } from '@/components/ui/loading-skeleton';
 import { useTagsQuery } from '@/utilities/api/tag';
 
 export default function TagListPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const tags = useTagsQuery();
 
   return (

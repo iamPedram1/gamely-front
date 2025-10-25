@@ -64,9 +64,8 @@ export function DatePicker({
             id='date'
             variant={'outline'}
             className={cn(
-              'w-[300px] justify-start text-left font-normal',
-              !date && 'text-muted-foreground',
-              'rtl:flex-row-reverse'
+              'w-[300px] justify-center font-normal',
+              !date && 'text-muted-foreground'
             )}
           >
             <CalendarIcon className='me-2 h-4 w-4' />

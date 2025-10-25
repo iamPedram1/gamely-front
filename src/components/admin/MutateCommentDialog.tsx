@@ -20,7 +20,7 @@ import {
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import { createOnErrorHandler } from '@/utilities';
 import { generateStringSchema } from '@/validations/common';
 import { useCreateComment, useUpdateComment } from '@/utilities/api/comment';
@@ -80,7 +80,7 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
     autoAlert: { mode: 'update', name: 'Category' },
   });
 
-  // Custom Utilities
+  // Utilities
   const onSubmit = (data: Required<FormSchema>) => {
     if (isEditMode)
       updateComment.mutate({ commentId: commentToEdit.id, postId, ...data });

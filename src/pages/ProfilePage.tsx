@@ -25,9 +25,9 @@ import { Save, ArrowLeft } from 'lucide-react';
 import useLoadingStore, { setLoadingState } from '@/store/loading';
 import { useUpdateProfileMutation } from '@/utilities/api/auth';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { uploadFile } from '@/utilities/uploader';
+import { uploadFile } from '@/utilities/api/uploader';
 import { createOnErrorHandler } from '@/utilities';
 import {
   generateEmailSchema,
@@ -37,11 +37,11 @@ import {
 
 const createProfileSchema = () =>
   object({
-    name: generateStringSchema('name', 3, 255),
-    email: generateEmailSchema(),
-    bio: generateStringSchema('bio', 1, 255).optional(),
-    password: generateStringSchema('password', 1, 255).optional(),
-    avatar: generateFileSchema('coverImage').optional(),
+    name: generateStringSchema('name', 3, 255).optional(),
+    email: generateEmailSchema().optional(),
+    bio: generateStringSchema('bio', 1, 255).optional().nullable(),
+    password: generateStringSchema('password', 1, 255).optional().nullable(),
+    avatar: generateFileSchema('coverImage').optional().nullable(),
   });
 
 type FormSchema = Zod.infer<ReturnType<typeof createProfileSchema>>;
@@ -58,6 +58,7 @@ export default function ProfilePage() {
     mode: 'onTouched',
     resolver: zodResolver(schema),
   });
+
   const updateProfile = useUpdateProfileMutation({
     onSuccess: (_, vars) => {
       if (
@@ -70,8 +71,8 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    reset({ ...profile });
-  }, [isAuthorized]);
+    reset(profile);
+  }, [profile]);
 
   // Utilities
   const handleUpdate = async (data: FormSchema) => {
@@ -129,7 +130,7 @@ export default function ProfilePage() {
         <main className='flex-1 container py-8'>
           <Link to='/'>
             <Button variant='ghost' className='mb-6 flex items-center gap-2'>
-              <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180 rtl:rotate-180' />
+              <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
               {t('common.back')}
             </Button>
           </Link>

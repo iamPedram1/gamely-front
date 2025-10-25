@@ -15,10 +15,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
-import { useCreateTag, useTagQuery, useUpdateTag } from '@/utilities/api/tag';
+import {
+  useCreateTag,
+  useTagQuery,
+  useUpdateTag,
+} from '@/utilities/api/management/tag';
 import {
   generateRegexStringSchema,
   generateStringSchema,

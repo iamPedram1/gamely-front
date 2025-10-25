@@ -20,7 +20,7 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler } from '@/utilities';
 import { generateEmailSchema } from '@/validations/common';

@@ -1,10 +1,11 @@
+import { useMemo } from 'react';
+import { object } from 'zod';
+import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { object } from 'zod';
-import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Save } from 'lucide-react';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -17,30 +18,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // Context
 import useLoadingStore, { setLoadingState } from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
-import { uploadFile } from '@/utilities/uploader';
-import { createOnErrorHandler } from '@/utilities';
+import { uploadFile } from '@/utilities/api/uploader';
+import { createOnErrorHandler, getChangedFields } from '@/utilities';
+import { supportedLanguages } from '@/utilities/helperPack';
 import {
   useCreateGame,
   useGameQuery,
   useUpdateGame,
-} from '@/utilities/api/game';
+} from '@/utilities/api/management/game';
 import {
   generateFileSchema,
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
-import { useMemo } from 'react';
 
 // Types
 const createGameSchema = () =>
   object({
-    title: generateStringSchema('title', 3, 255),
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-    description: generateStringSchema('description', 10, 500),
     releaseDate: generateStringSchema('release date'),
     coverImage: generateFileSchema('cover image'),
+    translations: object({
+      en: object({
+        title: generateStringSchema('title', 3, 255),
+        description: generateStringSchema('description', 10, 500),
+      }),
+      fa: object({
+        title: generateStringSchema('title', 3, 255),
+        description: generateStringSchema('description', 10, 500),
+      }),
+    }),
   });
 
 type FormSchema = Zod.infer<ReturnType<typeof createGameSchema>>;
@@ -83,7 +92,11 @@ export default function MutateGamePage() {
       payload.coverImage = data.coverImage.id;
     }
 
-    if (isEditMode) updateGame.mutate(payload);
+    if (isEditMode)
+      updateGame.mutate({
+        id: params.id,
+        data: getChangedFields(game.data, payload),
+      });
     else createGame.mutate(payload);
   };
 
@@ -120,23 +133,28 @@ export default function MutateGamePage() {
             <CardTitle>{t('game.gameDetails')}</CardTitle>
           </CardHeader>
           <CardContent className='space-y-6'>
-            <div className='space-y-2'>
-              <Label htmlFor='title'>
-                {t('game.gameTitle')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='title'
-                render={({ field }) => (
-                  <Input
-                    disabled={disabled}
-                    id='title'
-                    placeholder={t('game.enterGameTitle')}
-                    {...field}
+            <div className='grid grid-cols-2 gap-4'>
+              {supportedLanguages.map((lng) => (
+                <div className='space-y-2'>
+                  <Label htmlFor='title'>
+                    {t('game.gameTitle')} {`(${t(`common.${lng}`)}) `}{' '}
+                    {t('form.required')}
+                  </Label>
+                  <Controller
+                    defaultValue=''
+                    control={control}
+                    name={`translations.${lng}.title`}
+                    render={({ field }) => (
+                      <Input
+                        disabled={disabled}
+                        id='title'
+                        placeholder={t('game.enterGameTitle')}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
+                </div>
+              ))}
             </div>
             <div className='space-y-2'>
               <Label htmlFor='slug'>
@@ -152,6 +170,47 @@ export default function MutateGamePage() {
                     id='slug'
                     placeholder={t('game.gameUrlSlug')}
                     {...field}
+                  />
+                )}
+              />
+            </div>
+            <div className='grid grid-cols-2 gap-4'>
+              {supportedLanguages.map((lng) => (
+                <div className='space-y-2' key={`game-${lng}-description`}>
+                  <Label htmlFor='description'>
+                    {t('game.description')} {`(${t(`common.${lng}`)}) `}{' '}
+                    {t('form.required')}
+                  </Label>
+                  <Controller
+                    defaultValue=''
+                    control={control}
+                    name={`translations.${lng}.description`}
+                    render={({ field }) => (
+                      <Textarea
+                        id='description'
+                        placeholder={t('game.briefGameDescription')}
+                        rows={5}
+                        disabled={disabled}
+                        {...field}
+                      />
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className='space-y-2'>
+              <Label htmlFor='releaseDate'>
+                {t('game.releaseDate')} {t('form.required')}
+              </Label>
+              <Controller
+                defaultValue=''
+                control={control}
+                name='releaseDate'
+                render={({ field }) => (
+                  <DatePicker
+                    disabled={disabled}
+                    value={field.value}
+                    onChange={(date) => field.onChange(date.toISOString())}
                   />
                 )}
               />
@@ -200,42 +259,6 @@ export default function MutateGamePage() {
                     />
                   )
                 }
-              />
-            </div>
-            <div className='space-y-2'>
-              <Label htmlFor='releaseDate'>
-                {t('game.releaseDate')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='releaseDate'
-                render={({ field }) => (
-                  <DatePicker
-                    disabled={disabled}
-                    value={field.value}
-                    onChange={(date) => field.onChange(date.toISOString())}
-                  />
-                )}
-              />
-            </div>
-            <div className='space-y-2'>
-              <Label htmlFor='description'>
-                {t('game.description')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='description'
-                render={({ field }) => (
-                  <Textarea
-                    id='description'
-                    placeholder={t('game.briefGameDescription')}
-                    rows={5}
-                    disabled={disabled}
-                    {...field}
-                  />
-                )}
               />
             </div>
 

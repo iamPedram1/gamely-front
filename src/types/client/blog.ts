@@ -38,7 +38,7 @@ export interface UserProps {
   email: string;
   avatar: FileProps;
   bio: string;
-  role: 'superAdmin' | 'admin' | 'author' | 'user';
+  role: 'admin' | 'author' | 'user';
   status?: 'active' | 'blocked';
   createdDate?: string;
 }
@@ -72,7 +72,7 @@ export interface GameProps {
   releaseDate: string;
 }
 
-type CommentStatusType = 'approved' | 'rejected' | 'pending';
+type CommentStatusType = 'approved' | 'reject' | 'pending';
 
 export interface CommentProps {
   id: string;

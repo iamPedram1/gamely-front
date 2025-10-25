@@ -1,8 +1,8 @@
-// Custom Types
-
-import { CommonResponseProps, FileProps } from '@/types/api';
 import { getCookie } from '@/utilities/cookie';
 import { isSucceed } from '@/utilities/request';
+
+// Custom Types
+import type { CommonResponseProps, FileProps } from '@/types/api';
 
 export const uploadFile = async (
   files: File[],

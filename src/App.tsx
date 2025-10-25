@@ -8,7 +8,7 @@ import NotificationProvider from '@/components/ui/notification';
 // Context
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 
 // Pages

@@ -13,42 +13,69 @@ import {
 } from 'lucide-react';
 
 // Custom Hooks
+import useAuth from '@/hooks/useAuth';
 import { useBoolean } from '@/hooks/state';
 
 // Components
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import DarkModeToggle from '@/components/DarkModeToggle';
 
 export default function AdminLayout() {
-  // Custom Hooks
+  // States
   const sidebarOpen = useBoolean();
-  const { t } = useTranslation();
+
+  // Custom Hooks
+  const { profile } = useAuth();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  // Custom Utilities
+  // Utilities
   const isActive = (path: string) => location.pathname.startsWith(path);
   const navItems = [
-    { path: '/dashboard/posts', icon: FileText, label: t('dashboard.posts') },
-    { path: '/dashboard/games', icon: Gamepad2, label: t('dashboard.games') },
+    {
+      path: '/dashboard/posts',
+      roles: ['author', 'admin', 'superAdmin'],
+      icon: FileText,
+      label: t('dashboard.posts'),
+    },
+    {
+      path: '/dashboard/games',
+      roles: ['author', 'admin', 'superAdmin'],
+      icon: Gamepad2,
+      label: t('dashboard.games'),
+    },
     {
       path: '/dashboard/categories',
       icon: FolderOpen,
+      roles: ['author', 'admin', 'superAdmin'],
       label: t('dashboard.categories'),
     },
-    { path: '/dashboard/tags', icon: Tag, label: t('dashboard.tags') },
-    { path: '/dashboard/users', icon: Users, label: t('dashboard.users') },
+    {
+      path: '/dashboard/tags',
+      roles: ['author', 'admin', 'superAdmin'],
+      icon: Tag,
+      label: t('dashboard.tags'),
+    },
+    {
+      path: '/dashboard/users',
+      roles: ['admin', 'superAdmin'],
+      icon: Users,
+      label: t('dashboard.users'),
+    },
     {
       path: '/dashboard/comments',
+      roles: ['author', 'admin', 'superAdmin'],
       icon: MessageSquare,
       label: t('dashboard.comments'),
     },
   ];
 
   // Render
+  if (!profile) return <p>Loading</p>;
   return (
     <div className='min-h-screen bg-background flex'>
       <aside
@@ -65,30 +92,34 @@ export default function AdminLayout() {
               <LayoutDashboard className='h-6 w-6 text-white' />
             </div>
             {sidebarOpen.state && (
-              <span className='gradient-gaming-text'>
+              <span className='gradient-gaming-text text-nowrap'>
                 {t('dashboard.admin')}
               </span>
             )}
           </Link>
         </div>
         <nav className='flex flex-col p-4 gap-2'>
-          {navItems.map((item) => (
-            <Link key={item.path} to={item.path}>
-              <Button
-                variant={isActive(item.path) ? 'default' : 'ghost'}
-                className={`w-full justify-start gap-3 ${
-                  isActive(item.path)
-                    ? 'gradient-gaming glow-effect'
-                    : 'hover:bg-primary/10'
-                }`}
-              >
-                <item.icon className='h-5 w-5' />
-                {sidebarOpen.state && (
-                  <span className='font-semibold'>{item.label}</span>
-                )}
-              </Button>
-            </Link>
-          ))}
+          {navItems.map((item) =>
+            item.roles.includes(profile.role) ? (
+              <Link key={item.path} to={item.path}>
+                <Button
+                  variant={isActive(item.path) ? 'default' : 'ghost'}
+                  className={`w-full justify-start gap-3 ${
+                    isActive(item.path)
+                      ? 'gradient-gaming glow-effect'
+                      : 'hover:bg-primary/10'
+                  }`}
+                >
+                  <item.icon className='min-h-5 min-w-5' />
+                  {sidebarOpen.state && (
+                    <span className='font-semibold text-nowrap'>
+                      {item.label}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+            ) : null
+          )}
         </nav>
         <div className='p-4 border-t border-primary/20'>
           <Link to='/'>

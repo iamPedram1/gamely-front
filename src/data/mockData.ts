@@ -1,4 +1,10 @@
-import { PostProps, TagProps, CategoryProps, GameProps, UserProps } from '@/types/blog';
+import {
+  PostProps,
+  TagProps,
+  CategoryProps,
+  GameProps,
+  UserProps,
+} from '@/types/blog';
 
 export const mockTags: TagProps[] = [
   { id: '1', title: 'RPG', slug: 'rpg' },
@@ -55,7 +61,7 @@ export const mockUsers: UserProps[] = [
     bio: 'Senior game reviewer with 10 years of experience',
     role: 'admin',
     status: 'active',
-    createdAt: '2023-01-15T10:00:00Z',
+    createdDate: '2023-01-15T10:00:00Z',
   },
   {
     id: '2',
@@ -65,7 +71,7 @@ export const mockUsers: UserProps[] = [
     bio: 'Strategy game specialist and guide writer',
     role: 'author',
     status: 'active',
-    createdAt: '2023-02-20T14:30:00Z',
+    createdDate: '2023-02-20T14:30:00Z',
   },
   {
     id: '3',
@@ -75,7 +81,7 @@ export const mockUsers: UserProps[] = [
     bio: 'Gaming enthusiast',
     role: 'user',
     status: 'active',
-    createdAt: '2023-03-10T09:15:00Z',
+    createdDate: '2023-03-10T09:15:00Z',
   },
   {
     id: '4',
@@ -85,7 +91,7 @@ export const mockUsers: UserProps[] = [
     bio: 'Indie game lover',
     role: 'user',
     status: 'blocked',
-    createdAt: '2023-04-05T16:45:00Z',
+    createdDate: '2023-04-05T16:45:00Z',
   },
 ];
 
@@ -125,7 +131,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GameFan',
         content:
           "Great review! I've been playing for 50 hours and still discovering new things.",
-        createdAt: '2024-03-21T14:30:00Z',
+        createdDate: '2024-03-21T14:30:00Z',
       },
       {
         id: '2',
@@ -133,7 +139,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Space',
         content:
           "The ship customization is incredible. Best space game I've played!",
-        createdAt: '2024-03-21T16:45:00Z',
+        createdDate: '2024-03-21T16:45:00Z',
       },
     ],
   },
@@ -201,7 +207,7 @@ The cyberpunk aesthetic is stunning, with neon-lit cities and detailed unit desi
         username: 'StrategyPro',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Strategy',
         content: 'The neural network system is genius! Adds so much depth.',
-        createdAt: '2024-03-16T11:20:00Z',
+        createdDate: '2024-03-16T11:20:00Z',
       },
     ],
   },

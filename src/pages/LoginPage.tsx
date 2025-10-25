@@ -23,7 +23,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-// Custom Utilities
+// Utilities
 import routes from '@/utilities/routes';
 import useLoadingStore from '@/store/loading';
 import { createOnErrorHandler } from '@/utilities';
@@ -79,7 +79,7 @@ export default function LoginPage() {
     onSuccess: ({ data }) => signin(data.token, data.refreshToken),
   });
 
-  // Custom Utilities
+  // Utilities
   const handleLogin = async (data: Required<LoginFormProps>) => {
     login(data);
   };

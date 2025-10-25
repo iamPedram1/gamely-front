@@ -20,13 +20,13 @@ import {
 // Context
 import useLoadingStore from '@/store/loading';
 
-// Custom Utilities
+// Utilities
 import { createOnErrorHandler } from '@/utilities';
 import {
   useCategoryQuery,
   useCreateCategory,
   useUpdateCategory,
-} from '@/utilities/api/category';
+} from '@/utilities/api/management/category';
 import {
   generateRegexStringSchema,
   generateStringSchema,
@@ -85,7 +85,7 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
     autoAlert: { mode: 'update', name: 'Category' },
   });
 
-  // Custom Utilities
+  // Utilities
   const onSubmit = (data: Required<FormSchema>) => {
     if (isEditMode) updateCategory.mutate({ id: categoryId, ...data });
     else createCategory.mutate(data);
