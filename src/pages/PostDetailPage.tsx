@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +11,8 @@ import { useBoolean } from '@/hooks/state';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Comment from '@/components/blog/Comment';
 import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
 
 // Utilities
@@ -178,37 +177,13 @@ export default function PostDetailPage() {
           {comments.data.docs.length === 0 ? (
             <p className='text-muted-foreground'>{t('comment.noComments')}</p>
           ) : (
-            <div className='space-y-4'>
+            <div className='space-y-6'>
               {comments.data.docs.map((comment) => (
-                <Card key={comment.id}>
-                  <CardHeader>
-                    <div className='flex items-center gap-3'>
-                      <Avatar>
-                        <AvatarImage
-                          src={comment.avatar?.url || '/placeholder.svg'}
-                          alt={comment.username}
-                        />
-                        <AvatarFallback>{comment.username[0]}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className='font-semibold'>{comment.username}</p>
-                        <p className='text-xs text-muted-foreground'>
-                          {dayjs(comment.createDate).format('YYYY/MM/DD-HH:mm')}
-                        </p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className='flex flex-col gap-4'>
-                    <p className='text-sm'>{comment.content}</p>
-                    <Button
-                      onClick={() => setCommentToReply(comment)}
-                      className='w-fit'
-                      variant='secondary'
-                    >
-                      {t('comment.reply')}
-                    </Button>
-                  </CardContent>
-                </Card>
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  onReply={setCommentToReply}
+                />
               ))}
             </div>
           )}

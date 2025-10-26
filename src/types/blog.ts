@@ -81,4 +81,5 @@ export interface CommentProps {
   avatar: FileProps;
   createDate: string;
   status: CommentStatusType;
+  replies?: CommentProps[];
 }
