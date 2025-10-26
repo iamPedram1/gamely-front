@@ -19,14 +19,11 @@ import {
 } from '@/store/dialog';
 
 // Utilities
-import { setFailedCrudAlert, setSuccessCrudAlert } from '@/utilities';
-import { convertNumberToPersian } from '@/utilities/helperPack';
-
+import { useUnMount } from '@/hooks/utils';
 // Custom Types
 import type { UseFormReturn } from 'react-hook-form';
 import type { CommonResponseProps } from '@/types/api';
 import type { AlertCrudType } from '@/utilities';
-import { useUnMount } from '@/hooks/utils';
 
 interface AutoAlertProps {
   hookFormMethods?: UseFormReturn<any>;
@@ -200,69 +197,7 @@ const useBaseMutation = <TData, TError, TVariables>(
         }
 
         if (!disableAutoAlert) {
-          if (!options?.autoAlert && !options?.customAlert) {
-            if (!isSuccess) setAlertState(message, 'error');
-            if (isSuccess && !alertOnlyOnError)
-              setAlertState(message, 'success');
-          }
-
-          if (options?.autoAlert) {
-            if (
-              isSuccess &&
-              !alertOnlyOnError &&
-              typeof options.autoAlert.name === 'string'
-            )
-              setSuccessCrudAlert(
-                options.autoAlert.mode,
-                options.autoAlert.name
-              );
-
-            if (!isSuccess && typeof options.autoAlert.name === 'string') {
-              const hookFormMethods = options.autoAlert?.hookFormMethods;
-              const apiErrors = Object.entries(
-                (error?.cause?.errorDetails as Record<string, string[]>) || {}
-              );
-              if (hookFormMethods) {
-                let count = 0;
-
-                apiErrors.forEach(([key, err]) => {
-                  if (hookFormMethods.control._names.mount.has(key)) {
-                    hookFormMethods.setError(key, {
-                      message: convertNumberToPersian(err?.[0] || ''),
-                      type: 'custom',
-                    });
-                    ++count;
-                  }
-                });
-
-                if (apiErrors.length > 0 && count === 0)
-                  setAlertState(
-                    apiErrors?.[0]?.[0] ||
-                      'پردازش عملیات مربوطه با خطا مواجه شد',
-                    'error'
-                  );
-              } else {
-                setFailedCrudAlert(
-                  options.autoAlert.mode,
-                  options.autoAlert.name,
-                  message
-                );
-              }
-            }
-          }
-
-          if (options?.customAlert) {
-            if (isSuccess && !alertOnlyOnError)
-              setAlertState(
-                options.customAlert?.successMessage || '',
-                options.customAlert.successSeverity || 'success'
-              );
-            if (!isSuccess)
-              setAlertState(
-                options.customAlert?.errorMessage || '',
-                options.customAlert.errorSeverity || 'success'
-              );
-          }
+          setAlertState(message, isSuccess ? 'success' : 'error');
         }
 
         if (onSettled)

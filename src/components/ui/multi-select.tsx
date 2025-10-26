@@ -54,7 +54,6 @@ export function MultiSelect({
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
   const { t, i18n } = useTranslation();
-  console.log(options);
 
   const defaultPlaceholder = placeholder || t('multiSelect.selectItems');
   const defaultEmptyText = emptyText || t('multiSelect.noItemsFound');

@@ -30,9 +30,9 @@ export default function GamesListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const { t, i18n } = useTranslation();
-  const games = useGamesQuery();
+  const games = useGamesQuery({ refetchOnQueryChange: true });
   const deleteGame = useDeleteGame();
+  const { t, i18n } = useTranslation();
   const disabled = loading || deleteGame.isPending;
 
   // Render
@@ -90,7 +90,7 @@ export default function GamesListPage() {
                     <div className='flex items-center gap-3'>
                       {game.coverImage && (
                         <img
-                          src={game.coverImage.url || '/placeholder.svg'}
+                          src={game.coverImage?.url || '/placeholder.svg'}
                           alt={game?.translations?.[i18n.language]?.title}
                           className='w-16 h-16 object-cover rounded'
                         />

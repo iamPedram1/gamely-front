@@ -13,8 +13,11 @@ import type { GameProps, SummaryProps } from '@/types/management/blog';
 const gamesQueryKey = 'games';
 
 export const useGamesQuery = useAppQuery(
-  () =>
-    apiHandler.get<DataWithPagination<GameProps>>(endpoints.management.games),
+  (reqInit) =>
+    apiHandler.get<DataWithPagination<GameProps>>(
+      endpoints.management.games,
+      reqInit
+    ),
   [gamesQueryKey]
 );
 

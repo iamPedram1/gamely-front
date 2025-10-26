@@ -68,17 +68,11 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
     resolver: zodResolver(schema),
     defaultValues: commentToEdit
       ? { comment: commentToEdit.content, replyToCommentId: replyToComment?.id }
-      : undefined,
+      : { ...(replyToComment && { replyToCommentId: replyToComment?.id }) },
   });
 
-  const createComment = useCreateComment({
-    onSuccess: onClose,
-    autoAlert: { mode: 'add', name: 'Comment' },
-  });
-  const updateComment = useUpdateComment({
-    onSuccess: onClose,
-    autoAlert: { mode: 'update', name: 'Category' },
-  });
+  const createComment = useCreateComment({ onSuccess: onClose });
+  const updateComment = useUpdateComment({ onSuccess: onClose });
 
   // Utilities
   const onSubmit = (data: Required<FormSchema>) => {

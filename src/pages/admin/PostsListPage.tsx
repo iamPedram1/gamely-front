@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 
@@ -8,13 +10,7 @@ import { Button } from '@/components/ui/button';
 import Searchbar from '@/components/ui/searchbar';
 import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { MultiSelect } from '@/components/ui/multi-select';
 import {
   Table,
   TableBody,
@@ -32,6 +28,11 @@ import routes from '@/utilities/routes';
 import { getDate } from '@/utilities';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/management/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/management/category';
+import { debounce } from '@/utilities/helperPack';
+
+interface FormProps {
+  category: string[];
+}
 
 export default function PostsListPage() {
   // Context
@@ -39,11 +40,34 @@ export default function PostsListPage() {
   const { loading } = useLoadingStore();
 
   // Hooks
-  const posts = usePostsQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.getAll('category');
+  const posts = usePostsQuery({ refetchOnQueryChange: true });
   const deletePost = useDeletePost();
   const categories = useCategoriesSummariesQuery({ placeholderData: [] });
-
   const disabled = loading || deletePost.isPending;
+
+  const { control } = useForm<FormProps>({
+    values: { category },
+  });
+
+  const categoryOptions = useMemo(
+    () =>
+      categories.data.map((ctg) => ({
+        label: ctg.translations[i18n.language].title,
+        value: ctg.id,
+      })),
+    [categories.data]
+  );
+
+  const filterByCategory = debounce((ids: string[]) => {
+    setSearchParams((sp) => {
+      const newSP = new URLSearchParams(sp);
+      newSP.delete('category');
+      ids.forEach((id) => newSP.append('category', id));
+      return newSP;
+    });
+  }, 500);
 
   // Render
   return (
@@ -77,26 +101,20 @@ export default function PostsListPage() {
             </h2>
             <div className='flex items-center gap-3'>
               <Searchbar placeholder={t('common.searchInPosts')} />
-              <Select>
-                <SelectTrigger className='w-[180px]'>
-                  <SelectValue placeholder={t('common.filterByCategory')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.isFetching ? (
-                    <SelectItem disabled value='loading'>
-                      {t('common.loading')}...
-                    </SelectItem>
-                  ) : (
-                    <>
-                      {categories?.data?.map?.((ctg) => (
-                        <SelectItem key={ctg.id} value={ctg.id}>
-                          {ctg?.translations?.[i18n.language]?.title}
-                        </SelectItem>
-                      ))}
-                    </>
-                  )}
-                </SelectContent>
-              </Select>
+              <Controller
+                control={control}
+                name='category'
+                rules={{ onChange: (e) => filterByCategory(e.target.value) }}
+                render={({ field }) => (
+                  <MultiSelect
+                    selected={field.value}
+                    onChange={(value) => field.onChange(value)}
+                    options={categoryOptions}
+                    className='w-[200px] h-auto'
+                    placeholder={t('common.filterByCategory')}
+                  />
+                )}
+              />
             </div>
           </div>
         </CardHeader>

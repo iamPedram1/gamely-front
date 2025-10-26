@@ -22,18 +22,22 @@ const Searchbar = (props: SearchbarProps) => {
 
   // Hooks
   const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search');
   const { control } = useForm<FormProps>({
     defaultValues: { search: searchParams.get('search') },
+    values: { search },
   });
 
   // Utilities
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    searchParams.set('search', e.target.value);
-    searchParams.set('page', '1');
-    setSearchParams(searchParams);
-  };
-
-  const debouneChange = debounce(handleChange, 1000);
+  const handleChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(() => {
+      const sp = new URLSearchParams(searchParams);
+      if (e.target.value) sp.set('search', e.target.value);
+      else sp.delete('search');
+      sp.set('page', '1');
+      return sp;
+    });
+  }, 1000);
 
   // Render
   return (
@@ -42,13 +46,12 @@ const Searchbar = (props: SearchbarProps) => {
       <Controller
         name='search'
         control={control}
-        rules={{ onChange: debouneChange }}
+        rules={{ onChange: handleChange }}
         render={({ field }) => (
           <Input
             placeholder={placeholder}
             className='pl-10 w-[250px]'
-            value={field.value}
-            onChange={debouneChange}
+            {...field}
           />
         )}
       />

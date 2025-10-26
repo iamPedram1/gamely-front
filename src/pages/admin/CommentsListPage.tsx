@@ -71,8 +71,6 @@ export default function CommentsListPage() {
   };
 
   const handleUpdateStatus = (status: CommentStatusType) => {
-    console.log('Approve comment:', selectedComment?.id);
-
     updateComment.mutate({ commentId: selectedComment.id, data: { status } });
     isDialogOpen.setFalse();
   };

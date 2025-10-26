@@ -100,7 +100,7 @@ export default function HomePage() {
               <Link to={`/posts/${featuredPost.slug}`}>
                 <div className='relative aspect-[4/5] rounded-2xl overflow-hidden border-2 border-primary/20 glow-effect hover:glow-effect-strong transition-all group'>
                   <img
-                    src={featuredPost.coverImage.url || '/placeholder.svg'}
+                    src={featuredPost.coverImage?.url || '/placeholder.svg'}
                     alt={featuredPost.title}
                     className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                   />
@@ -150,7 +150,7 @@ export default function HomePage() {
               <Link key={game.id} to={`/game/${game.slug}`}>
                 <div className='group relative aspect-[3/4] rounded-xl overflow-hidden border border-primary/20 hover:border-primary/50 transition-all glow-effect hover:glow-effect-strong'>
                   <img
-                    src={game.coverImage.url || '/placeholder.svg'}
+                    src={game.coverImage?.url || '/placeholder.svg'}
                     alt={game.title}
                     className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                   />

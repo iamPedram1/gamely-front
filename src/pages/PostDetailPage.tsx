@@ -135,7 +135,7 @@ export default function PostDetailPage() {
         </div>
         <div className='aspect-video overflow-hidden rounded-lg mb-8'>
           <img
-            src={post.data.coverImage.url || '/placeholder.svg'}
+            src={post.data.coverImage?.url || '/placeholder.svg'}
             alt={post.data.title}
             className='w-full h-full object-cover'
           />

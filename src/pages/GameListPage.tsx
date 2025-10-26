@@ -49,7 +49,7 @@ export default function GameListPage() {
                     {game.coverImage && (
                       <img
                         alt={game.title}
-                        src={game.coverImage.url || '/placeholder.svg'}
+                        src={game.coverImage?.url || '/placeholder.svg'}
                         className='w-full h-full object-cover hover:scale-105 transition-transform duration-300'
                       />
                     )}
