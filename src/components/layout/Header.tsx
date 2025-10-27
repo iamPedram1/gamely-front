@@ -1,5 +1,4 @@
 import type React from 'react';
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -157,7 +156,7 @@ export default function Header() {
                     <span>{t('nav.profile')}</span>
                   </Link>
                 </DropdownMenuItem>
-                {(profile.role === 'admin' || profile.role === 'author') && (
+                {['author', 'admin', 'superAdmin'].includes(profile.role) && (
                   <DropdownMenuItem
                     asChild
                     className='cursor-pointer hover:bg-primary/10 transition-colors'

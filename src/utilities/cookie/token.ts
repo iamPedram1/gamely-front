@@ -2,16 +2,16 @@
 import { deleteCookie, getCookie, setCookie } from '@/utilities/cookie';
 
 // Types
-export const setToken = (token: string) => {
-  setCookie('Token', token, { path: '/' });
+export const setAccessToken = (token: string) => {
+  setCookie('Access-Token', token, { path: '/' });
 };
 
-export const deleteToken = () => {
-  deleteCookie('Token', { path: '/' });
+export const deleteAccessToken = () => {
+  deleteCookie('Access-Token', { path: '/' });
 };
 
-export const getToken = () => {
-  return getCookie('Token');
+export const getAccessToken = () => {
+  return getCookie('Access-Token');
 };
 
 export const setRefreshToken = (token: string) => {

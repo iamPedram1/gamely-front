@@ -38,34 +38,43 @@ export default function GameListPage() {
         </div>
       ) : (
         <>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {games.data.docs.map((game) => (
               <Card
                 key={game.id}
-                className='overflow-hidden hover:shadow-lg transition-shadow'
+                className='w-[300px] flex flex-col gap-2 overflow-hidden hover:shadow-lg transition-all'
               >
-                <Link to={`/game/${game.slug}`}>
-                  <div className='aspect-video overflow-hidden'>
-                    {game.coverImage && (
+                <Link
+                  to={`/posts?game=${game.slug}`}
+                  className='block relative group'
+                >
+                  <div className='relative w-[300px] h-[285px] overflow-hidden bg-muted group'>
+                    {game.coverImage ? (
                       <img
                         alt={game.title}
-                        src={game.coverImage?.url || '/placeholder.svg'}
-                        className='w-full h-full object-cover hover:scale-105 transition-transform duration-300'
+                        src={game.coverImage.url || '/placeholder.svg'}
+                        className='w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105'
                       />
+                    ) : (
+                      <div className='flex items-center justify-center h-full text-muted-foreground text-sm'>
+                        No image available
+                      </div>
                     )}
                   </div>
                 </Link>
 
-                <CardHeader>
+                <CardHeader className='!py-0'>
                   <Link to={`/game/${game.slug}`}>
-                    <h3 className='text-xl font-bold hover:text-primary transition-colors'>
+                    <h3 className='text-xl font-bold hover:text-primary transition-colors line-clamp-1'>
                       {game.title}
                     </h3>
                   </Link>
                 </CardHeader>
 
-                <CardContent>
-                  <p className='text-muted-foreground'>{game.description}</p>
+                <CardContent className='!py-0'>
+                  <p className='text-muted-foreground line-clamp-3'>
+                    {game.description}
+                  </p>
                 </CardContent>
 
                 <CardFooter className='flex items-center justify-between'>
@@ -87,6 +96,7 @@ export default function GameListPage() {
               </Card>
             ))}
           </div>
+
           {games.data.pagination && (
             <PaginationControls pagination={games.data.pagination} />
           )}

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 
 // Utilities
 import { debounce } from '@/utilities/helperPack';
+import { useTranslation } from 'react-i18next';
 
 // Custom Types
 interface SearchbarProps {
@@ -18,9 +19,10 @@ type FormProps = { search: string };
 
 const Searchbar = (props: SearchbarProps) => {
   // Props
-  const { placeholder = 'Search ...' } = props;
+  const { placeholder } = props;
 
   // Hooks
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get('search');
   const { control } = useForm<FormProps>({
@@ -49,7 +51,7 @@ const Searchbar = (props: SearchbarProps) => {
         rules={{ onChange: handleChange }}
         render={({ field }) => (
           <Input
-            placeholder={placeholder}
+            placeholder={placeholder || `${t('common.search')} ...`}
             className='pl-10 w-[250px]'
             {...field}
           />

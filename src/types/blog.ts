@@ -32,14 +32,17 @@ export interface PostSummaryProps {
   comments: CommentProps[];
 }
 
+export type UserRole = 'superAdmin' | 'admin' | 'author' | 'user';
+export type UserStatus = 'active' | 'blocked';
+
 export interface UserProps {
   id: string;
   name: string;
   email: string;
   avatar: FileProps;
   bio: string;
-  role: 'superAdmin' | 'admin' | 'author' | 'user';
-  status?: 'active' | 'blocked';
+  role: UserRole;
+  status?: UserStatus;
   createDate?: string;
 }
 
@@ -77,7 +80,7 @@ type CommentStatusType = 'approved' | 'rejected' | 'pending';
 export interface CommentProps {
   id: string;
   username: string;
-  content: string;
+  message: string;
   avatar: FileProps;
   createDate: string;
   status: CommentStatusType;

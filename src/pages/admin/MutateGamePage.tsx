@@ -137,7 +137,7 @@ export default function MutateGamePage() {
               {supportedLanguages.map((lng) => (
                 <div className='space-y-2'>
                   <Label htmlFor='title'>
-                    {t('game.gameTitle')} {`(${t(`common.${lng}`)}) `}{' '}
+                    {t('game.gameTitle')} {t(`common.${lng}`)}{' '}
                     {t('form.required')}
                   </Label>
                   <Controller
@@ -178,7 +178,7 @@ export default function MutateGamePage() {
               {supportedLanguages.map((lng) => (
                 <div className='space-y-2' key={`game-${lng}-description`}>
                   <Label htmlFor='description'>
-                    {t('game.description')} {`(${t(`common.${lng}`)}) `}{' '}
+                    {t('game.description')} {t(`common.${lng}`)}{' '}
                     {t('form.required')}
                   </Label>
                   <Controller

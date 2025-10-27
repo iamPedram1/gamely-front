@@ -71,12 +71,12 @@ export default function LoginPage() {
   const { mutate: login } = useLoginMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
-    onSuccess: ({ data }) => signin(data.token, data.refreshToken),
+    onSuccess: ({ data }) => signin(data.accessToken, data.refreshToken),
   });
   const { mutate: register } = useRegisterMutation({
     redirectAfterSuccessTo: '/',
     stayOnLoadingAfterSuccessMutate: true,
-    onSuccess: ({ data }) => signin(data.token, data.refreshToken),
+    onSuccess: ({ data }) => signin(data.accessToken, data.refreshToken),
   });
 
   // Utilities

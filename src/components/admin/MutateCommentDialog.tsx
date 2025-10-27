@@ -37,7 +37,7 @@ interface MutateCommentDialogProps {
 
 const createCommentSchema = () =>
   object({
-    comment: generateStringSchema('comment', 3, 255),
+    message: generateStringSchema('message', 3, 255),
     replyToCommentId: generateStringSchema(
       'replyToId',
       undefined,
@@ -67,7 +67,7 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
     mode: 'onTouched',
     resolver: zodResolver(schema),
     defaultValues: commentToEdit
-      ? { comment: commentToEdit.content, replyToCommentId: replyToComment?.id }
+      ? { message: commentToEdit.message, replyToCommentId: replyToComment?.id }
       : { ...(replyToComment && { replyToCommentId: replyToComment?.id }) },
   });
 
@@ -106,7 +106,7 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
               </Label>
               <Controller
                 control={control}
-                name='comment'
+                name='message'
                 render={({ field }) => (
                   <Textarea
                     id='comment'

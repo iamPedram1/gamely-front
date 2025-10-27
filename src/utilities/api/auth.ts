@@ -10,7 +10,7 @@ import type { UserProps } from '@/types/blog';
 import type { CommonResponseProps } from '@/types/api';
 
 export interface AuthResponseProps {
-  token: string;
+  accessToken: string;
   refreshToken: string;
 }
 
@@ -61,12 +61,12 @@ export const refreshToken = (
   );
 };
 export const revokeToken = (
-  token: string,
+  accessToken: string,
   refreshToken: string
 ): Promise<CommonResponseProps<AuthResponseProps>> => {
   return apiHandler.post(
     endpoints.tokenRevoke,
-    { token, refreshToken },
+    { accessToken, refreshToken },
     { keepalive: true }
   );
 };

@@ -23,11 +23,17 @@ export const useCommentsQuery = useAppQuery(
 export const useUpdateComment = useAppMutation(
   (payload: {
     commentId: string;
-    data: Partial<Pick<CommentProps, 'status' | 'content'>>;
+    data: Partial<Pick<CommentProps, 'status' | 'message'>>;
   }) =>
     apiHandler.patch(
       `${endpoints.management.comments}/${payload.commentId}`,
       payload.data
     ),
+  [commentsQueryKey]
+);
+
+export const useDeleteComment = useAppMutation(
+  (commentId: string) =>
+    apiHandler.delete(`${endpoints.management.comments}/${commentId}`),
   [commentsQueryKey]
 );

@@ -1,10 +1,10 @@
-'use client';
-
 import * as React from 'react';
 import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 
 // Components
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -18,8 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 
 // Utilities
 import { cn } from '@/utilities/tailwind';
@@ -169,6 +167,7 @@ export function MultiSelect({
 
                 return (
                   <CommandItem
+                    keywords={[option.label]}
                     key={option.value}
                     value={option.value}
                     onSelect={() => {

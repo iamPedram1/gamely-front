@@ -16,6 +16,7 @@ import { setAlertState } from '@/store/alert';
 
 // Custom Types
 import type { CommonResponseProps } from '@/types/api';
+import { parseQueryStringToObject } from '@/utilities';
 
 export interface AlertProps {
   /**
@@ -100,7 +101,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
   const queryKey = useMemo(() => {
     const keys = [...otherOptions.queryKey];
     if (refetchOnQueryChange)
-      keys.push(Object.fromEntries(new URLSearchParams(searchParams)));
+      keys.push(parseQueryStringToObject(searchParams.toString()));
 
     return keys;
   }, [otherOptions.queryKey, searchParams, refetchOnQueryChange]);
@@ -114,7 +115,7 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
         ...(queryKey && { queryKey }),
         query: {
           ...(query || {}),
-          ...Object.fromEntries(new URLSearchParams(searchParams)),
+          ...parseQueryStringToObject(searchParams.toString()),
           ...queries,
         },
       });

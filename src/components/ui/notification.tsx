@@ -1,19 +1,18 @@
-'use client';
-
 import * as Toast from '@radix-ui/react-toast';
-import {
-  CheckCircledIcon,
-  CrossCircledIcon,
-  ExclamationTriangleIcon,
-  InfoCircledIcon,
-} from '@radix-ui/react-icons';
+import { useMemo, useEffect } from 'react';
 import { TriangleAlert, X } from 'lucide-react';
-import { useMemo, useEffect, useState } from 'react';
+import {
+  InfoCircledIcon,
+  CheckCircledIcon,
+  ExclamationTriangleIcon,
+} from '@radix-ui/react-icons';
+
+// Hooks
+import { useBoolean } from '@/hooks/state';
 
 // Store
 import useAlertStore from '@/store/alert';
 import type { SeverityType } from '@/store/alert/slice';
-import { useBoolean } from '@/hooks/state';
 
 function NotificationItem({
   id,

@@ -97,11 +97,11 @@ export default function PostDetailPage() {
             )}
           </div>
 
-          <h1 className='text-4xl md:text-5xl font-bold mb-4'>
+          <h1 className='text-xl md:text-5xl font-bold mb-4'>
             {post.data.title}
           </h1>
 
-          <div className='flex items-center gap-4 text-sm text-muted-foreground mb-6'>
+          <div className='flex items-center gap-2 md:gap-4 text-sm text-muted-foreground mb-6'>
             <div className='flex items-center gap-2'>
               <Avatar className='h-10 w-10'>
                 <AvatarImage
@@ -111,24 +111,25 @@ export default function PostDetailPage() {
                 <AvatarFallback>{post.data.author.name[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <p className='font-medium text-foreground'>
+                <p className='text-xs md:text-sm font-medium text-foreground'>
                   {post.data.author.name}
                 </p>
                 <p className='text-xs'>{post.data.author.bio}</p>
               </div>
             </div>
             <Separator orientation='vertical' className='h-10' />
-            <div className='flex items-center gap-3'>
-              <div className='flex items-center gap-1'>
-                <Calendar className='h-4 w-4' />
-                <span>{getDate(post.data.createDate, i18n.language)}</span>
-              </div>
-              <div className='flex items-center gap-1'>
-                <Clock className='h-4 w-4' />
-                <span>
-                  {post.data.readingTime} {t('post.minRead')}
-                </span>
-              </div>
+            <div className='flex items-center gap-1'>
+              <Calendar className='h-4 w-4' />
+              <span className='text-xs md:text-sm text-nowrap'>
+                {getDate(post.data.createDate, i18n.language)}
+              </span>
+            </div>
+            <Separator orientation='vertical' className='h-10' />
+            <div className='flex items-center gap-1'>
+              <Clock className='h-4 w-4' />
+              <span className='text-xs md:text-sm text-nowrap'>
+                {post.data.readingTime} {t('post.minRead')}
+              </span>
             </div>
           </div>
         </div>

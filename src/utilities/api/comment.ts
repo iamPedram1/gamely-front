@@ -1,11 +1,14 @@
-import apiHandler from '@/utilities/safeApiHandler';
 import { useAppMutation } from '@/hooks/api/useMutation';
 import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
+
+// Utilities
+import endpoints from '@/utilities/endpoints';
+import apiHandler from '@/utilities/safeApiHandler';
+import initialPagination from '@/utilities/pagination';
 
 // Types
 import type { CommentProps } from '@/types/blog';
 import type { DataWithPagination } from '@/types/api';
-import initialPagination from '@/utilities/pagination';
 
 const commentsQueryKey = 'comments';
 
@@ -19,9 +22,9 @@ export const useCommentsQuery = makeUseFetchQuery(
 );
 
 export const useCreateComment = useAppMutation(
-  (payload: { postId: string; comment: string; replyToCommentId?: string }) =>
-    apiHandler.post(`/posts/${payload.postId}/comments`, {
-      comment: payload.comment,
+  (payload: { postId: string; message: string; replyToCommentId?: string }) =>
+    apiHandler.post(`${endpoints.posts}/${payload.postId}/comments`, {
+      message: payload.message,
       ...(payload.replyToCommentId && {
         replyToCommentId: payload.replyToCommentId,
       }),
@@ -33,14 +36,17 @@ export const useUpdateComment = useAppMutation(
   (payload: {
     postId: string;
     commentId: string;
-    comment: string;
+    message: string;
     replyToCommentId?: string;
   }) =>
-    apiHandler.post(`/posts/${payload.postId}/comments/${payload.commentId}`, {
-      comment: payload.comment,
-      ...(payload.replyToCommentId && {
-        replyToCommentId: payload.replyToCommentId,
-      }),
-    }),
+    apiHandler.post(
+      `${endpoints.posts}/${payload.postId}/comments/${payload.commentId}`,
+      {
+        message: payload.message,
+        ...(payload.replyToCommentId && {
+          replyToCommentId: payload.replyToCommentId,
+        }),
+      }
+    ),
   [commentsQueryKey]
 );

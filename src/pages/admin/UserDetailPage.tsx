@@ -6,6 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { ArrowLeft, Save, Ban, CheckCircle } from 'lucide-react';
 
+// Hooks
+import useAuth from '@/hooks/useAuth';
+
 // Components
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,7 +44,6 @@ import {
   generateEmailSchema,
   generateStringSchema,
 } from '@/validations/common';
-import useAuth from '@/hooks/useAuth';
 
 const createUserSchema = () =>
   object({
@@ -74,7 +76,13 @@ export default function UserDetailPage() {
     control: formMethods.control,
     name: 'status',
   });
-  const disabled = updateUser.isPending || !user.isFetched;
+  const isUpdatingSelf = user.data.id === profile.id;
+  const isLoading = updateUser.isPending || !user.isFetched;
+  const disabled =
+    isLoading ||
+    (profile.role !== 'superAdmin' &&
+      ['admin', 'superAdmin'].includes(user.data.role) &&
+      !isUpdatingSelf);
 
   // Utilities
   const handleUpdate = (data: FormSchema) => {

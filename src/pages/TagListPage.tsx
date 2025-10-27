@@ -8,6 +8,7 @@ import PaginationControls from '@/components/ui/pagination-controls';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 // Utilities
+import routes from '@/utilities/routes';
 import { useTagsQuery } from '@/utilities/api/tag';
 
 export default function TagListPage() {
@@ -32,7 +33,7 @@ export default function TagListPage() {
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
             {tags.data.docs.map((tag) => {
               return (
-                <Link key={tag.id} to={`/tag/${tag.slug}`}>
+                <Link key={tag.id} to={`${routes.posts.index}?tag=${tag.slug}`}>
                   <Card className='hover:shadow-lg transition-shadow cursor-pointer'>
                     <CardHeader>
                       <div className='flex items-center justify-between'>

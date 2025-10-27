@@ -90,7 +90,7 @@ export type CommentStatusType = 'approved' | 'rejected' | 'pending';
 export interface CommentProps {
   id: string;
   creator: UserProps;
-  content: string;
+  message: string;
   createDate: string;
   status: CommentStatusType;
   post: SummaryProps;

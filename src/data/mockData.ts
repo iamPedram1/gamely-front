@@ -129,7 +129,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
         id: '1',
         username: 'GameFan123',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GameFan',
-        content:
+        message:
           "Great review! I've been playing for 50 hours and still discovering new things.",
         createDate: '2024-03-21T14:30:00Z',
       },
@@ -137,7 +137,7 @@ Starfield Chronicles sets a new standard for space RPGs. With its engaging story
         id: '2',
         username: 'SpaceExplorer',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Space',
-        content:
+        message:
           "The ship customization is incredible. Best space game I've played!",
         createDate: '2024-03-21T16:45:00Z',
       },
@@ -206,7 +206,7 @@ The cyberpunk aesthetic is stunning, with neon-lit cities and detailed unit desi
         id: '3',
         username: 'StrategyPro',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Strategy',
-        content: 'The neural network system is genius! Adds so much depth.',
+        message: 'The neural network system is genius! Adds so much depth.',
         createDate: '2024-03-16T11:20:00Z',
       },
     ],

@@ -1,31 +1,44 @@
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { CornerDownRight } from 'lucide-react';
+import { ChevronDown, ChevronUp, MessageSquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 
 import type { CommentProps } from '@/types/blog';
 
 interface CommentComponentProps {
   comment: CommentProps;
   onReply: (comment: CommentProps) => void;
-  depth?: number;
+  isReply?: boolean;
+  showThreadLine?: boolean;
 }
 
 export default function Comment({
   comment,
   onReply,
-  depth = 0,
+  isReply = false,
+  showThreadLine = false,
 }: CommentComponentProps) {
   const { t } = useTranslation();
-  const maxDepth = 4;
+  const [open, setOpen] = useState(false);
   const hasReplies = comment.replies && comment.replies.length > 0;
 
   return (
-    <div className='space-y-3'>
-      <Card className='transition-all hover:shadow-md'>
+    <div className='relative space-y-3'>
+      {/* Reddit-style thread line */}
+      {showThreadLine && (
+        <div className='absolute left-4 top-6 bottom-0 w-[2px] bg-border/60 rounded-full' />
+      )}
+
+      <Card className='transition-all hover:shadow-md relative z-10'>
         <CardHeader className='pb-3'>
           <div className='flex items-center gap-3'>
             <Avatar className='h-9 w-9'>
@@ -45,37 +58,61 @@ export default function Comment({
             </div>
           </div>
         </CardHeader>
+
         <CardContent className='flex flex-col gap-3 pt-0'>
-          <p className='text-sm leading-relaxed'>{comment.content}</p>
-          {depth < maxDepth && (
+          <p className='text-sm leading-relaxed'>{comment.message}</p>
+
+          <div className='flex gap-3 flex-wrap'>
             <Button
               onClick={() => onReply(comment)}
               size='sm'
-              variant='ghost'
+              variant='outline'
               className='w-fit text-xs h-8'
             >
               {t('comment.reply')}
             </Button>
-          )}
+
+            {hasReplies && (
+              <Collapsible open={open} onOpenChange={setOpen} className='w-fit'>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant='ghost'
+                    size='sm'
+                    className='text-xs h-8 flex items-center gap-1'
+                  >
+                    <MessageSquare className='w-4 h-4' />
+                    {open
+                      ? `${comment.replies?.length} ${t('common.comment')}`
+                      : `${comment.replies?.length} ${t('common.comment')}`}
+                    {open ? (
+                      <ChevronUp className='w-4 h-4' />
+                    ) : (
+                      <ChevronDown className='w-4 h-4' />
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+              </Collapsible>
+            )}
+          </div>
         </CardContent>
       </Card>
 
+      {/* Flat replies connected with stretched thread line */}
       {hasReplies && (
-        <div className='flex gap-2 ms-4 md:ms-6'>
-          <div className='flex-shrink-0 pt-2'>
-            <CornerDownRight className='h-5 w-5 text-muted-foreground/60 rtl:scale-x-[-1]' />
-          </div>
-          <div className='flex-1 space-y-3'>
-            {comment.replies!.map((reply) => (
+        <Collapsible open={open} onOpenChange={setOpen}>
+          <CollapsibleContent className='relative space-y-3'>
+            <div className='absolute left-4 top-0 bottom-0 w-[2px] bg-border/40 rounded-full' />
+            {comment.replies!.map((reply, index) => (
               <Comment
                 key={reply.id}
                 comment={reply}
                 onReply={onReply}
-                depth={depth + 1}
+                isReply
+                showThreadLine={index < comment.replies!.length - 1}
               />
             ))}
-          </div>
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </div>
   );

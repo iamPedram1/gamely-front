@@ -77,7 +77,7 @@ type CommentStatusType = 'approved' | 'reject' | 'pending';
 export interface CommentProps {
   id: string;
   username: string;
-  content: string;
+  message: string;
   avatar: FileProps;
   createDate: string;
   status: CommentStatusType;

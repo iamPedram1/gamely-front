@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Eye, Search } from 'lucide-react';
 
 // Components
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
+import Searchbar from '@/components/ui/searchbar';
+import { UserRole, UserStatus } from '@/types/blog';
+import PaginationControls from '@/components/ui/pagination-controls';
 import {
   Select,
   SelectContent,
@@ -24,7 +26,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import PaginationControls from '@/components/ui/pagination-controls';
 
 // Utilities
 import { useUsersQuery } from '@/utilities/api/management/user';
@@ -32,13 +33,26 @@ import { getDate } from '@/utilities';
 
 export default function UsersListPage() {
   const { t, i18n } = useTranslation();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
 
   // Hooks
-  const users = useUsersQuery();
+  const users = useUsersQuery({ refetchOnQueryChange: true });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Utilities
+  const handleChangeStatusFilter = (status: UserStatus | 'all') => {
+    setSearchParams((sp) => {
+      if (!status || status === 'all') sp.delete('status');
+      else sp.set('status', status);
+      return sp;
+    });
+  };
+  const handleChangeRoleFilter = (role: UserRole | 'all') => {
+    setSearchParams((sp) => {
+      if (!role || role === 'all') sp.delete('role');
+      else sp.set('role', role);
+      return sp;
+    });
+  };
 
   // Render
   return (
@@ -62,24 +76,10 @@ export default function UsersListPage() {
               {t('dashboard.allUsers')} ({users.data.pagination.totalDocs})
             </h2>
             <div className='flex items-center gap-3 flex-wrap'>
-              <div className='relative'>
-                <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                <Input
-                  placeholder={t('common.search') + '...'}
-                  className='pl-10 w-[250px]'
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                />
-              </div>
+              <Searchbar />
               <Select
-                value={roleFilter}
-                onValueChange={(value) => {
-                  setRoleFilter(value);
-                  setCurrentPage(1);
-                }}
+                value={searchParams.get('role') ?? 'all'}
+                onValueChange={handleChangeRoleFilter}
               >
                 <SelectTrigger className='w-[150px]'>
                   <SelectValue placeholder={t('user.role')} />
@@ -92,11 +92,8 @@ export default function UsersListPage() {
                 </SelectContent>
               </Select>
               <Select
-                value={statusFilter}
-                onValueChange={(value) => {
-                  setStatusFilter(value);
-                  setCurrentPage(1);
-                }}
+                value={searchParams.get('status') ?? 'all'}
+                onValueChange={handleChangeStatusFilter}
               >
                 <SelectTrigger className='w-[150px]'>
                   <SelectValue placeholder={t('user.status')} />

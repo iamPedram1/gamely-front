@@ -1,17 +1,18 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Search, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 
 // Custom Hooks
 import { useBoolean } from '@/hooks/state';
 
 // Components
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Searchbar from '@/components/ui/searchbar';
+import PaginationControls from '@/components/ui/pagination-controls';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -35,7 +36,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import PaginationControls from '@/components/ui/pagination-controls';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -44,34 +44,64 @@ import { truncateText } from '@/utilities/helperPack';
 import { usePostsQuery } from '@/utilities/api/management/post';
 import {
   useCommentsQuery,
+  useDeleteComment,
   useUpdateComment,
 } from '@/utilities/api/management/comment';
 
 // Types
-import { CommentProps, CommentStatusType } from '@/types/management/blog';
+import type { CommentProps, CommentStatusType } from '@/types/management/blog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
+interface FormProps {
+  comment: CommentProps | null;
+}
 
 export default function CommentsListPage() {
+  // States
+  const isDialogOpen = useBoolean();
+
+  // Hooks
   const { t, i18n } = useTranslation();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [postFilter, setPostFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const isDialogOpen = useBoolean(false);
-  const [selectedComment, setSelectedComment] = useState<CommentProps | null>(
-    null
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const posts = usePostsQuery();
-  const comments = useCommentsQuery();
+  const comments = useCommentsQuery({ refetchOnQueryChange: true });
   const updateComment = useUpdateComment();
+  const deleteComment = useDeleteComment({ onSuccess: isDialogOpen.setFalse });
+  const { control, setValue, getValues } = useForm<FormProps>({});
+  const selectedCommentId = useWatch({ control, name: 'comment.id' });
+
+  // Utilities
+  const handleChangeStatusFilter = (status: CommentStatusType | 'all') => {
+    setSearchParams((sp) => {
+      if (!status || status === 'all') sp.delete('status');
+      else sp.set('status', status);
+      sp.set('page', '1');
+
+      return sp;
+    });
+  };
+  const handleChangePostFilter = (post: string) => {
+    setSearchParams((sp) => {
+      if (!post || post === 'all') sp.delete('post');
+      else sp.set('post', post);
+      sp.set('page', '1');
+
+      return sp;
+    });
+  };
 
   const handleOpenDialog = (comment: CommentProps) => {
-    setSelectedComment(comment);
+    setValue('comment', comment);
     isDialogOpen.setTrue();
   };
 
   const handleUpdateStatus = (status: CommentStatusType) => {
-    updateComment.mutate({ commentId: selectedComment.id, data: { status } });
+    updateComment.mutate({
+      commentId: selectedCommentId,
+      data: { status, message: getValues('comment.message') },
+    });
     isDialogOpen.setFalse();
   };
 
@@ -101,22 +131,11 @@ export default function CommentsListPage() {
             <div className='flex items-center gap-3 flex-wrap'>
               <div className='relative'>
                 <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                <Input
-                  placeholder={t('common.search') + '...'}
-                  className='pl-10 w-[250px]'
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                />
+                <Searchbar />
               </div>
               <Select
-                value={postFilter}
-                onValueChange={(value) => {
-                  setPostFilter(value);
-                  setCurrentPage(1);
-                }}
+                value={searchParams.get('post') ?? 'all'}
+                onValueChange={(value) => handleChangePostFilter(value)}
               >
                 <SelectTrigger className='w-[200px]'>
                   <SelectValue placeholder={t('comment.filterByPost')} />
@@ -132,11 +151,10 @@ export default function CommentsListPage() {
                 </SelectContent>
               </Select>
               <Select
-                value={statusFilter}
-                onValueChange={(value) => {
-                  setStatusFilter(value);
-                  setCurrentPage(1);
-                }}
+                value={searchParams.get('status') ?? 'all'}
+                onValueChange={(value) =>
+                  handleChangeStatusFilter(value as CommentStatusType)
+                }
               >
                 <SelectTrigger className='w-[150px]'>
                   <SelectValue placeholder={t('user.status')} />
@@ -205,7 +223,7 @@ export default function CommentsListPage() {
                   </TableCell>
                   <TableCell className='max-w-md'>
                     <p className='text-sm line-clamp-2'>
-                      {truncateText(comment.content, 25)}
+                      {truncateText(comment.message, 25)}
                     </p>
                   </TableCell>
                   <TableCell className='text-center max-w-xs'>
@@ -270,44 +288,70 @@ export default function CommentsListPage() {
             <DialogDescription>{t('comment.manageComment')}</DialogDescription>
           </DialogHeader>
 
-          {selectedComment && (
+          {selectedCommentId && (
             <div className='space-y-4 py-4'>
               <div className='flex items-center gap-3'>
                 <Avatar className='h-10 w-10'>
                   <AvatarImage
                     src={
-                      selectedComment.creator?.avatar?.url || '/placeholder.svg'
+                      getValues('comment.creator.avatar.url') ||
+                      '/placeholder.svg'
                     }
-                    alt={selectedComment.creator.name}
+                    alt={getValues('comment.creator.name')}
                   />
                   <AvatarFallback>
-                    {selectedComment.creator.name[0]}
+                    {getValues('comment.creator.name')[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className='font-semibold'>
-                    {selectedComment.creator.name}
+                    {getValues('comment.creator.name')}
                   </p>
                   <p className='text-xs text-muted-foreground'>
-                    {getDate(selectedComment.createDate, i18n.language)}
+                    {getDate(getValues('comment.createDate'), i18n.language)}
                   </p>
                 </div>
               </div>
 
               <div className='p-4 rounded-lg bg-accent/50 border border-primary/10'>
-                <p className='text-sm'>{selectedComment.content}</p>
+                <div className='space-y-4'>
+                  <div className='space-y-2'>
+                    <Label htmlFor='title'>
+                      {t('common.comment')} {t('form.required')}
+                    </Label>
+                    <Controller
+                      control={control}
+                      name='comment.message'
+                      render={({ field }) => (
+                        <Textarea
+                          id='comment'
+                          required
+                          rows={10}
+                          disabled={
+                            updateComment.isPending || deleteComment.isPending
+                          }
+                          {...field}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className='text-sm text-muted-foreground'>
                 <strong>{t('common.post')}:</strong>{' '}
-                {selectedComment.post.translations[i18n.language].title}
+                {getValues(
+                  `comment.post.translations.${
+                    i18n.language as 'en' | 'fa'
+                  }.title`
+                )}
               </div>
             </div>
           )}
 
           <DialogFooter className='flex gap-2'>
             <Button
-              disabled={updateComment.isPending}
+              disabled={updateComment.isPending || deleteComment.isPending}
               variant='outline'
               className='border-green-500/50 text-green-500 hover:bg-green-500/10'
               onClick={() => handleUpdateStatus('approved')}
@@ -316,7 +360,7 @@ export default function CommentsListPage() {
               {t('comment.approve')}
             </Button>
             <Button
-              disabled={updateComment.isPending}
+              disabled={updateComment.isPending || deleteComment.isPending}
               variant='outline'
               className='border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10'
               onClick={() => handleUpdateStatus('rejected')}
@@ -325,9 +369,9 @@ export default function CommentsListPage() {
               {t('comment.reject')}
             </Button>
             <Button
-              disabled={updateComment.isPending}
+              disabled={updateComment.isPending || deleteComment.isPending}
               variant='destructive'
-              onClick={() => handleUpdateStatus('rejected')}
+              onClick={() => deleteComment.mutate(selectedCommentId)}
             >
               <Trash2 className='h-4 w-4 me-2' />
               {t('common.delete')}

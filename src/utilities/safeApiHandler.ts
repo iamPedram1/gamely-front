@@ -3,9 +3,9 @@ import apiHandler from '@/utilities/apiHandler';
 import { refreshToken } from '@/utilities/api/auth';
 import {
   getRefreshToken,
-  getToken,
+  getAccessToken,
   setRefreshToken,
-  setToken,
+  setAccessToken,
 } from '@/utilities/cookie/token';
 
 // Custom Types
@@ -43,7 +43,10 @@ async function callWithRefresh<T = any>(
   if (res.statusCode === 401) {
     if (endpoint === endpoints.tokenRefresh) return res;
 
-    const authCookies = { token: getToken(), refreshToken: getRefreshToken() };
+    const authCookies = {
+      token: getAccessToken(),
+      refreshToken: getRefreshToken(),
+    };
 
     if (!authCookies.token || !authCookies.refreshToken) return handleNoToken();
 
@@ -65,7 +68,7 @@ async function callWithRefresh<T = any>(
       const refreshRes = await refreshPromise;
 
       if (refreshRes.isSuccess) {
-        setToken(refreshRes.data.token);
+        setAccessToken(refreshRes.data.accessToken);
         setRefreshToken(refreshRes.data.refreshToken);
 
         const retryResult = await methodCall(...args);

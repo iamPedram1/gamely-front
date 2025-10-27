@@ -47,7 +47,11 @@ export const useCreatePost = useAppMutation(
 
 export const useUpdatePost = useAppMutation(
   (payload: { id: string; data: Partial<PostProps> }, reqInit) =>
-    apiHandler.patch(`/posts/${payload.id}`, payload.data, reqInit),
+    apiHandler.patch(
+      `${endpoints.management.posts}/${payload.id}`,
+      payload.data,
+      reqInit
+    ),
   [postsQueryKey]
 );
 export const useDeletePost = useAppMutation(

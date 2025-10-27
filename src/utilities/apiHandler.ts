@@ -6,6 +6,7 @@ import {
   filterQueryParamsByWhitelist,
   getUrlWithQueryString,
 } from '@/utilities/request';
+import { getAccessToken } from '@/utilities/cookie/token';
 
 export interface AppRequestInitProps extends Omit<RequestInit, 'body'> {
   /**
@@ -101,7 +102,7 @@ async function appFetch<T = any>(
         : filterQueryParamsByWhitelist(query, queryWhitelistKeyNames);
     const url = `${baseURL}${endpoint}`;
     const sanitizedUrl = getUrlWithQueryString(url, queries);
-    const token = getCookie('Token');
+    const token = getAccessToken();
 
     const res = await fetch(sanitizedUrl, {
       ...reqInit,
@@ -109,7 +110,7 @@ async function appFetch<T = any>(
       ...(typeof window !== 'undefined' && { signal }),
       headers: {
         'Accept-Language': i18n.language,
-        ...(token && { 'X-API-KEY': getCookie('Token') }),
+        ...(token && { 'X-API-KEY': token }),
         'Content-Type': 'application/json; charset=utf-8',
         ...reqInit?.headers,
       },

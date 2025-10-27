@@ -29,8 +29,10 @@ import { getDate } from '@/utilities';
 import { useDeletePost, usePostsQuery } from '@/utilities/api/management/post';
 import { useCategoriesSummariesQuery } from '@/utilities/api/management/category';
 import { debounce } from '@/utilities/helperPack';
+import { useGamesSummariesQuery } from '@/utilities/api/management/game';
 
 interface FormProps {
+  game: string[];
   category: string[];
 }
 
@@ -41,14 +43,16 @@ export default function PostsListPage() {
 
   // Hooks
   const [searchParams, setSearchParams] = useSearchParams();
-  const category = searchParams.getAll('category');
+  const category = searchParams.getAll('category') ?? [];
+  const game = searchParams.getAll('game') ?? [];
   const posts = usePostsQuery({ refetchOnQueryChange: true });
   const deletePost = useDeletePost();
+  const games = useGamesSummariesQuery({ placeholderData: [] });
   const categories = useCategoriesSummariesQuery({ placeholderData: [] });
   const disabled = loading || deletePost.isPending;
 
   const { control } = useForm<FormProps>({
-    values: { category },
+    values: { category, game },
   });
 
   const categoryOptions = useMemo(
@@ -59,12 +63,30 @@ export default function PostsListPage() {
       })),
     [categories.data]
   );
+  const gameOptions = useMemo(
+    () =>
+      games.data.map((ctg) => ({
+        label: ctg.translations[i18n.language].title,
+        value: ctg.id,
+      })),
+    [games.data]
+  );
 
   const filterByCategory = debounce((ids: string[]) => {
     setSearchParams((sp) => {
       const newSP = new URLSearchParams(sp);
+      newSP.delete('page');
       newSP.delete('category');
       ids.forEach((id) => newSP.append('category', id));
+      return newSP;
+    });
+  }, 500);
+  const filterByGame = debounce((ids: string[]) => {
+    setSearchParams((sp) => {
+      const newSP = new URLSearchParams(sp);
+      newSP.delete('game');
+      newSP.delete('page');
+      ids.forEach((id) => newSP.append('game', id));
       return newSP;
     });
   }, 500);
@@ -112,6 +134,20 @@ export default function PostsListPage() {
                     options={categoryOptions}
                     className='w-[200px] h-auto'
                     placeholder={t('common.filterByCategory')}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name='game'
+                rules={{ onChange: (e) => filterByGame(e.target.value) }}
+                render={({ field }) => (
+                  <MultiSelect
+                    selected={field.value}
+                    onChange={(value) => field.onChange(value)}
+                    options={gameOptions}
+                    className='w-[200px] h-auto'
+                    placeholder={t('common.filterByGame')}
                   />
                 )}
               />

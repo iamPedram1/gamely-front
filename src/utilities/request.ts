@@ -17,13 +17,20 @@ export const getUrlWithQueryString = (
   url: string,
   query: Record<string, any> = {}
 ): string => {
-  if (Object.values(query).length === 0) return url;
+  const params = new URLSearchParams();
 
-  const searchParams = new URLSearchParams(query).toString();
+  for (const [key, value] of Object.entries(query)) {
+    if (Array.isArray(value)) {
+      // Append each value for the same key
+      value.forEach((v) => params.append(key, String(v)));
+    } else if (value !== undefined && value !== null) {
+      params.append(key, String(value));
+    }
+  }
 
-  return `${url}${searchParams ? `?${searchParams}` : ''}`;
+  const queryString = params.toString();
+  return queryString ? `${url}?${queryString}` : url;
 };
-
 /**
  * Filters the query parameters from the request object based on a whitelist of allowed keys.
  *
@@ -40,3 +47,28 @@ export const filterQueryParamsByWhitelist = (
     else return prev;
   }, {});
 };
+
+/**
+ * Convert a query string into an object.
+ * Duplicate keys are stored as arrays.
+ */
+export function parseQueryStringToObject(
+  queryString: string
+): Record<string, any> {
+  const result: Record<string, any> = {};
+  const params = new URLSearchParams(queryString);
+
+  for (const [key, value] of params) {
+    if (key in result) {
+      if (Array.isArray(result[key])) {
+        result[key].push(value);
+      } else {
+        result[key] = [result[key], value];
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}

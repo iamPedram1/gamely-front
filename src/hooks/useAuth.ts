@@ -8,11 +8,11 @@ import { useBoolean } from '@/hooks/state';
 import { revokeToken, useProfileQuery } from '@/utilities/api/auth';
 import {
   deleteRefreshToken,
-  deleteToken,
+  deleteAccessToken,
   getRefreshToken,
-  getToken,
+  getAccessToken,
   setRefreshToken,
-  setToken,
+  setAccessToken,
 } from '@/utilities/cookie/token';
 
 // Custom Types
@@ -21,7 +21,7 @@ import type { UserProps } from '@/types/blog';
 const useAuth = () => {
   const isAuthorized = useBoolean();
   const location = useLocation();
-  const token = getToken();
+  const token = getAccessToken();
   const navigate = useNavigate();
   const profile = useProfileQuery({
     enabled: Boolean(token),
@@ -33,21 +33,21 @@ const useAuth = () => {
   });
 
   const logout = useCallback((redirectTo?: string) => {
-    revokeToken(getToken(), getRefreshToken());
-    deleteToken();
+    revokeToken(getAccessToken(), getRefreshToken());
+    deleteAccessToken();
     deleteRefreshToken();
     isAuthorized.setFalse();
     navigate(redirectTo || '/');
   }, []);
 
   useEffect(() => {
-    const token = getToken();
+    const token = getAccessToken();
     if (token && profile.data) isAuthorized.setTrue();
     else isAuthorized.setFalse();
   }, [profile.data, location]);
 
   const signin = useCallback((token: string, refreshToken: string) => {
-    setToken(token);
+    setAccessToken(token);
     setRefreshToken(refreshToken);
     isAuthorized.setTrue();
   }, []);

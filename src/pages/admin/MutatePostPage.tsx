@@ -125,7 +125,7 @@ export default function MutatePostPage() {
     if (isEditMode)
       updatePost.mutate({
         id: params.id,
-        data: getChangedFields(post.data, data as any),
+        data: getChangedFields(post.data, payload as any),
       });
     else createPost.mutate(payload);
   };
@@ -168,7 +168,7 @@ export default function MutatePostPage() {
               {supportedLanguages.map((lng) => (
                 <div className='space-y-2'>
                   <Label htmlFor={`${lng}-title`}>
-                    {t('post.title')} {`(${t(`common.${lng}`)}) `}
+                    {t('post.title')} {t(`common.${lng}`)}
                     {t('form.required')}
                   </Label>
                   <Controller
@@ -179,7 +179,6 @@ export default function MutatePostPage() {
                       <Input
                         id={`${lng}-title`}
                         placeholder={t('post.enterPostTitle')}
-                        required
                         {...field}
                       />
                     )}
@@ -354,7 +353,7 @@ export default function MutatePostPage() {
               {supportedLanguages.map((lng) => (
                 <div key={`abstract-${lng}`} className='space-y-2'>
                   <Label htmlFor={`${lng}-abstract`}>
-                    {t('post.abstract')} {`(${t(`common.${lng}`)}) `}
+                    {t('post.abstract')} {t(`common.${lng}`)}
                     {t('form.required')}
                   </Label>
                   <Controller
@@ -375,7 +374,7 @@ export default function MutatePostPage() {
               {supportedLanguages.map((lng) => (
                 <div key={`content-${lng}`} className='space-y-2'>
                   <Label htmlFor={`${lng}-content`}>
-                    {t('post.content')} {`(${t(`common.${lng}`)}) `}
+                    {t('post.content')} {t(`common.${lng}`)}
                     {t('form.required')}
                   </Label>
                   <Controller
