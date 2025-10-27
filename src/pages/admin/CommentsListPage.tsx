@@ -105,6 +105,15 @@ export default function CommentsListPage() {
     isDialogOpen.setFalse();
   };
 
+  const handleEditComment = () => {
+    updateComment.mutate({
+      commentId: selectedCommentId,
+      data: { message: getValues('comment.message') },
+    });
+    isDialogOpen.setFalse();
+  };
+
+  // Render
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -350,24 +359,39 @@ export default function CommentsListPage() {
           )}
 
           <DialogFooter className='flex gap-2'>
-            <Button
-              disabled={updateComment.isPending || deleteComment.isPending}
-              variant='outline'
-              className='border-green-500/50 text-green-500 hover:bg-green-500/10'
-              onClick={() => handleUpdateStatus('approved')}
-            >
-              <CheckCircle className='h-4 w-4 me-2' />
-              {t('comment.approve')}
-            </Button>
-            <Button
-              disabled={updateComment.isPending || deleteComment.isPending}
-              variant='outline'
-              className='border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10'
-              onClick={() => handleUpdateStatus('rejected')}
-            >
-              <XCircle className='h-4 w-4 me-2' />
-              {t('comment.reject')}
-            </Button>
+            {getValues('comment.status') !== 'approved' ? (
+              <>
+                <Button
+                  disabled={updateComment.isPending || deleteComment.isPending}
+                  variant='outline'
+                  className='border-green-500/50 text-green-500 hover:bg-green-500/10'
+                  onClick={() => handleUpdateStatus('approved')}
+                >
+                  <CheckCircle className='h-4 w-4 me-2' />
+                  {t('comment.approve')}
+                </Button>
+                <Button
+                  disabled={updateComment.isPending || deleteComment.isPending}
+                  variant='outline'
+                  className='border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10'
+                  onClick={() => handleUpdateStatus('rejected')}
+                >
+                  <XCircle className='h-4 w-4 me-2' />
+                  {t('comment.reject')}
+                </Button>
+              </>
+            ) : (
+              <Button
+                disabled={updateComment.isPending || deleteComment.isPending}
+                variant='outline'
+                className='order-1 border-green-500/50 text-green-500 hover:bg-green-500/10'
+                onClick={handleEditComment}
+              >
+                <CheckCircle className='h-4 w-4 me-2' />
+                {t('common.edit')}
+              </Button>
+            )}
+
             <Button
               disabled={updateComment.isPending || deleteComment.isPending}
               variant='destructive'

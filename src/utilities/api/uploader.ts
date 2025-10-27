@@ -1,5 +1,6 @@
 import { getCookie } from '@/utilities/cookie';
 import { isSucceed } from '@/utilities/request';
+import { accessTokenCookieName } from '@/utilities/appVariables';
 
 // Custom Types
 import type { CommonResponseProps, FileProps } from '@/types/api';
@@ -32,7 +33,7 @@ export const uploadWithXML = async (
   return new Promise(async (resolve, reject) => {
     const url = `http://localhost:3000/api/v1/upload/${location}/batch`;
 
-    const userToken = getCookie('Token');
+    const userToken = getCookie(accessTokenCookieName);
     const formData = new FormData();
 
     files.forEach((file) => {

@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 
 // Utilities
+import routes from '@/utilities/routes';
 import { getDate } from '@/utilities';
 import { useGamesQuery } from '@/utilities/api/game';
 
@@ -45,7 +46,7 @@ export default function GameListPage() {
                 className='w-[300px] flex flex-col gap-2 overflow-hidden hover:shadow-lg transition-all'
               >
                 <Link
-                  to={`/posts?game=${game.slug}`}
+                  to={`${routes.posts.index}?game=${game.slug}`}
                   className='block relative group'
                 >
                   <div className='relative w-[300px] h-[285px] overflow-hidden bg-muted group'>
@@ -84,7 +85,7 @@ export default function GameListPage() {
                       {getDate(game.releaseDate, i18n.language, 'YYYY/MM/DD')}
                     </span>
                   </div>
-                  <Link to={`/game/${game.slug}`}>
+                  <Link to={`${routes.posts.index}?game=${game.slug}`}>
                     <Badge
                       variant='outline'
                       className='hover:bg-accent cursor-pointer'

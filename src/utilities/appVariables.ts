@@ -9,8 +9,8 @@ export const getAppBaseURL = (isAdminSide = false): string =>
   `${apiBaseURL}/v${apiVersion}${isAdminSide ? '/cms' : ''}`;
 
 export const authTokenName = 'Authorization';
-export const tokenCookieName = (
-  import.meta.env.TOKEN_COOKIE_NAME || 'Token'
+export const accessTokenCookieName = (
+  import.meta.env.TOKEN_COOKIE_NAME || 'Access-Token'
 ).trim();
 export const refreshTokenCookieName = (
   import.meta.env.REFRESH_TOKEN_COOKIE_NAME || 'Refresh-Token'

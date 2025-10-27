@@ -76,7 +76,7 @@ export default function UserDetailPage() {
     control: formMethods.control,
     name: 'status',
   });
-  const isUpdatingSelf = user.data.id === profile.id;
+  const isUpdatingSelf = user?.data?.id === profile?.id;
   const isLoading = updateUser.isPending || !user.isFetched;
   const disabled =
     isLoading ||

@@ -28,7 +28,7 @@ import useLoadingStore, { setLoadingState } from '@/store/loading';
 import routes from '@/utilities/routes';
 import { uploadFile } from '@/utilities/api/uploader';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { supportedLanguages } from '@/utilities/helperPack';
+import { supportedLanguages, truncateText } from '@/utilities/helperPack';
 import {
   createOnErrorHandler,
   getChangedFields,
@@ -246,14 +246,14 @@ export default function MutatePostPage() {
                         }
                       />
                       <div className='flex flex-row gap-4 items-center justify-center align-middle'>
-                        <p className='text-muted-foreground mt-2'>
+                        <p className='text-muted-foreground'>
                           {field.value instanceof File
-                            ? field.value.name
-                            : field.value.filename}
+                            ? truncateText(field.value.name, 50)
+                            : truncateText(field.value.filename, 50)}
                         </p>
                         <CrossCircledIcon
                           onClick={() => !disabled && field.onChange(null)}
-                          className={`size-8 relative top-1.5 cursor-pointer ${
+                          className={`size-8 relative cursor-pointer ${
                             disabled ? 'text-muted' : 'text-red-700'
                           }`}
                         />

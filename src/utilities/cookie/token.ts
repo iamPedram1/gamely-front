@@ -1,27 +1,31 @@
 // Custom Utilites
 import { deleteCookie, getCookie, setCookie } from '@/utilities/cookie';
+import {
+  accessTokenCookieName,
+  refreshTokenCookieName,
+} from '@/utilities/appVariables';
 
 // Types
 export const setAccessToken = (token: string) => {
-  setCookie('Access-Token', token, { path: '/' });
+  setCookie(accessTokenCookieName, token, { path: '/' });
 };
 
 export const deleteAccessToken = () => {
-  deleteCookie('Access-Token', { path: '/' });
+  deleteCookie(accessTokenCookieName, { path: '/' });
 };
 
 export const getAccessToken = () => {
-  return getCookie('Access-Token');
+  return getCookie(accessTokenCookieName);
 };
 
 export const setRefreshToken = (token: string) => {
-  setCookie('Refresh-Token', token, { path: '/' });
+  setCookie(refreshTokenCookieName, token, { path: '/' });
 };
 
 export const deleteRefreshToken = () => {
-  deleteCookie('Refresh-Token', { path: '/' });
+  deleteCookie(refreshTokenCookieName, { path: '/' });
 };
 
 export const getRefreshToken = () => {
-  return getCookie('Refresh-Token');
+  return getCookie(refreshTokenCookieName);
 };
