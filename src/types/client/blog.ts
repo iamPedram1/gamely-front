@@ -43,6 +43,14 @@ export interface UserProps {
   createDate?: string;
 }
 
+export interface NotificationProps {
+  id: string;
+  seen: boolean;
+  message: string;
+  post: SummaryProps;
+  createDate: string;
+}
+
 export interface TagProps {
   id: string;
   postsCount: number;

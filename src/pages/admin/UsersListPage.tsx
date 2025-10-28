@@ -1,15 +1,13 @@
-import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Eye } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Eye, Search } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 // Components
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Searchbar from '@/components/ui/searchbar';
-import { UserRole, UserStatus } from '@/types/blog';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PaginationControls from '@/components/ui/pagination-controls';
 import {
   Select,
@@ -30,6 +28,9 @@ import {
 // Utilities
 import { useUsersQuery } from '@/utilities/api/management/user';
 import { getDate } from '@/utilities';
+
+// Types
+import type { UserRole, UserStatus } from '@/types/blog';
 
 export default function UsersListPage() {
   const { t, i18n } = useTranslation();
@@ -168,7 +169,7 @@ export default function UsersListPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {getDate(user.createDate, i18n.language)}
+                    {getDate(user.createDate)}
                   </TableCell>
                   <TableCell className='text-center'>
                     <Link to={`/dashboard/users/${user.id}`}>

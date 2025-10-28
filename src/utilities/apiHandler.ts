@@ -125,7 +125,9 @@ async function appFetch<T = any>(
         try {
           response = await res.json();
         } catch (error) {
-          response.status = res?.status || 502;
+          if (res.status === 204) {
+            return { ...(response || {}), status: res.status };
+          } else response.status = res?.status || 502;
         }
         throw new Error('ERROR', { cause: response });
       })

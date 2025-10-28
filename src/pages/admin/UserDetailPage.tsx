@@ -197,8 +197,7 @@ export default function UserDetailPage() {
                 />
               </div>
               <p className='text-xs text-muted-foreground'>
-                {t('user.joined')}{' '}
-                {getDate(user.data?.createDate, i18n.language)}
+                {t('user.joined')} {getDate(user.data?.createDate)}
               </p>
             </div>
             <AlertDialog>

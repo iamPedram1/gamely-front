@@ -39,55 +39,28 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import routes from '@/utilities/routes';
+import {
+  useNotificationsQuery,
+  useSeenNotificationMutation,
+} from '@/utilities/api/notification';
+import Searchbar from '@/components/ui/searchbar';
 
 export default function Header() {
   // States
-  const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Hooks
-  const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { isAuthorized, isAuthLoading, profile, logout } = useAuth();
 
   // Mock notifications data
-  const notifications = [
-    {
-      id: 1,
-      type: 'reply',
-      message: 'John replied to your comment on "Best Gaming Setup 2024"',
-      time: '2 minutes ago',
-      read: false,
-    },
-    {
-      id: 2,
-      type: 'reply',
-      message: 'Sarah replied to your comment on "Top 10 RPG Games"',
-      time: '1 hour ago',
-      read: false,
-    },
-    {
-      id: 3,
-      type: 'reply',
-      message: 'Mike replied to your comment on "Gaming News Update"',
-      time: '3 hours ago',
-      read: true,
-    },
-  ];
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const notifications = useNotificationsQuery();
+  const seenNotification = useSeenNotificationMutation({
+    disableAutoAlert: true,
+  });
+  const unreadCount = notifications.data.docs.filter((n) => !n.seen).length;
 
   // Utilities
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Search:', searchQuery);
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
   const getRoleLabel = (role: string) => {
     return t(`user.${role}`);
   };
@@ -130,21 +103,7 @@ export default function Header() {
         </div>
 
         <div className='flex items-center gap-3'>
-          <form
-            onSubmit={handleSearch}
-            className='hidden sm:flex items-center gap-2'
-          >
-            <div className='relative'>
-              <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
-              <Input
-                type='search'
-                placeholder={t('common.search') + '...'}
-                className='pl-10 w-[200px] lg:w-[300px] bg-accent/25 dark:bg-accent/50 border-primary/20 focus:border-primary'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </form>
+          <Searchbar />
 
           {/* Notifications */}
           {isAuthorized && (
@@ -175,20 +134,21 @@ export default function Header() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <ScrollArea className='h-[17rem]'>
-                  {notifications.length === 0 ? (
+                  {notifications.data.docs.length === 0 ? (
                     <div className='p-4 text-center text-muted-foreground text-sm'>
                       {t('notifications.empty')}
                     </div>
                   ) : (
-                    notifications.map((notification) => (
+                    notifications.data.docs.map((notification) => (
                       <DropdownMenuItem
                         key={notification.id}
                         className='flex flex-col items-start p-3 cursor-pointer hover:bg-accent/50'
+                        onClick={() => seenNotification.mutate(notification.id)}
                       >
                         <div className='flex items-start gap-2 w-full'>
                           <div
                             className={`w-2 h-2 rounded-full mt-2 ${
-                              notification.read ? 'bg-muted' : 'bg-primary'
+                              notification.seen ? 'bg-muted' : 'bg-primary'
                             }`}
                           />
                           <div className='flex-1'>
@@ -196,7 +156,7 @@ export default function Header() {
                               {notification.message}
                             </p>
                             <p className='text-xs text-muted-foreground mt-1'>
-                              {notification.time}
+                              {notification.createDate}
                             </p>
                           </div>
                         </div>
@@ -272,7 +232,7 @@ export default function Header() {
                 )}
                 <DropdownMenuSeparator className='bg-primary/20' />
                 <DropdownMenuItem
-                  onClick={handleLogout}
+                  onClick={() => logout()}
                   className='cursor-pointer w-full hover:bg-destructive/10 text-destructive focus:text-destructive transition-colors gap-2'
                 >
                   <LogOut className='h-4 w-4 rtl:rotate-180' />
@@ -337,21 +297,7 @@ export default function Header() {
                   </Link>
                 </nav>
                 <div className='sm:hidden mt-4'>
-                  <form
-                    onSubmit={handleSearch}
-                    className='flex items-center gap-2'
-                  >
-                    <div className='relative flex-1'>
-                      <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
-                      <Input
-                        type='search'
-                        placeholder={t('common.search') + '...'}
-                        className='pl-10 bg-accent/25 dark:bg-accent/50 border-primary/20 focus:border-primary'
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                    </div>
-                  </form>
+                  <Searchbar />
                 </div>
               </div>
             </SheetContent>

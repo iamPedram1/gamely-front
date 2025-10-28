@@ -207,7 +207,7 @@ export default function PostsListPage() {
                     {post.author.name}
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>
-                    {getDate(post.createDate, i18n.language)}
+                    {getDate(post.createDate)}
                   </TableCell>
                   <TableCell className='text-right'>
                     <div className='flex items-center justify-end gap-2'>

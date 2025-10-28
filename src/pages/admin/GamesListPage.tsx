@@ -104,7 +104,7 @@ export default function GamesListPage() {
                     </span>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>
-                    {getDate(game.releaseDate, i18n.language)}
+                    {getDate(game.releaseDate)}
                   </TableCell>
                   <TableCell>
                     <div className='flex items-center justify-center gap-2'>

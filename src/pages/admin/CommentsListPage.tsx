@@ -262,11 +262,7 @@ export default function CommentsListPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground text-sm'>
-                    {getDate(
-                      comment.createDate,
-                      i18n.language,
-                      'YYYY/MM/DD - HH:MM'
-                    )}
+                    {getDate(comment.createDate, 'YYYY/MM/DD - HH:MM')}
                   </TableCell>
                   <TableCell className='text-center'>
                     <Button
@@ -317,7 +313,7 @@ export default function CommentsListPage() {
                     {getValues('comment.creator.name')}
                   </p>
                   <p className='text-xs text-muted-foreground'>
-                    {getDate(getValues('comment.createDate'), i18n.language)}
+                    {getDate(getValues('comment.createDate'))}
                   </p>
                 </div>
               </div>

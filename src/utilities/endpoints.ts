@@ -1,5 +1,6 @@
 const endpoints = {
   profile: '/user/profile',
+  notifications: '/user/notifications',
   login: '/auth/login',
   register: '/auth/register',
   tokenRefresh: '/auth/token/refresh',
