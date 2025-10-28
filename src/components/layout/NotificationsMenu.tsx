@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, Trash2, Check } from 'lucide-react';
+import { Bell, Trash2, Check, Loader2 } from 'lucide-react';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import {
 import {
   useDeleteAllNotificationsMutation,
   useDeleteNotificationMutation,
-  useNotificationsQuery,
+  useNotificationsInfiniteQuery,
   useSeenAllNotificationsMutation,
   useSeenNotificationMutation,
 } from '@/utilities/api/notification';
@@ -24,11 +25,11 @@ import {
 // Utilities
 import { getDate } from '@/utilities';
 
-// Types
 export default function NotificationsMenu() {
   // Hooks
   const { t } = useTranslation();
-  const notifications = useNotificationsQuery();
+
+  const notifications = useNotificationsInfiniteQuery();
   const seenOne = useSeenNotificationMutation({ disableAutoAlert: true });
   const seenAll = useSeenAllNotificationsMutation({ disableAutoAlert: true });
   const deleteAll = useDeleteAllNotificationsMutation({
@@ -38,7 +39,25 @@ export default function NotificationsMenu() {
     disableAutoAlert: true,
   });
 
-  const unreadCount = notifications.data.docs.filter((n) => !n.seen).length;
+  // Utilities
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target;
+    const { scrollTop, scrollHeight, clientHeight } = target as HTMLElement;
+    const { hasNextPage, isFetchingNextPage, fetchNextPage } = notifications;
+    const isEndOfScroll = scrollHeight - scrollTop - clientHeight < 100;
+
+    if (hasNextPage && !isFetchingNextPage && isEndOfScroll) fetchNextPage();
+  };
+
+  const allNotifications = useMemo(
+    () => notifications.data?.pages.flatMap((page) => page.docs) || [],
+    [notifications.data?.pages]
+  );
+
+  const unreadCount = useMemo(
+    () => allNotifications.filter((n) => !n.seen).length,
+    [allNotifications]
+  );
 
   // Render
   return (
@@ -69,7 +88,6 @@ export default function NotificationsMenu() {
               variant='ghost'
               size='icon'
               className='h-7 w-7 text-primary hover:text-primary/80'
-              disabled={seenAll.isPending || unreadCount === 0}
               onClick={() => seenAll.mutate(null)}
               title={t('notifications.markAllAsRead')}
             >
@@ -79,7 +97,6 @@ export default function NotificationsMenu() {
               variant='ghost'
               size='icon'
               className='h-7 w-7 text-destructive hover:text-destructive/80'
-              disabled={notifications.data.docs.length === 0}
               onClick={() => deleteAll.mutate(null)}
               title={t('notifications.deleteAll')}
             >
@@ -88,35 +105,46 @@ export default function NotificationsMenu() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <ScrollArea className='h-64'>
-          {notifications.data.docs.length === 0 ? (
+        <ScrollArea
+          onEndedCapture={(e) => console.log('Ended Capture')}
+          onScrollCapture={handleScroll}
+          className='h-64'
+        >
+          {allNotifications.length === 0 && !notifications.isFetching ? (
             <div className='p-4 text-center text-muted-foreground text-sm'>
               {t('notifications.empty')}
             </div>
           ) : (
-            notifications.data.docs.map((notification) => (
-              <DropdownMenuItem
-                key={notification.id}
-                onClick={() => seenOne.mutate(notification.id)}
-                className='flex flex-col items-start p-3 cursor-pointer hover:bg-accent/50'
-              >
-                <div className='flex items-start gap-2 w-full'>
-                  <div
-                    className={`w-2 h-2 rounded-full mt-2 ${
-                      notification.seen ? 'bg-muted' : 'bg-primary'
-                    }`}
-                  />
-                  <div className='flex-1'>
-                    <p className='text-sm leading-relaxed'>
-                      {notification.message}
-                    </p>
-                    <p className='text-xs text-muted-foreground mt-1'>
-                      {getDate(notification.createDate)}
-                    </p>
+            <>
+              {allNotifications.map((notification) => (
+                <DropdownMenuItem
+                  key={notification.id}
+                  onClick={() => seenOne.mutate(notification.id)}
+                  className='flex flex-col items-start p-3 cursor-pointer hover:bg-accent/50'
+                >
+                  <div className='flex items-start gap-2 w-full'>
+                    <div
+                      className={`w-2 h-2 rounded-full mt-2 ${
+                        notification.seen ? 'bg-muted' : 'bg-primary'
+                      }`}
+                    />
+                    <div className='flex-1'>
+                      <p className='text-sm leading-relaxed'>
+                        {notification.message}
+                      </p>
+                      <p className='text-xs text-muted-foreground mt-1'>
+                        {getDate(notification.createDate)}
+                      </p>
+                    </div>
                   </div>
+                </DropdownMenuItem>
+              ))}
+              {notifications.hasNextPage && (
+                <div className='flex justify-center py-3'>
+                  <Loader2 className='h-5 w-5 animate-spin text-muted-foreground' />
                 </div>
-              </DropdownMenuItem>
-            ))
+              )}
+            </>
           )}
         </ScrollArea>
       </DropdownMenuContent>
