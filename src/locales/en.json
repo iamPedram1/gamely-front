@@ -428,6 +428,9 @@
   },
   "notifications": {
     "title": "Notification",
-    "empty": "There is no notification to display"
+    "empty": "There is no notification to display",
+    "deleteAll": "Delete all notifications",
+    "deleteOne": "Delete this notification",
+    "markAllAsRead": "Mark all as read"
   }
 }
