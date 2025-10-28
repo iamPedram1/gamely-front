@@ -124,6 +124,7 @@
     "allTags": "همه برچسب‌ها",
     "allUsers": "همه کاربران",
     "allComments": "همه نظرات",
+    "allStatus": "همه وضعیت‌ها",
     "allCategories": "همه دسته‌بندی‌ها",
     "postDetails": "جزئیات مقاله",
     "gameDetails": "جزئیات بازی",
@@ -402,7 +403,14 @@
     "resolve": "حل کردن",
     "dismissReport": "رد کردن گزارش",
     "dismissReportConfirmation": "آیا از رد کردن این گزارش اطمینان دارید؟",
-    "dismiss": "رد کردن"
+    "dismiss": "رد کردن",
+    "reportedOn": "گزارش شده در",
+    "reviewedBy": "بررسی شده توسط",
+    "reportDetails": "جزئیات گزارش",
+    "reportId": "شناسه گزارش",
+    "reportInformation": "اطلاعات گزارش",
+    "reportedContent": "محتوای گزارش‌شده",
+    "timeline": "زمان‌بندی"
   },
   "categories": {
     "title": "دسته‌بندی بازی‌ها",
@@ -415,5 +423,8 @@
     "explore": "مشاهده",
     "featuredCategories": "دسته‌های ویژه"
   },
-  "notifications": { "title": "اعلان" }
+  "notifications": {
+    "title": "اعلان",
+    "empty": "در حال حاضر اعلانی برای نمایش وجود ندارد"
+  }
 }

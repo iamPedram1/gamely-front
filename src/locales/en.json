@@ -4,6 +4,8 @@
     "fa": "(Persian)",
     "en": "(English)",
     "loading": "Loading...",
+    "block": "Block",
+    "unblock": "Unblock",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -396,14 +398,22 @@
     "comment": "Comment",
     "post": "Post",
     "user": "User",
-
+    "blockUserConfirmation": "Are you sure you want to block {{username}}? They will no longer be able to interact with you.",
+    "reportedOn": "Reported On",
+    "reviewedBy": "Reviewed By",
     "reviewedOn": "Reviewed on",
     "resolveReport": "Resolve Report",
     "resolveReportConfirmation": "Are you sure you want to mark this report as resolved?",
     "resolve": "Resolve",
     "dismissReport": "Dismiss Report",
     "dismissReportConfirmation": "Are you sure you want to dismiss this report?",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "reportDetails": "Report Details",
+    "reportId": "Report ID",
+
+    "reportInformation": "Report Information",
+    "reportedContent": "Reported Content",
+    "timeline": "Timeline"
   },
   "categories": {
     "title": "Game Categories",
@@ -416,5 +426,8 @@
     "explore": "Explore",
     "featuredCategories": "Featured Categories"
   },
-  "notifications": { "title": "Notification" }
+  "notifications": {
+    "title": "Notification",
+    "empty": "There is no notification to display"
+  }
 }

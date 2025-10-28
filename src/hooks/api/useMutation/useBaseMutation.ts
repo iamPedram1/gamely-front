@@ -18,12 +18,13 @@ import {
   OpenDialogConfigType,
 } from '@/store/dialog';
 
-// Utilities
+// Hooks
 import { useUnMount } from '@/hooks/utils';
+
 // Custom Types
 import type { UseFormReturn } from 'react-hook-form';
 import type { CommonResponseProps } from '@/types/api';
-import type { AlertCrudType } from '@/utilities';
+import { isSucceed, type AlertCrudType } from '@/utilities';
 
 interface AutoAlertProps {
   hookFormMethods?: UseFormReturn<any>;
@@ -148,12 +149,15 @@ const useBaseMutation = <TData, TError, TVariables>(
 
         const response = (await mutationFn(v, c)) as CommonResponseProps<TData>;
 
-        if (response.isSuccess) return response as unknown as Required<TData>;
+        if (isSucceed(response.statusCode))
+          return response as unknown as Required<TData>;
         else throw new Error(response.message, { cause: response });
       },
       onSuccess: (data, variables, onMutateResult, context) => {
+        console.log('onSuccess', { data, variables, onMutateResult, context });
         if (!noRevalidate && revalidateBehavior === 'after-success') {
           mutationKey?.forEach((queryKey: any) => {
+            console.log('Revalidate', queryKey);
             queryClient.invalidateQueries({ queryKey: [queryKey] });
           });
         }
@@ -180,12 +184,20 @@ const useBaseMutation = <TData, TError, TVariables>(
         context,
         onMutateResult
       ) => {
+        console.log('onSettled', {
+          data,
+          error,
+          variables,
+          onMutateResult,
+          context,
+        });
         const message =
           data?.message || error?.cause?.message || error?.cause?.errors?.[0];
         const isSuccess = error && 'message' in error ? false : true;
 
         if (!noRevalidate && revalidateBehavior === 'after-settled') {
           mutationKey?.forEach((queryKey: any) => {
+            console.log('Revalidate', queryKey);
             queryClient.invalidateQueries({ queryKey: [queryKey] });
           });
         }

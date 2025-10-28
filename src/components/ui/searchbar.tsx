@@ -9,17 +9,19 @@ import { Input } from '@/components/ui/input';
 // Utilities
 import { debounce } from '@/utilities/helperPack';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/utilities/tailwind';
 
 // Custom Types
 interface SearchbarProps {
   placeholder?: string;
+  className?: string;
 }
 
 type FormProps = { search: string };
 
 const Searchbar = (props: SearchbarProps) => {
   // Props
-  const { placeholder } = props;
+  const { placeholder, className } = props;
 
   // Hooks
   const { t } = useTranslation();
@@ -43,7 +45,7 @@ const Searchbar = (props: SearchbarProps) => {
 
   // Render
   return (
-    <div className='relative'>
+    <div className={cn('relative', className)}>
       <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
       <Controller
         name='search'

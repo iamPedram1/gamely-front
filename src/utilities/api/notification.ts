@@ -1,6 +1,5 @@
 // Utilities
 import endpoints from '@/utilities/endpoints';
-import apiHandler from '@/utilities/apiHandler';
 import safeApiHandler from '@/utilities/safeApiHandler';
 import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
@@ -14,7 +13,7 @@ export interface AuthResponseProps {
   refreshToken: string;
 }
 
-const notificationsQueryKey = 'nofitications';
+const notificationsQueryKey = 'notifications';
 
 export const useNotificationsQuery = useAppQuery(
   () =>
@@ -26,6 +25,21 @@ export const useNotificationsQuery = useAppQuery(
 
 export const useSeenNotificationMutation = useAppMutation(
   (notificationId: string) =>
-    apiHandler.post(`${endpoints.notifications}/${notificationId}/seen`),
+    safeApiHandler.post(`${endpoints.notifications}/${notificationId}/seen`),
+  [notificationsQueryKey]
+);
+
+export const useSeenAllNotificationsMutation = useAppMutation(
+  () => safeApiHandler.post(`${endpoints.notifications}/seen/all`),
+  [notificationsQueryKey]
+);
+export const useDeleteNotificationMutation = useAppMutation(
+  (notificationId: string) =>
+    safeApiHandler.delete(`${endpoints.notifications}/${notificationId}/seen`),
+  [notificationsQueryKey]
+);
+
+export const useDeleteAllNotificationsMutation = useAppMutation(
+  () => safeApiHandler.delete(`${endpoints.notifications}/delete/all`),
   [notificationsQueryKey]
 );

@@ -117,17 +117,15 @@ async function appFetch<T = any>(
       body: reqInit?.body ? JSON.stringify(reqInit?.body || {}) : undefined,
     })
       .then(async (res) => {
-        if (res?.ok)
-          return res.body
-            ? res.json()
-            : { statusCode: res.status, isSuccess: res.ok };
         let response: Record<string, any> = {};
         try {
+          if (res?.ok)
+            return res.status !== 204 && res.body
+              ? res.json()
+              : { statusCode: res.status, isSuccess: res.ok };
           response = await res.json();
         } catch (error) {
-          if (res.status === 204) {
-            return { ...(response || {}), status: res.status };
-          } else response.status = res?.status || 502;
+          response.status = res?.status || 502;
         }
         throw new Error('ERROR', { cause: response });
       })
@@ -147,6 +145,8 @@ async function appFetch<T = any>(
       message,
     };
   } catch (error: any) {
+    console.log(error);
+
     const statusCode = error?.cause?.statusCode || 502;
     const errors = error?.cause?.errors || [];
     const errorMessage =
