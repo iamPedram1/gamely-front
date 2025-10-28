@@ -36,8 +36,6 @@ export function DatePicker({
   );
 
   // Hooks
-  const { i18n } = useTranslation();
-
   useUpdateEffect(() => {
     setDate(
       typeof value === 'string' && Boolean(value)
@@ -69,11 +67,7 @@ export function DatePicker({
             )}
           >
             <CalendarIcon className='me-2 h-4 w-4' />
-            {date ? (
-              getDate(date.toISOString(), i18n.language)
-            ) : (
-              <span>Pick a date</span>
-            )}
+            {date ? getDate(date.toISOString()) : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0' align='start'>

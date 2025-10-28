@@ -7,8 +7,12 @@ const routes = {
     index: '/games',
     details: (slug: string) => '/games/' + slug,
   },
+  users: {
+    details: (id: string) => '/user/' + id,
+  },
   profile: {
     index: '/profile',
+    blockList: '/profile/block-list',
   },
   posts: {
     index: '/posts',
@@ -43,6 +47,7 @@ const routes = {
       index: '/dashboard/users',
       edit: (id: string) => '/dashboard/users/' + id,
     },
+    reports: '/dashboard/reports',
     categories: {
       index: '/dashboard/categories',
       add: '/dashboard/categories/add',

@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, Clock } from 'lucide-react';
 
 // Components
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // Utilities
 import { getDate } from '@/utilities';
@@ -24,7 +24,7 @@ interface PostCardProps {
 
 export default function PostCard({ post }: PostCardProps) {
   // Custom Hooks
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Render
   return (
@@ -68,7 +68,7 @@ export default function PostCard({ post }: PostCardProps) {
 
       <CardContent className='space-y-4'>
         <p className='text-muted-foreground line-clamp-3 leading-relaxed'>
-          {post.title}
+          {post.abstract}
         </p>
 
         <div className='flex flex-wrap gap-2'>
@@ -93,19 +93,19 @@ export default function PostCard({ post }: PostCardProps) {
           <Avatar className='h-8 w-8 border-2 border-primary/20'>
             <AvatarImage
               src={post.author?.avatar?.url || '/placeholder.svg'}
-              alt={post.author.name}
+              alt={post.author?.name}
             />
             <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-              {post.author.name[0]}
+              {post.author?.name?.[0]}
             </AvatarFallback>
           </Avatar>
-          <span className='text-sm font-semibold'>{post.author.name}</span>
+          <span className='text-sm font-semibold'>{post.author?.name}</span>
         </Link>
 
         <div className='flex items-center gap-3 text-xs text-muted-foreground'>
           <div className='flex items-center gap-1'>
             <Calendar className='h-3 w-3' />
-            <span> {getDate(post.createDate, i18n.language)}</span>
+            <span> {getDate(post.createDate)}</span>
           </div>
           <div className='flex items-center gap-1'>
             <Clock className='h-3 w-3' />

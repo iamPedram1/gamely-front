@@ -55,7 +55,10 @@
     "inThisCategory": "in this category",
     "noPostsInCategory": "No posts found in this category",
     "replyToComment": "Reply to Comment",
-    "loginForAction": "You should login for this action"
+    "loginForAction": "You should login for this action",
+    "noResults": "No results found",
+    "tryDifferentSearch": "Try a different search term",
+    "searchUsers": "Search users..."
   },
   "auth": {
     "login": "Sign In",
@@ -88,6 +91,7 @@
   },
   "nav": {
     "home": "Home",
+    "menu": "Menu",
     "news": "News",
     "games": "Games",
     "tags": "Tags",
@@ -103,6 +107,7 @@
     "categories": "Categories",
     "tags": "Tags",
     "users": "Users",
+    "reports": "Reports",
     "comments": "Comments",
     "management": "Management",
     "addPost": "Add Post",
@@ -141,7 +146,7 @@
     "status": "Status",
     "active": "Active",
     "blocked": "Blocked",
-    "superManager": "Super Manager",
+    "superAdmin": "Super Admin",
     "admin": "Admin",
     "author": "Author",
     "user": "User",
@@ -162,7 +167,23 @@
     "enterName": "Enter name",
     "enterEmail": "Enter email",
     "userBio": "User bio",
-    "unauthorized": "Unauthorized"
+    "unauthorized": "Unauthorized",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "joinedOn": "Joined on",
+    "lastSeen": "Last seen",
+    "onlineNow": "Online now",
+    "hoursAgo": "{{hours}} hours ago",
+    "daysAgo": "{{days}} days ago",
+    "followers": "Followers",
+    "following": "Following",
+    "posts": "Posts",
+    "recentPosts": "Recent Posts",
+    "favoriteGames": "Favorite Games",
+    "noPosts": "No posts yet",
+    "noPostsDescription": "This user hasn't published any posts yet.",
+    "noFavoriteGames": "No favorite games",
+    "noFavoriteGamesDescription": "This user hasn't added any favorite games yet."
   },
   "comment": {
     "comment": "Comment",
@@ -320,7 +341,14 @@
     "profileInformation": "Profile Information",
     "updateProfile": "Update Profile",
     "avatarRecommendation": "Recommended: Square image, at least 200x200px",
-    "bioDescription": "Brief description for your profile. Maximum 500 characters."
+    "bioDescription": "Brief description for your profile. Maximum 500 characters.",
+    "blockedUsers": "Blocked Users",
+    "blockedUsersDescription": "Here you can manage users you've blocked from interacting with you.",
+    "noBlockedUsers": "No blocked users",
+    "noBlockedUsersDescription": "You haven’t blocked anyone yet. Good vibes only! ✨",
+    "blockedOn": "Blocked on",
+    "unblockUserConfirmation": "Are you sure you want to unblock {{username}}?",
+    "blockedUsersCount": "You have blocked {{count}} user(s)."
   },
   "validation": {
     "required": "{{field}} is required",
@@ -342,5 +370,51 @@
     "selectItems": "Select items...",
     "noItemsFound": "No items found.",
     "search": "Search..."
-  }
+  },
+  "reports": {
+    "title": "Reports Management",
+    "description": "View, review, and resolve user reports to keep your platform safe.",
+    "searchPlaceholder": "Search by reason, description, or user...",
+    "filterByStatus": "Filter by status",
+    "filterByType": "Filter by type",
+    "type": "Type",
+    "reason": "Reason",
+    "reportedBy": "Reported By",
+    "reportedUser": "Reported User",
+    "status": "Status",
+    "date": "Date",
+    "total": "Total",
+    "allReports": "All Reports",
+    "noReports": "No reports found",
+    "noReportsDescription": "There are currently no reports to review.",
+
+    "pending": "Pending",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
+    "dismissed": "Dismissed",
+
+    "comment": "Comment",
+    "post": "Post",
+    "user": "User",
+
+    "reviewedOn": "Reviewed on",
+    "resolveReport": "Resolve Report",
+    "resolveReportConfirmation": "Are you sure you want to mark this report as resolved?",
+    "resolve": "Resolve",
+    "dismissReport": "Dismiss Report",
+    "dismissReportConfirmation": "Are you sure you want to dismiss this report?",
+    "dismiss": "Dismiss"
+  },
+  "categories": {
+    "title": "Game Categories",
+    "description": "Explore all gaming genres — from action-packed adventures to creative indie experiences.",
+    "totalCategories": "Total Categories",
+    "totalPosts": "Total Posts",
+    "trending": "Trending",
+    "searchPlaceholder": "Search categories...",
+    "posts": "Posts",
+    "explore": "Explore",
+    "featuredCategories": "Featured Categories"
+  },
+  "notifications": { "title": "Notification" }
 }

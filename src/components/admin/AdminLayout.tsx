@@ -10,6 +10,7 @@ import {
   Menu,
   Users,
   MessageSquare,
+  OctagonAlertIcon,
 } from 'lucide-react';
 
 // Custom Hooks
@@ -65,6 +66,12 @@ export default function AdminLayout() {
       roles: ['admin', 'superAdmin'],
       icon: Users,
       label: t('dashboard.users'),
+    },
+    {
+      path: '/dashboard/reports',
+      roles: ['admin', 'superAdmin'],
+      icon: OctagonAlertIcon,
+      label: t('dashboard.reports'),
     },
     {
       path: '/dashboard/comments',

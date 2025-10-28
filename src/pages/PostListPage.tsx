@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
 // Components
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import PostCard from '@/components/blog/PostCard';
 import PaginationControls from '@/components/ui/pagination-controls';
 import { PostCardSkeleton } from '@/components/ui/loading-skeleton';

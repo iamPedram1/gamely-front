@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { ArrowRight, TrendingUp, Zap, Trophy } from 'lucide-react';
 
 // Components
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import PostCard from '@/components/blog/PostCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +13,7 @@ import { mockPosts, mockGames } from '@/data/mockData';
 
 export default function HomePage() {
   // Custom Hooks
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Utilities
   const featuredPost = mockPosts[0];

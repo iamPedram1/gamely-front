@@ -13,12 +13,15 @@ import routes from '@/utilities/routes';
 
 // Pages
 import HomePage from '@/pages/HomePage';
+import UserPage from '@/pages/UserPage';
 import LoginPage from '@/pages/LoginPage';
+import ProfilePage from '@/pages/ProfilePage';
 import TagListPage from '@/pages/TagListPage';
 import PostListPage from '@/pages/PostListPage';
 import GameListPage from '@/pages/GameListPage';
-import MutateTagPage from '@/pages/admin/MutateTagPage';
+import BlockListPage from '@/pages/BlockListPage';
 import PostDetailPage from '@/pages/PostDetailPage';
+import MutateTagPage from '@/pages/admin/MutateTagPage';
 import MutatePostPage from '@/pages/admin/MutatePostPage';
 import TagsListPage from '@/pages/admin/TagsListPage';
 import MutateGamePage from '@/pages/admin/MutateGamePage';
@@ -28,10 +31,13 @@ import CategoryPostsPage from '@/pages/CategoryPostsPage';
 import CategoriesPage from '@/pages/admin/CategoriesPage';
 import RecoverPasswordPage from '@/pages/RecoverPasswordPage';
 import ChangePasswordPage from '@/pages/ChangePasswordPage';
+import CategoriesPagePublic from '@/pages/CategoriesPage';
 import UsersListPage from '@/pages/admin/UsersListPage';
 import UserDetailPage from '@/pages/admin/UserDetailPage';
 import CommentsListPage from '@/pages/admin/CommentsListPage';
-import ProfilePage from '@/pages/ProfilePage';
+import ReportsListPage from '@/pages/admin/ReportsListPage';
+
+// Layout
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -61,11 +67,17 @@ function App() {
           <Route path={routes.games.index} element={<GameListPage />} />
           <Route path={routes.tags.index} element={<TagListPage />} />
           <Route
+            path={routes.categories.index}
+            element={<CategoriesPagePublic />}
+          />
+          <Route
             path={routes.categories.details(':id')}
             element={<CategoryPostsPage />}
           />
           <Route path={routes.login} element={<LoginPage />} />
           <Route path={routes.profile.index} element={<ProfilePage />} />
+          <Route path={routes.profile.blockList} element={<BlockListPage />} />
+          <Route path={routes.users.details(':id')} element={<UserPage />} />
           <Route
             path={routes.passwordRecovery}
             element={<RecoverPasswordPage />}
@@ -128,6 +140,10 @@ function App() {
             <Route
               path={routes.dashboard.comments}
               element={<CommentsListPage />}
+            />
+            <Route
+              path={routes.dashboard.reports}
+              element={<ReportsListPage />}
             />
           </Route>
         </Routes>

@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronUp, MessageSquare } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  MessageSquare,
+  MoreHorizontal,
+  Shield,
+  Flag,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -11,6 +18,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import type { CommentProps } from '@/types/blog';
 
@@ -30,6 +43,16 @@ export default function Comment({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const hasReplies = comment.replies && comment.replies.length > 0;
+
+  const handleBlock = () => {
+    // TODO: Implement block functionality
+    console.log('Block user:', comment.username);
+  };
+
+  const handleReport = () => {
+    // TODO: Implement report functionality
+    console.log('Report comment:', comment.id);
+  };
 
   return (
     <div className='relative space-y-3'>
@@ -56,6 +79,33 @@ export default function Comment({
                 {dayjs(comment.createDate).format('YYYY/MM/DD HH:mm')}
               </p>
             </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-8 w-8 p-0 hover:bg-accent'
+                >
+                  <MoreHorizontal className='h-4 w-4' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end' className='w-48'>
+                <DropdownMenuItem
+                  onClick={handleBlock}
+                  className='cursor-pointer text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950'
+                >
+                  <Shield className='h-4 w-4 mr-2' />
+                  {t('comment.block')}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleReport}
+                  className='cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950'
+                >
+                  <Flag className='h-4 w-4 mr-2' />
+                  {t('comment.report')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
 

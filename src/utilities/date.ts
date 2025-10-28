@@ -1,3 +1,4 @@
+import i18n from '@/utilities/i18n';
 import dayjs from 'dayjs';
 import jalaliday from 'jalaliday/dayjs';
 dayjs.extend(jalaliday);
@@ -136,9 +137,13 @@ export function minutesLeftToTarget(targetTime: string): number {
   return target.diff(now, 'minutes');
 }
 
-export const getDate = (date: string, locale: string, format?: string) => {
+export const getDate = (date: string, format?: string) => {
+  const language = i18n.language;
+
   return dayjs(date)
-    .locale(locale)
-    .calendar(locale === 'fa' ? 'jalali' : 'gregory')
-    .format(format ? format : locale === 'fa' ? 'D MMMM YYYY' : 'MMMM D, YYYY');
+    .locale(language)
+    .calendar(language === 'fa' ? 'jalali' : 'gregory')
+    .format(
+      format ? format : language === 'fa' ? 'D MMMM YYYY' : 'MMMM D, YYYY'
+    );
 };

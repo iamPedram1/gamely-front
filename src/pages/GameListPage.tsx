@@ -21,7 +21,7 @@ import { useGamesQuery } from '@/utilities/api/game';
 export default function GameListPage() {
   // Hooks
   const games = useGamesQuery();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Render
   return (
@@ -81,9 +81,7 @@ export default function GameListPage() {
                 <CardFooter className='flex items-center justify-between'>
                   <div className='flex items-center gap-1 text-sm text-muted-foreground'>
                     <Calendar className='h-4 w-4' />
-                    <span>
-                      {getDate(game.releaseDate, i18n.language, 'YYYY/MM/DD')}
-                    </span>
+                    <span>{getDate(game.releaseDate, 'YYYY/MM/DD')}</span>
                   </div>
                   <Link to={`${routes.posts.index}?game=${game.slug}`}>
                     <Badge

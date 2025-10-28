@@ -8,7 +8,8 @@ import {
   LogOut,
   LayoutDashboard,
   UserCircle,
-  ChevronDown,
+  Bell,
+  Menu,
 } from 'lucide-react';
 
 // Custom Hooks
@@ -18,6 +19,10 @@ import useAuth from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import DarkModeToggle from '@/components/DarkModeToggle';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,18 +31,51 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import routes from '@/utilities/routes';
-import DarkModeToggle from '@/components/DarkModeToggle';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Header() {
   // States
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Hooks
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { isAuthorized, isAuthLoading, profile, logout } = useAuth();
+
+  // Mock notifications data
+  const notifications = [
+    {
+      id: 1,
+      type: 'reply',
+      message: 'John replied to your comment on "Best Gaming Setup 2024"',
+      time: '2 minutes ago',
+      read: false,
+    },
+    {
+      id: 2,
+      type: 'reply',
+      message: 'Sarah replied to your comment on "Top 10 RPG Games"',
+      time: '1 hour ago',
+      read: false,
+    },
+    {
+      id: 3,
+      type: 'reply',
+      message: 'Mike replied to your comment on "Gaming News Update"',
+      time: '3 hours ago',
+      read: true,
+    },
+  ];
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Utilities
   const handleSearch = (e: React.FormEvent) => {
@@ -69,7 +107,7 @@ export default function Header() {
             <span className='gradient-gaming-text'>{t('appName')}</span>
           </Link>
 
-          <nav className='hidden md:flex items-center gap-8 text-sm font-medium'>
+          <nav className='hidden lg:flex items-center gap-8 text-sm font-medium'>
             <Link
               to={routes.posts.index}
               className='transition-all hover:text-primary hover:scale-105 text-foreground/80 uppercase tracking-wide'
@@ -91,7 +129,7 @@ export default function Header() {
           </nav>
         </div>
 
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-3'>
           <form
             onSubmit={handleSearch}
             className='hidden sm:flex items-center gap-2'
@@ -107,17 +145,83 @@ export default function Header() {
               />
             </div>
           </form>
-          <LanguageSwitcher />
-          <DarkModeToggle />
+
+          {/* Notifications */}
+          {isAuthorized && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='relative h-9 w-9 p-0'
+                >
+                  <Bell className='h-5 w-5' />
+                  {unreadCount > 0 && (
+                    <Badge
+                      variant='destructive'
+                      className='absolute -top-0 -right-0 h-4 w-4 p-0 text-xs flex items-center justify-center'
+                    >
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align='end'
+                className='w-80 bg-background/95 backdrop-blur-xl border-primary/20'
+              >
+                <DropdownMenuLabel className='font-semibold'>
+                  {t('notifications.title')}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <ScrollArea className='h-[17rem]'>
+                  {notifications.length === 0 ? (
+                    <div className='p-4 text-center text-muted-foreground text-sm'>
+                      {t('notifications.empty')}
+                    </div>
+                  ) : (
+                    notifications.map((notification) => (
+                      <DropdownMenuItem
+                        key={notification.id}
+                        className='flex flex-col items-start p-3 cursor-pointer hover:bg-accent/50'
+                      >
+                        <div className='flex items-start gap-2 w-full'>
+                          <div
+                            className={`w-2 h-2 rounded-full mt-2 ${
+                              notification.read ? 'bg-muted' : 'bg-primary'
+                            }`}
+                          />
+                          <div className='flex-1'>
+                            <p className='text-sm leading-relaxed'>
+                              {notification.message}
+                            </p>
+                            <p className='text-xs text-muted-foreground mt-1'>
+                              {notification.time}
+                            </p>
+                          </div>
+                        </div>
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          <div className='hidden md:flex items-center gap-3'>
+            <LanguageSwitcher />
+            <DarkModeToggle />
+          </div>
+
           {isAuthorized && profile ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='ghost'
-                  className='flex items-center gap-2 hover:bg-primary/10 transition-all h-10'
+                  className='p-0.5 h-fit w-fit rounded-full transition-all'
                   disabled={isAuthLoading}
                 >
-                  <Avatar className='h-8 w-8 border-2 border-primary/20'>
+                  <Avatar className='w-10 h-10 border-2 border-primary/20'>
                     <AvatarImage
                       src={profile.avatar?.url || '/placeholder.svg'}
                       alt={profile.name}
@@ -126,11 +230,10 @@ export default function Header() {
                       {profile.name[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <ChevronDown className='h-4 w-4 text-muted-foreground rtl:rotate-180' />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                align='center'
+                align='end'
                 className='w-56 bg-background/95 backdrop-blur-xl border-primary/20'
               >
                 <DropdownMenuLabel className='font-normal'>
@@ -187,6 +290,72 @@ export default function Header() {
               </Button>
             </Link>
           )}
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant='ghost'
+                size='sm'
+                className='lg:hidden h-10 w-10 p-0'
+              >
+                <Menu className='h-5 w-5' />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side='right' className='w-80'>
+              <SheetHeader>
+                <SheetTitle className='gradient-gaming-text'>
+                  {t('nav.menu')}
+                </SheetTitle>
+              </SheetHeader>
+              <div className='flex flex-col gap-4 mt-6'>
+                <div className='flex items-center gap-4 pb-4 border-b'>
+                  <LanguageSwitcher />
+                  <DarkModeToggle />
+                </div>
+                <nav className='flex flex-col gap-4'>
+                  <Link
+                    to={routes.posts.index}
+                    className='text-lg font-medium hover:text-primary transition-colors'
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('nav.news')}
+                  </Link>
+                  <Link
+                    to={routes.games.index}
+                    className='text-lg font-medium hover:text-primary transition-colors'
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('nav.games')}
+                  </Link>
+                  <Link
+                    to={routes.tags.index}
+                    className='text-lg font-medium hover:text-primary transition-colors'
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {t('nav.tags')}
+                  </Link>
+                </nav>
+                <div className='sm:hidden mt-4'>
+                  <form
+                    onSubmit={handleSearch}
+                    className='flex items-center gap-2'
+                  >
+                    <div className='relative flex-1'>
+                      <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
+                      <Input
+                        type='search'
+                        placeholder={t('common.search') + '...'}
+                        className='pl-10 bg-accent/25 dark:bg-accent/50 border-primary/20 focus:border-primary'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

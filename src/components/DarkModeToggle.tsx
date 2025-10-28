@@ -9,7 +9,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 const DarkModeToggle = () => {
   // Hooks
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
 
   // Render
@@ -17,7 +17,6 @@ const DarkModeToggle = () => {
     <Button
       variant='ghost'
       size='icon'
-      className='hover:bg-primary'
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
     >
       <Sun className='h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
