@@ -8,16 +8,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AvatarUpload from '@/components/profile/AvatarUpload';
+import { UserProps } from '@/types/client/blog';
 
 // Types
-import { UserProfile } from '@/types/blog';
 
 interface ProfileFormProps {
   control: any;
   handleSubmit: any;
   onSubmit: (data: any) => void;
   onError: (error: any) => void;
-  profile: UserProfile;
+  profile: UserProps;
   disabled: boolean;
   t: (key: string) => string;
 }
@@ -29,7 +29,7 @@ export default function ProfileForm({
   onError,
   profile,
   disabled,
-  t
+  t,
 }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -39,23 +39,23 @@ export default function ProfileForm({
         </CardHeader>
         <CardContent className='space-y-6'>
           {/* Avatar Upload */}
-          <AvatarUpload 
-            control={control} 
-            profile={profile} 
-            disabled={disabled} 
-            t={t} 
+          <AvatarUpload
+            control={control}
+            profile={profile}
+            disabled={disabled}
+            t={t}
           />
 
           {/* Name Field */}
           <div className='space-y-2'>
-            <Label htmlFor='name'>{t('user.name')} *</Label>
+            <Label htmlFor='username'>{t('user.username')} *</Label>
             <Controller
               control={control}
-              name='name'
+              name='username'
               render={({ field }) => (
                 <Input
-                  id='name'
-                  placeholder={t('user.enterName')}
+                  id='username'
+                  placeholder={t('user.enterUserName')}
                   required
                   {...field}
                 />

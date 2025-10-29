@@ -23,7 +23,7 @@ export const useTagsQuery = useAppQuery(
 
 export const useTagsSummariesQuery = useAppQuery(
   (context) =>
-    apiHandler.get<SummaryProps & Array<{ postsCount: number }>>(
+    apiHandler.get<Array<SummaryProps & { postsCount: number }>>(
       `${endpoints.management.tags}/summaries`,
       {
         ...context,

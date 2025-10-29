@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getDate } from '@/utilities';
 
 // Types
-import type { PostProps } from '@/types/blog';
+import type { PostProps } from '@/types/client/blog';
 
 interface PostHeaderProps {
   post: PostProps;
@@ -35,13 +35,13 @@ export default function PostHeader({ post }: PostHeaderProps) {
           <Avatar className='h-10 w-10'>
             <AvatarImage
               src={post.author.avatar?.url || '/placeholder.svg'}
-              alt={post.author.name}
+              alt={post.author.username}
             />
-            <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+            <AvatarFallback>{post.author.username[0]}</AvatarFallback>
           </Avatar>
           <div>
             <p className='text-xs md:text-sm font-medium text-foreground'>
-              {post.author.name}
+              {post.author.username}
             </p>
             <p className='text-xs'>{post.author.bio}</p>
           </div>

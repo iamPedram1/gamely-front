@@ -7,7 +7,7 @@ import apiHandler from '@/utilities/safeApiHandler';
 import initialPagination from '@/utilities/pagination';
 
 // Types
-import type { CommentProps } from '@/types/blog';
+import type { CommentProps } from '@/types/client/blog';
 import type { DataWithPagination } from '@/types/api';
 
 const commentsQueryKey = 'comments';

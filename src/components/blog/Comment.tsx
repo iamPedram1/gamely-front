@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import type { CommentProps } from '@/types/blog';
+import type { CommentProps } from '@/types/client/blog';
 import ReportCommentDialog from '@/components/blog/ReportCommentDialog';
 
 interface CommentComponentProps {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import PostCard from '@/components/blog/PostCard';
 
 // Types
-import { PostProps } from '@/types/blog';
+import { PostProps } from '@/types/client/blog';
 
 interface LatestNewsSectionProps {
   posts: PostProps[];

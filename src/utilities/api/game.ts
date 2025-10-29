@@ -3,7 +3,7 @@ import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 import { useAppQuery } from '@/hooks/api/useQuery';
 
 // Types
-import type { GameProps } from '@/types/blog';
+import type { GameProps } from '@/types/client/blog';
 import type { DataWithPagination } from '@/types/api';
 import endpoints from '@/utilities/endpoints';
 

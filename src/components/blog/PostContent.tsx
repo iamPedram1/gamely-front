@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
 // Types
-import type { PostProps } from '@/types/blog';
+import type { PostProps } from '@/types/client/blog';
 
 interface PostContentProps {
   post: PostProps;

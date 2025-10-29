@@ -22,7 +22,7 @@ import { usePostQuery } from '@/utilities/api/post';
 import { useCommentsQuery } from '@/utilities/api/comment';
 
 // Types
-import type { CommentProps } from '@/types/blog';
+import type { CommentProps } from '@/types/client/blog';
 
 export default function PostDetailPage() {
   // States

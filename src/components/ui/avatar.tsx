@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 
 import { cn } from '@/utilities/tailwind';
+import { generateRandomNumber } from '@/utilities/helperPack';
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
@@ -21,13 +22,24 @@ Avatar.displayName = AvatarPrimitive.Root.displayName;
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={cn('aspect-square h-full w-full', className)}
-    {...props}
-  />
-));
+>(({ className, src, ...props }, ref) => {
+  const randomAvatar = React.useMemo(
+    () =>
+      `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${generateRandomNumber()}`,
+    []
+  );
+
+  console.log(src || randomAvatar);
+
+  return (
+    <AvatarPrimitive.Image
+      ref={ref}
+      src={randomAvatar}
+      className={cn('aspect-square h-full w-full', className)}
+      {...props}
+    />
+  );
+});
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<

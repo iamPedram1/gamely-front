@@ -4,7 +4,7 @@ import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { TagProps } from '@/types/blog';
+import type { TagProps } from '@/types/client/blog';
 
 const tagsQueryKey = 'tags';
 

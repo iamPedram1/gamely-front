@@ -7,7 +7,7 @@ import apiHandler from '@/utilities/safeApiHandler';
 import endpoints from '@/utilities/endpoints';
 
 // Types
-import type { UserProps } from '@/types/blog';
+import type { UserProps } from '@/types/client/blog';
 import type { DataWithPagination } from '@/types/api';
 
 const usersQueryKey = 'users';

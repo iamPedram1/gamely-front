@@ -4,7 +4,7 @@ import { useAppQuery } from '@/hooks/api/useQuery';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { CategoryProps } from '@/types/blog';
+import type { CategoryProps } from '@/types/client/blog';
 
 const categoriesQueryKey = 'categories';
 

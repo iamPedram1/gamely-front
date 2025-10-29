@@ -32,14 +32,22 @@ export interface PostSummaryProps {
   comments: CommentProps[];
 }
 
+export type UserRole = 'superAdmin' | 'admin' | 'author' | 'user';
+export type UserStatus = 'active' | 'blocked';
+
 export interface UserProps {
   id: string;
-  name: string;
+  username: string;
   email: string;
+  postsCount: number;
+  followersCount: number;
+  followingsCount: number;
+  isFollowing: boolean;
+  lastSeen: string;
   avatar: FileProps;
   bio: string;
-  role: 'admin' | 'author' | 'user';
-  status?: 'active' | 'blocked';
+  role: UserRole;
+  status?: UserStatus;
   createDate?: string;
 }
 
@@ -80,7 +88,7 @@ export interface GameProps {
   releaseDate: string;
 }
 
-type CommentStatusType = 'approved' | 'reject' | 'pending';
+type CommentStatusType = 'approved' | 'rejected' | 'pending';
 
 export interface CommentProps {
   id: string;
@@ -90,4 +98,15 @@ export interface CommentProps {
   createDate: string;
   status: CommentStatusType;
   replies?: CommentProps[];
+}
+
+export interface FollowerProps {
+  id: string;
+  username: string;
+  userId: string;
+  avatar?: FileProps;
+  since: string;
+  role: UserRole;
+  isFollowing?: boolean;
+  isBlocked?: boolean;
 }

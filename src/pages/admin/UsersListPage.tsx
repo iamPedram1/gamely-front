@@ -30,7 +30,7 @@ import { useUsersQuery } from '@/utilities/api/management/user';
 import { getDate } from '@/utilities';
 
 // Types
-import type { UserRole, UserStatus } from '@/types/blog';
+import type { UserRole, UserStatus } from '@/types/client/blog';
 
 export default function UsersListPage() {
   const { t, i18n } = useTranslation();
@@ -130,13 +130,13 @@ export default function UsersListPage() {
                       <Avatar className='h-10 w-10 border-2 border-primary/20'>
                         <AvatarImage
                           src={user.avatar?.url || '/placeholder.svg'}
-                          alt={user.name}
+                          alt={user.username}
                         />
                         <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-                          {user.name[0]}
+                          {user.username[0]}
                         </AvatarFallback>
                       </Avatar>
-                      <span>{user.name}</span>
+                      <span>{user.username}</span>
                     </div>
                   </TableCell>
                   <TableCell className='text-muted-foreground'>

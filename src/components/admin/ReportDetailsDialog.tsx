@@ -239,11 +239,7 @@ export default function ReportDetailsDialog({
                     {t('reports.reportedOn')}:
                   </span>
                   <span className='text-muted-foreground'>
-                    {getDate(
-                      report.createdAt,
-                      i18n.language,
-                      'YYYY/MM/DD - HH:mm:ss'
-                    )}
+                    {getDate(report.createdAt, 'YYYY/MM/DD - HH:mm:ss')}
                   </span>
                 </div>
                 {report.reviewedAt && (
@@ -253,11 +249,7 @@ export default function ReportDetailsDialog({
                         {t('reports.reviewedOn')}:
                       </span>
                       <span className='text-muted-foreground'>
-                        {getDate(
-                          report.reviewedAt,
-                          i18n.language,
-                          'YYYY/MM/DD - HH:mm:ss'
-                        )}
+                        {getDate(report.reviewedAt, 'YYYY/MM/DD - HH:mm:ss')}
                       </span>
                     </div>
                     {report.reviewedBy && (

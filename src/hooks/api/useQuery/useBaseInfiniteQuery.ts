@@ -127,7 +127,7 @@ function useBaseInfiniteQuery<T = any>(
     refetchOnWindowFocus: false,
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const { currentPage, totalPages } = lastPage.pagination;
+      const { currentPage, totalPages } = lastPage?.pagination || {};
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });

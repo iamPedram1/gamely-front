@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Comment from '@/components/blog/Comment';
 
 // Types
-import type { CommentProps } from '@/types/blog';
+import type { CommentProps } from '@/types/client/blog';
 
 interface CommentsSectionProps {
   comments: {
@@ -23,7 +23,7 @@ export default function CommentsSection({
   comments,
   isSuccess,
   onAddComment,
-  onReply
+  onReply,
 }: CommentsSectionProps) {
   // Hooks
   const { t } = useTranslation();
@@ -33,15 +33,9 @@ export default function CommentsSection({
       <div className='flex justify-between'>
         <h2 className='text-2xl font-bold mb-4'>
           {t('comment.comments')} (
-          {isSuccess
-            ? comments?.pagination?.totalDocs
-            : t('common.loading')}
-          )
+          {isSuccess ? comments?.pagination?.totalDocs : t('common.loading')})
         </h2>
-        <Button
-          onClick={onAddComment}
-          className='gradient-gaming'
-        >
+        <Button onClick={onAddComment} className='gradient-gaming'>
           {t('comment.add')}
         </Button>
       </div>
@@ -50,11 +44,7 @@ export default function CommentsSection({
       ) : (
         <div className='space-y-6'>
           {comments.docs.map((comment) => (
-            <Comment
-              key={comment.id}
-              comment={comment}
-              onReply={onReply}
-            />
+            <Comment key={comment.id} comment={comment} onReply={onReply} />
           ))}
         </div>
       )}

@@ -1,7 +1,6 @@
 // Utilities
 import endpoints from '@/utilities/endpoints';
 import safeApiHandler from '@/utilities/safeApiHandler';
-import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 import useBaseInfiniteQuery from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 
@@ -17,15 +16,6 @@ export interface AuthResponseProps {
 
 const notificationsQueryKey = 'notifications';
 
-export const getNotifications = () =>
-  safeApiHandler.get<DataWithPagination<NotificationProps>>(
-    endpoints.notifications
-  );
-
-export const useNotificationsQuery = useAppQuery(getNotifications, [
-  notificationsQueryKey,
-]);
-
 export const useNotificationsInfiniteQuery = (
   options?: Partial<UseBaseInfiniteQueryOptionsProps<NotificationProps>>
 ) =>
@@ -35,7 +25,7 @@ export const useNotificationsInfiniteQuery = (
     queryKey: [notificationsQueryKey],
     queryFn: ({ pageParam }) =>
       safeApiHandler.get<DataWithPagination<NotificationProps>>(
-        endpoints.notifications,
+        endpoints.user.notifications,
         { query: { page: pageParam } }
       ),
     enabled: true,
@@ -44,21 +34,23 @@ export const useNotificationsInfiniteQuery = (
 
 export const useSeenNotificationMutation = useAppMutation(
   (notificationId: string) =>
-    safeApiHandler.post(`${endpoints.notifications}/${notificationId}/seen`),
+    safeApiHandler.post(
+      `${endpoints.user.notifications}/${notificationId}/seen`
+    ),
   [notificationsQueryKey]
 );
 
 export const useSeenAllNotificationsMutation = useAppMutation(
-  () => safeApiHandler.post(`${endpoints.notifications}/seen/all`),
+  () => safeApiHandler.post(`${endpoints.user.notifications}/seen/all`),
   [notificationsQueryKey]
 );
 export const useDeleteNotificationMutation = useAppMutation(
   (notificationId: string) =>
-    safeApiHandler.delete(`${endpoints.notifications}/${notificationId}`),
+    safeApiHandler.delete(`${endpoints.user.notifications}/${notificationId}`),
   [notificationsQueryKey]
 );
 
 export const useDeleteAllNotificationsMutation = useAppMutation(
-  () => safeApiHandler.delete(`${endpoints.notifications}/delete/all`),
+  () => safeApiHandler.delete(`${endpoints.user.notifications}/delete/all`),
   [notificationsQueryKey]
 );

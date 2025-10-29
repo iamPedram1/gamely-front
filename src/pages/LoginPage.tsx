@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+import { useMemo } from 'react';
 import { object } from 'zod';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,8 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import useAuth from '@/hooks/useAuth';
 
 // Components
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -32,8 +32,6 @@ import {
   generateEmailSchema,
   generateStringSchema,
 } from '@/validations/common';
-import { useMemo } from 'react';
-import { t } from 'i18next';
 
 type LoginFormProps = Zod.infer<ReturnType<typeof createLoginFormSchema>>;
 type RegisterFormProps = Zod.infer<ReturnType<typeof createRegisterFormSchema>>;
@@ -41,7 +39,7 @@ type RegisterFormProps = Zod.infer<ReturnType<typeof createRegisterFormSchema>>;
 const createRegisterFormSchema = () =>
   object({
     email: generateEmailSchema(),
-    name: generateStringSchema('name'),
+    username: generateStringSchema('username'),
     password: generateStringSchema('password', 8, 255),
     confirmPassword: generateStringSchema('confirmPassword'),
   }).refine((data) => data.password === data.confirmPassword, {
@@ -87,7 +85,7 @@ export default function LoginPage() {
   const handleRegister = async (data: Required<RegisterFormProps>) => {
     register({
       email: data.email,
-      name: data.name,
+      username: data.username,
       password: data.password,
     });
   };
@@ -185,14 +183,16 @@ export default function LoginPage() {
               >
                 <CardContent className='space-y-4'>
                   <div className='space-y-2'>
-                    <Label htmlFor='register-name'>{t('common.name')}</Label>
+                    <Label htmlFor='register-username'>
+                      {t('field.username')}
+                    </Label>
                     <Controller
                       control={registerForm.control}
-                      name='name'
+                      name='username'
                       render={({ field }) => (
                         <Input
                           disabled={loading}
-                          id='register-name'
+                          id='register-username'
                           type='text'
                           placeholder={t('auth.namePlaceholder')}
                           {...field}

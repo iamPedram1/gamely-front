@@ -7,13 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // Types
-import { GameProps } from '@/types/blog';
+import { GameProps } from '@/types/client/blog';
 
 interface TrendingGamesSectionProps {
   games: GameProps[];
 }
 
-export default function TrendingGamesSection({ games }: TrendingGamesSectionProps) {
+export default function TrendingGamesSection({
+  games,
+}: TrendingGamesSectionProps) {
   // Custom Hooks
   const { t } = useTranslation();
 

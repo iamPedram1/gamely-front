@@ -213,20 +213,20 @@ export default function CommentsListPage() {
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8 border-2 border-primary/20'>
                         <AvatarImage
-                          alt={comment.creator.name}
+                          alt={comment.creator.username}
                           src={
                             comment?.creator.avatar?.url || '/placeholder.svg'
                           }
                         />
                         <AvatarFallback className='bg-primary/10 text-primary font-bold text-xs'>
-                          {comment.creator.name[0]}
+                          {comment.creator.username[0]}
                         </AvatarFallback>
                       </Avatar>
                       <Link
                         to={routes.dashboard.users.edit(comment.creator.id)}
                         className='text-sm underline'
                       >
-                        {comment.creator.name}
+                        {comment.creator.username}
                       </Link>
                     </div>
                   </TableCell>
@@ -302,15 +302,15 @@ export default function CommentsListPage() {
                       getValues('comment.creator.avatar.url') ||
                       '/placeholder.svg'
                     }
-                    alt={getValues('comment.creator.name')}
+                    alt={getValues('comment.creator.username')}
                   />
                   <AvatarFallback>
-                    {getValues('comment.creator.name')[0]}
+                    {getValues('comment.creator.username')[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className='font-semibold'>
-                    {getValues('comment.creator.name')}
+                    {getValues('comment.creator.username')}
                   </p>
                   <p className='text-xs text-muted-foreground'>
                     {getDate(getValues('comment.createDate'))}

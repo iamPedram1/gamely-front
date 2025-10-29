@@ -54,7 +54,7 @@ const Searchbar = (props: SearchbarProps) => {
         render={({ field }) => (
           <Input
             placeholder={placeholder || `${t('common.search')} ...`}
-            className='pl-10 w-[250px]'
+            className='pl-10 w-full'
             {...field}
           />
         )}

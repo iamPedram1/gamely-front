@@ -6,7 +6,7 @@ import endpoints from '@/utilities/endpoints';
 import apiHandler from '@/utilities/safeApiHandler';
 
 // Types
-import type { PostProps } from '@/types/blog';
+import type { PostProps } from '@/types/client/blog';
 import type { DataWithPagination } from '@/types/api';
 
 const postsQueryKey = 'posts';

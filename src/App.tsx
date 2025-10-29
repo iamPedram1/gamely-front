@@ -36,6 +36,10 @@ import UsersListPage from '@/pages/admin/UsersListPage';
 import UserDetailPage from '@/pages/admin/UserDetailPage';
 import CommentsListPage from '@/pages/admin/CommentsListPage';
 import ReportsListPage from '@/pages/admin/ReportsListPage';
+import ProfileFollowersPage from '@/pages/ProfileFollowersPage';
+import ProfileFollowingPage from '@/pages/ProfileFollowingPage';
+import UserFollowersPage from '@/pages/UserFollowersPage';
+import UserFollowingPage from '@/pages/UserFollowingPage';
 
 // Layout
 import Header from '@/components/layout/Header';
@@ -77,7 +81,26 @@ function App() {
           <Route path={routes.login} element={<LoginPage />} />
           <Route path={routes.profile.index} element={<ProfilePage />} />
           <Route path={routes.profile.blockList} element={<BlockListPage />} />
-          <Route path={routes.users.details(':id')} element={<UserPage />} />
+          <Route
+            path={routes.profile.followers}
+            element={<ProfileFollowersPage />}
+          />
+          <Route
+            path={routes.profile.followings}
+            element={<ProfileFollowingPage />}
+          />
+          <Route
+            path={routes.users.details(':username')}
+            element={<UserPage />}
+          />
+          <Route
+            path={routes.users.followers(':username')}
+            element={<UserFollowersPage />}
+          />
+          <Route
+            path={routes.users.followings(':username')}
+            element={<UserFollowingPage />}
+          />
           <Route
             path={routes.passwordRecovery}
             element={<RecoverPasswordPage />}

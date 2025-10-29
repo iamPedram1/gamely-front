@@ -140,7 +140,11 @@ export default function NotificationsMenu() {
                           variant='ghost'
                           size='icon'
                           className='h-7 w-7 text-destructive hover:text-destructive/80'
-                          onClick={() => deleteOne.mutate(notification.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            deleteOne.mutate(notification.id);
+                          }}
                           title={t('notifications.deleteOne')}
                         >
                           <Trash2 className='h-4 w-4' />

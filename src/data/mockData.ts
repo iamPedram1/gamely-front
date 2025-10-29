@@ -4,7 +4,7 @@ import {
   CategoryProps,
   GameProps,
   UserProps,
-} from '@/types/blog';
+} from '@/types/client/blog';
 
 export const mockTags: TagProps[] = [
   { id: '1', title: 'RPG', slug: 'rpg' },
@@ -55,7 +55,7 @@ export const mockGames: GameProps[] = [
 export const mockUsers: UserProps[] = [
   {
     id: '1',
-    name: 'Alex Morgan',
+    username: 'Alex Morgan',
     email: 'alex.morgan@gamehub.com',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
     bio: 'Senior game reviewer with 10 years of experience',
@@ -65,7 +65,7 @@ export const mockUsers: UserProps[] = [
   },
   {
     id: '2',
-    name: 'Sarah Chen',
+    username: 'Sarah Chen',
     email: 'sarah.chen@gamehub.com',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
     bio: 'Strategy game specialist and guide writer',
@@ -75,7 +75,7 @@ export const mockUsers: UserProps[] = [
   },
   {
     id: '3',
-    name: 'Mike Johnson',
+    username: 'Mike Johnson',
     email: 'mike.j@example.com',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
     bio: 'Gaming enthusiast',
@@ -85,7 +85,7 @@ export const mockUsers: UserProps[] = [
   },
   {
     id: '4',
-    name: 'Emma Wilson',
+    username: 'Emma Wilson',
     email: 'emma.w@example.com',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
     bio: 'Indie game lover',

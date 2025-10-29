@@ -456,18 +456,13 @@ export default function ReportsListPage() {
                         <TableCell>
                           <div className='text-sm'>
                             <div>
-                              {getDate(
-                                report.createdAt,
-                                i18n.language,
-                                'YYYY/MM/DD-HH:mm:ss'
-                              )}
+                              {getDate(report.createdAt, 'YYYY/MM/DD-HH:mm:ss')}
                             </div>
                             {report.reviewedAt && (
                               <div className='text-muted-foreground'>
                                 {t('reports.reviewedOn')}{' '}
                                 {getDate(
                                   report.reviewedAt,
-                                  i18n.language,
                                   'YYYY/MM/DD-HH:mm:ss'
                                 )}
                               </div>

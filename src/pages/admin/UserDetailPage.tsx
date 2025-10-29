@@ -47,7 +47,7 @@ import {
 
 const createUserSchema = () =>
   object({
-    name: generateStringSchema('title', 3, 255, false),
+    username: generateStringSchema('username', 3, 255, false),
     email: generateEmailSchema(),
     status: zodEnum(['active', 'blocked']).optional(),
     role: zodEnum(['user', 'author', 'admin', 'superAdmin']).optional(),
@@ -152,14 +152,14 @@ export default function UserDetailPage() {
               <Avatar className='h-24 w-24 border-4 border-primary/20'>
                 <AvatarImage
                   src={user?.data?.avatar?.url}
-                  alt={user?.data?.name}
+                  alt={user?.data?.username}
                 />
                 <AvatarFallback className='bg-primary/10 text-primary text-2xl font-bold'>
-                  {user?.data?.name[0]}
+                  {user?.data?.username[0]}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className='text-xl font-bold'>{user?.data?.name}</h3>
+                <h3 className='text-xl font-bold'>{user?.data?.username}</h3>
                 <p className='text-sm text-muted-foreground'>
                   {user?.data?.email}
                 </p>
@@ -263,16 +263,16 @@ export default function UserDetailPage() {
               className='space-y-6'
             >
               <div className='space-y-2'>
-                <Label htmlFor='name'>
+                <Label htmlFor='username'>
                   {t('user.name')} {t('form.required')}
                 </Label>
                 <Controller
                   control={formMethods.control}
-                  name='name'
+                  name='username'
                   render={({ field }) => (
                     <Input
-                      id='name'
-                      placeholder={t('user.enterName')}
+                      id='username'
+                      placeholder={t('user.enterUserName')}
                       disabled={disabled}
                       {...field}
                     />

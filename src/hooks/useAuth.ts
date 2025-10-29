@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from 'react-router';
 import { useBoolean } from '@/hooks/state';
 
 // Utilities
-import { revokeToken, useProfileQuery } from '@/utilities/api/auth';
+import { revokeToken } from '@/utilities/api/auth';
+import { useProfileQuery } from '@/utilities/api/user';
 import {
   deleteRefreshToken,
   deleteAccessToken,
@@ -16,13 +17,14 @@ import {
 } from '@/utilities/cookie/token';
 
 // Custom Types
-import type { UserProps } from '@/types/blog';
+import type { UserProps } from '@/types/client/blog';
 
 const useAuth = () => {
   const isAuthorized = useBoolean();
   const location = useLocation();
   const token = getAccessToken();
   const navigate = useNavigate();
+
   const profile = useProfileQuery({
     enabled: Boolean(token),
     onFetch: isAuthorized.setTrue,
@@ -55,7 +57,7 @@ const useAuth = () => {
   return {
     isAuthLoading: profile.isFetching,
     profile: profile.data as UserProps | null,
-    isAuthorized: isAuthorized.state,
+    isAuthorized: profile.data || isAuthorized.state,
     logout,
     signin,
   };

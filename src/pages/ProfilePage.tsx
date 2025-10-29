@@ -1,10 +1,10 @@
 import { object } from 'zod';
-import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, Users, UserCheck } from 'lucide-react';
 
 // Custom Hooks
 import useAuth from '@/hooks/useAuth';
@@ -12,15 +12,17 @@ import useAuth from '@/hooks/useAuth';
 // Components
 import { Button } from '@/components/ui/button';
 import ProfileForm from '@/components/profile/ProfileForm';
+import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
 
 // Context
 import useLoadingStore, { setLoadingState } from '@/store/loading';
-import { useUpdateProfileMutation } from '@/utilities/api/auth';
 
 // Utilities
 import routes from '@/utilities/routes';
-import { uploadFile } from '@/utilities/api/uploader';
 import { createOnErrorHandler } from '@/utilities';
+import { uploadFile } from '@/utilities/api/uploader';
+import { useUpdateProfileMutation } from '@/utilities/api/user';
 import {
   generateEmailSchema,
   generateFileSchema,
@@ -30,7 +32,7 @@ import {
 // Schema definition
 const createProfileSchema = () =>
   object({
-    name: generateStringSchema('name', 3, 255).optional(),
+    name: generateStringSchema('username', 3, 255).optional(),
     email: generateEmailSchema().optional(),
     bio: generateStringSchema('bio', 1, 255).optional().nullable(),
     password: generateStringSchema('password', 1, 255).optional().nullable(),
@@ -129,6 +131,39 @@ export default function ProfilePage() {
             {t('profile.manageAccount')}
           </p>
         </div>
+
+        {/* Followers/Following Stats Card */}
+        <Card className='bg-card/50 backdrop-blur-sm border-primary/10'>
+          <CardContent className='p-6'>
+            <div className='grid grid-cols-2 gap-4 text-center'>
+              <Link to={routes.profile.followers} className='group'>
+                <div className='flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-primary/5'>
+                  <Users className='h-8 w-8 mb-2 text-primary/70 group-hover:text-primary' />
+                  <div className='text-2xl font-bold gradient-gaming-text'>
+                    {profile.followersCount}
+                  </div>
+                  <div className='text-sm text-muted-foreground group-hover:text-foreground'>
+                    {t('user.followers')}
+                  </div>
+                </div>
+              </Link>
+
+              <Link to={routes.profile.followings} className='group'>
+                <div className='flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-primary/5'>
+                  <UserCheck className='h-8 w-8 mb-2 text-primary/70 group-hover:text-primary' />
+                  <div className='text-2xl font-bold gradient-gaming-text'>
+                    {profile.followingsCount}
+                  </div>
+                  <div className='text-sm text-muted-foreground group-hover:text-foreground'>
+                    {t('user.following')}
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Separator className='my-2' />
 
         {/* Profile Form */}
         <ProfileForm

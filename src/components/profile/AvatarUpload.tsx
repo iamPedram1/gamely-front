@@ -6,16 +6,21 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 
 // Types
-import { UserProfile } from '@/types/blog';
+import type { UserProps } from '@/types/client/blog';
 
 interface AvatarUploadProps {
   control: any;
-  profile: UserProfile;
+  profile: UserProps;
   disabled: boolean;
   t: (key: string) => string;
 }
 
-export default function AvatarUpload({ control, profile, disabled, t }: AvatarUploadProps) {
+export default function AvatarUpload({
+  control,
+  profile,
+  disabled,
+  t,
+}: AvatarUploadProps) {
   return (
     <div className='flex items-center gap-6'>
       <Controller
@@ -31,7 +36,7 @@ export default function AvatarUpload({ control, profile, disabled, t }: AvatarUp
               }
             />
             <AvatarFallback className='bg-primary/10 text-primary text-2xl font-bold'>
-              {profile.name?.[0] || ''}
+              {profile.username?.[0] || ''}
             </AvatarFallback>
           </Avatar>
         )}

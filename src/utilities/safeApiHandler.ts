@@ -41,7 +41,7 @@ async function callWithRefresh<T = any>(
   if (res.isSuccess) return res;
 
   if (res.statusCode === 401) {
-    if (endpoint === endpoints.tokenRefresh) return res;
+    if (endpoint === endpoints.auth.tokenRefresh) return res;
 
     const authCookies = {
       token: getAccessToken(),

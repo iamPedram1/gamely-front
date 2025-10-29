@@ -62,10 +62,10 @@ export default function UserMenu() {
           <Avatar className='h-8 w-8 border-2 border-primary/20'>
             <AvatarImage
               src={profile.avatar?.url || '/placeholder.svg'}
-              alt={profile.name}
+              alt={profile.username}
             />
             <AvatarFallback className='bg-gradient-gaming text-xs font-semibold'>
-              {profile.name[0]}
+              {profile.username[0]}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -77,7 +77,7 @@ export default function UserMenu() {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-semibold leading-none gradient-gaming-text'>
-              {profile.name}
+              {profile.username}
             </p>
             <p className='text-xs leading-none text-muted-foreground mt-1'>
               {getRoleLabel(profile.role)}

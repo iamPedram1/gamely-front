@@ -204,7 +204,7 @@ export default function PostsListPage() {
                     )}
                   </TableCell>
                   <TableCell className='text-center'>
-                    {post.author.name}
+                    {post.author.username}
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>
                     {getDate(post.createDate)}

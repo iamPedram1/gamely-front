@@ -26,7 +26,7 @@ import { generateStringSchema } from '@/validations/common';
 import { useCreateComment, useUpdateComment } from '@/utilities/api/comment';
 
 // Types
-import type { CommentProps } from '@/types/blog';
+import type { CommentProps } from '@/types/client/blog';
 
 interface MutateCommentDialogProps {
   onClose: () => void;

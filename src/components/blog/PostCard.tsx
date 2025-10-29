@@ -3,26 +3,31 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, Clock } from 'lucide-react';
 
 // Components
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // Utilities
 import { getDate } from '@/utilities';
+import routes from '@/utilities/routes';
 
 // Types
-import type { PostProps } from '@/types/blog';
+import type { PostProps, UserProps } from '@/types/client/blog';
 
 interface PostCardProps {
   post: PostProps;
+  author?: UserProps;
 }
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard(props: PostCardProps) {
+  // Props
+  const { post, author } = props;
+
   // Custom Hooks
   const { t, i18n } = useTranslation();
 
@@ -87,19 +92,25 @@ export default function PostCard({ post }: PostCardProps) {
       </CardContent>
       <CardFooter className='flex mt-auto items-center justify-between border-t border-primary/10 pt-4'>
         <Link
-          to={`/author/${post?.author?.id}`}
+          to={routes.users.details(author?.username || post?.author?.username)}
           className='flex items-center gap-2 hover:opacity-80 transition-opacity'
         >
           <Avatar className='h-8 w-8 border-2 border-primary/20'>
             <AvatarImage
-              src={post.author?.avatar?.url || '/placeholder.svg'}
-              alt={post.author.name}
+              src={
+                author?.avatar?.url ||
+                post.author?.avatar?.url ||
+                '/placeholder.svg'
+              }
+              alt={author?.username || post.author?.username}
             />
             <AvatarFallback className='bg-primary/10 text-primary font-bold'>
-              {post.author.name[0]}
+              {author?.username?.[0] || post.author?.username?.[0]}
             </AvatarFallback>
           </Avatar>
-          <span className='text-sm font-semibold'>{post.author.name}</span>
+          <span className='text-sm font-semibold'>
+            {author?.username || post.author?.username}
+          </span>
         </Link>
 
         <div className='flex items-center gap-3 text-xs text-muted-foreground'>

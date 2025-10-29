@@ -8,11 +8,15 @@ const routes = {
     details: (slug: string) => '/games/' + slug,
   },
   users: {
-    details: (id: string) => '/user/' + id,
+    details: (username: string) => '/user/' + username,
+    followers: (username: string) => `/user/${username}/followers`,
+    followings: (username: string) => `/user/${username}/followings`,
   },
   profile: {
     index: '/profile',
     blockList: '/profile/block-list',
+    followers: '/profile/followers',
+    followings: '/profile/followings',
   },
   posts: {
     index: '/posts',
