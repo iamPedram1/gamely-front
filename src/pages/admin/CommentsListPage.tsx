@@ -363,7 +363,7 @@ export default function CommentsListPage() {
                   className='border-green-500/50 text-green-500 hover:bg-green-500/10'
                   onClick={() => handleUpdateStatus('approved')}
                 >
-                  <CheckCircle className='h-4 w-4 me-2' />
+                  <CheckCircle className='h-4 w-4' />
                   {t('comment.approve')}
                 </Button>
                 <Button
@@ -372,7 +372,7 @@ export default function CommentsListPage() {
                   className='border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10'
                   onClick={() => handleUpdateStatus('rejected')}
                 >
-                  <XCircle className='h-4 w-4 me-2' />
+                  <XCircle className='h-4 w-4' />
                   {t('comment.reject')}
                 </Button>
               </>
@@ -383,7 +383,7 @@ export default function CommentsListPage() {
                 className='order-1 border-green-500/50 text-green-500 hover:bg-green-500/10'
                 onClick={handleEditComment}
               >
-                <CheckCircle className='h-4 w-4 me-2' />
+                <CheckCircle className='h-4 w-4' />
                 {t('common.edit')}
               </Button>
             )}
@@ -393,7 +393,7 @@ export default function CommentsListPage() {
               variant='destructive'
               onClick={() => deleteComment.mutate(selectedCommentId)}
             >
-              <Trash2 className='h-4 w-4 me-2' />
+              <Trash2 className='h-4 w-4' />
               {t('common.delete')}
             </Button>
           </DialogFooter>

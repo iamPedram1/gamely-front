@@ -209,12 +209,12 @@ export default function UserDetailPage() {
                 >
                   {status === 'active' ? (
                     <>
-                      <Ban className='h-4 w-4 me-2' />
+                      <Ban className='h-4 w-4' />
                       {t('user.block')}
                     </>
                   ) : (
                     <>
-                      <CheckCircle className='h-4 w-4 me-2' />
+                      <CheckCircle className='h-4 w-4' />
                       {t('user.unblock')}
                     </>
                   )}
@@ -352,7 +352,7 @@ export default function UserDetailPage() {
                   type='submit'
                   className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
                 >
-                  <Save className='h-4 w-4 me-2' />
+                  <Save className='h-4 w-4' />
                   {t('common.save')}
                 </Button>
                 <Link to={routes.dashboard.users.index}>

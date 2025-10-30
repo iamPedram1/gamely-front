@@ -7,10 +7,15 @@ import useBaseInfiniteQuery from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
-import type { FollowerProps, UserProps } from '@/types/client/blog';
+import type {
+  BlockedProps,
+  FollowerProps,
+  UserProps,
+} from '@/types/client/blog';
 import type { UseBaseInfiniteQueryOptionsProps } from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 
 export const usersQueryKey = 'user';
+export const blocksQueryKey = 'blocks';
 export const followersQueryKey = 'followers';
 export const followingQueryKey = 'following';
 
@@ -47,12 +52,27 @@ export const useFollowersInfiniteQuery = (
 ) =>
   useBaseInfiniteQuery<FollowerProps>({
     initialPageParam: 1,
-    queryKey: [followersQueryKey, username],
+    queryKey: [usersQueryKey, followersQueryKey, username],
     queryFn: ({ pageParam }) =>
       safeApiHandler.get<DataWithPagination<FollowerProps>>(
         username
           ? endpoints.user.followers(username)
           : endpoints.user.profile.followers,
+        { query: { page: pageParam } }
+      ),
+    enabled: true,
+    ...options,
+  });
+
+export const useBlockListInfiniteQuery = (
+  options?: Partial<UseBaseInfiniteQueryOptionsProps<BlockedProps>>
+) =>
+  useBaseInfiniteQuery<BlockedProps>({
+    initialPageParam: 1,
+    queryKey: [usersQueryKey, blocksQueryKey],
+    queryFn: ({ pageParam }) =>
+      safeApiHandler.get<DataWithPagination<BlockedProps>>(
+        endpoints.user.blocks,
         { query: { page: pageParam } }
       ),
     enabled: true,
@@ -66,7 +86,7 @@ export const useFollowingInfiniteQuery = (
 ) =>
   useBaseInfiniteQuery<FollowerProps>({
     initialPageParam: 1,
-    queryKey: [followingQueryKey, username],
+    queryKey: [usersQueryKey, followingQueryKey, username],
     queryFn: ({ pageParam }) =>
       safeApiHandler.get<DataWithPagination<FollowerProps>>(
         username
@@ -91,15 +111,17 @@ export const unblockUser = (userId: string) =>
   safeApiHandler.delete(endpoints.user.unblock(userId));
 
 export const useFollowUserMutation = useAppMutation(followUser, [
-  followingQueryKey,
   usersQueryKey,
 ]);
 export const useUnfollowUserMutation = useAppMutation(unfollowUser, [
-  followingQueryKey,
   usersQueryKey,
 ]);
 
-export const useBlockUserMutation = useAppMutation(blockUser, [usersQueryKey]);
+export const useBlockUserMutation = useAppMutation(blockUser, [
+  usersQueryKey,
+  blocksQueryKey,
+]);
 export const useUnblockUserMutation = useAppMutation(unblockUser, [
   usersQueryKey,
+  blocksQueryKey,
 ]);

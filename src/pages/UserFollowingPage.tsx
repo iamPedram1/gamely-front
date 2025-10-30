@@ -28,7 +28,7 @@ export default function UserFollowingPage() {
     <main className='flex-1 container py-8'>
       <Link to={routes.users.details(username || '')}>
         <Button variant='ghost' className='mb-6 flex items-center gap-2'>
-          <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
+          <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
           {t('common.back')}
         </Button>
       </Link>

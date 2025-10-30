@@ -141,7 +141,7 @@ export default function MutateTagPage() {
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
                 disabled={disabled}
               >
-                <Save className='h-4 w-4 me-2' />
+                <Save className='h-4 w-4' />
                 {isEditMode ? t('tag.updateTag') : t('tag.createTag')}
               </Button>
               <Link to={routes.dashboard.tags.index}>

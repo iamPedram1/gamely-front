@@ -1,18 +1,19 @@
 const endpoints = {
   user: {
     index: '/user',
+    notifications: '/notifications',
     details: (username: string) => `/user/${username}`,
-    notifications: '/user/notifications',
-    followers: (username: string) => `/user/${username}/followers`,
-    followings: (username: string) => `/user/${username}/followings`,
-    follow: (username: string) => `/user/${username}/follow`,
-    unfollow: (username: string) => `/user/${username}/unfollow`,
-    block: (username: string) => `/user/${username}/block`,
-    unblock: (username: string) => `/user/${username}/unblock`,
+    followers: (username: string) => `/follows/${username}/followers`,
+    followings: (username: string) => `/follows/${username}/followings`,
+    follow: (username: string) => `/follows/${username}/follow`,
+    unfollow: (username: string) => `/follows/${username}/unfollow`,
+    block: (username: string) => `/blocks/${username}/block`,
+    unblock: (username: string) => `/blocks/${username}/unblock`,
+    blocks: '/blocks',
     profile: {
       index: '/user/profile',
-      followers: '/user/profile/followers',
-      followings: '/user/profile/followings',
+      followers: '/follows/followers',
+      followings: '/follows/followings',
     },
   },
   auth: {

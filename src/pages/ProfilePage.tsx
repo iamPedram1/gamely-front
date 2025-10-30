@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Users, UserCheck } from 'lucide-react';
+import { ArrowLeft, Users, UserCheck, UserX } from 'lucide-react';
 
 // Custom Hooks
 import useAuth from '@/hooks/useAuth';
@@ -115,7 +115,7 @@ export default function ProfilePage() {
     <main className='flex-1 container py-8'>
       <Link to='/'>
         <Button variant='ghost' className='mb-6 flex items-center gap-2'>
-          <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
+          <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
           {t('common.back')}
         </Button>
       </Link>
@@ -135,7 +135,7 @@ export default function ProfilePage() {
         {/* Followers/Following Stats Card */}
         <Card className='bg-card/50 backdrop-blur-sm border-primary/10'>
           <CardContent className='p-6'>
-            <div className='grid grid-cols-2 gap-4 text-center'>
+            <div className='grid grid-cols-3 gap-4 text-center'>
               <Link to={routes.profile.followers} className='group'>
                 <div className='flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-primary/5'>
                   <Users className='h-8 w-8 mb-2 text-primary/70 group-hover:text-primary' />
@@ -156,6 +156,17 @@ export default function ProfilePage() {
                   </div>
                   <div className='text-sm text-muted-foreground group-hover:text-foreground'>
                     {t('user.following')}
+                  </div>
+                </div>
+              </Link>
+              <Link to={routes.profile.blockList} className='group'>
+                <div className='flex flex-col items-center p-4 rounded-lg transition-all duration-300 hover:bg-primary/5'>
+                  <UserX className='h-8 w-8 mb-2 text-primary/70 group-hover:text-primary' />
+                  <div className='text-2xl font-bold gradient-gaming-text'>
+                    {profile.blocksCount}
+                  </div>
+                  <div className='text-sm text-muted-foreground group-hover:text-foreground'>
+                    {t('user.blocks')}
                   </div>
                 </div>
               </Link>

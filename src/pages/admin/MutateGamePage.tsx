@@ -268,7 +268,7 @@ export default function MutateGamePage() {
                 type='submit'
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               >
-                <Save className='h-4 w-4 me-2' />
+                <Save className='h-4 w-4' />
                 {isEditMode ? t('game.updateGame') : t('game.createGame')}
               </Button>
               <Link to={routes.dashboard.games.index}>

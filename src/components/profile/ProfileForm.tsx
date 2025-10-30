@@ -125,7 +125,7 @@ export default function ProfileForm({
               className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
               disabled={disabled}
             >
-              <Save className='h-4 w-4 me-2' />
+              <Save className='h-4 w-4' />
               {t('profile.updateProfile')}
             </Button>
             <Button type='button' variant='outline'>

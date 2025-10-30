@@ -107,14 +107,14 @@ export default function Comment({
                     onClick={handleBlock}
                     className='cursor-pointer text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950'
                   >
-                    <Shield className='h-4 w-4 mr-2' />
+                    <Shield className='h-4 w-4' />
                     {t('comment.block')}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleReport}
                     className='cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950'
                   >
-                    <Flag className='h-4 w-4 mr-2' />
+                    <Flag className='h-4 w-4' />
                     {t('comment.report')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>

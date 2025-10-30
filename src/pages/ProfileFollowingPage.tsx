@@ -16,6 +16,7 @@ import routes from '@/utilities/routes';
 import {
   useBlockUserMutation,
   useFollowingInfiniteQuery,
+  useUnblockUserMutation,
   useUnfollowUserMutation,
 } from '@/utilities/api/user';
 
@@ -26,12 +27,14 @@ export default function ProfileFollowingPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { isAuthorized, isAuthLoading } = useAuth();
   const block = useBlockUserMutation();
+  const unblock = useUnblockUserMutation();
   const unfollow = useUnfollowUserMutation();
   const followings = useFollowingInfiniteQuery();
   const allFollowings = useMemo(
     () => followings.data?.pages?.flatMap?.((page) => page.docs) || [],
     [followings.data?.pages]
   );
+  console.log(allFollowings);
 
   // Utilities
   const handleScroll = useCallback(() => {
@@ -80,7 +83,7 @@ export default function ProfileFollowingPage() {
     <main className='flex-1 container py-8'>
       <Link to={routes.profile.index}>
         <Button variant='ghost' className='mb-6 flex items-center gap-2'>
-          <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
+          <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
           {t('common.back')}
         </Button>
       </Link>
@@ -129,9 +132,10 @@ export default function ProfileFollowingPage() {
               <FollowerCard
                 key={user.id}
                 follower={user}
-                showActions
                 onBlock={block.mutate}
                 onUnfollow={unfollow.mutate}
+                onUnblock={unblock.mutate}
+                showActions
               />
             ))
           )}

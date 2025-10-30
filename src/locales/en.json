@@ -154,6 +154,7 @@
     "user": "User",
     "block": "Block",
     "unblock": "Unblock",
+    "blocks": "Block List",
     "changeRole": "Change Role",
     "userDetails": "User Details",
     "joined": "Joined",

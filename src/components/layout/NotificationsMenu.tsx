@@ -105,11 +105,7 @@ export default function NotificationsMenu() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <ScrollArea
-          onEndedCapture={(e) => console.log('Ended Capture')}
-          onScrollCapture={handleScroll}
-          className='h-64'
-        >
+        <ScrollArea onScrollCapture={handleScroll} className='h-64'>
           {allNotifications.length === 0 && !notifications.isFetching ? (
             <div className='p-4 text-center text-muted-foreground text-sm'>
               {t('notifications.empty')}

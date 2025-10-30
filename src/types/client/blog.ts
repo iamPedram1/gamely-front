@@ -40,6 +40,7 @@ export interface UserProps {
   username: string;
   email: string;
   postsCount: number;
+  blocksCount: number;
   followersCount: number;
   followingsCount: number;
   isFollowing: boolean;
@@ -109,4 +110,13 @@ export interface FollowerProps {
   role: UserRole;
   isFollowing?: boolean;
   isBlocked?: boolean;
+}
+
+export interface BlockedProps {
+  id: string;
+  username: string;
+  userId: string;
+  avatar?: FileProps;
+  blockedAt: string;
+  role: UserRole;
 }

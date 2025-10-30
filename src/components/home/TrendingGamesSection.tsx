@@ -36,7 +36,7 @@ export default function TrendingGamesSection({
           <Link to='/games'>
             <Button variant='ghost' className='group'>
               {t('common.viewAll')}
-              <ArrowRight className='ms-2 h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
+              <ArrowRight className='h-4 w-4 group-hover:translate-x-1 transition-transform rtl:rotate-180' />
             </Button>
           </Link>
         </div>

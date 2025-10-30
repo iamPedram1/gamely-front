@@ -49,7 +49,7 @@ export default function HeroSection({ featuredPost }: HeroSectionProps) {
                   className='gradient-gaming flex font-bold uppercase tracking-wide glow-effect hover:glow-effect-strong text-lg px-8 py-6'
                 >
                   {t('home.exploreNews')}
-                  <ArrowRight className='ms-2 h-5 w-5 rtl:rotate-180' />
+                  <ArrowRight className='h-5 w-5 rtl:rotate-180' />
                 </Button>
               </Link>
               <Link to={routes.games.index}>

@@ -109,7 +109,7 @@ export default function PostsListPage() {
             disabled={disabled}
             className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
           >
-            <Plus className='h-4 w-4 ltr:me-2 rtl:ms-2' />
+            <Plus className='h-4 w-4' />
             {t('dashboard.addPost')}
           </Button>
         </Link>

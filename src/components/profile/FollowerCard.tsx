@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { UserMinus, UserPlus, Shield, Clock, Ban } from 'lucide-react';
+import { UserMinus, UserPlus, Shield, Clock, Ban, Trash2 } from 'lucide-react';
 
 // Components
 import { Badge } from '@/components/ui/badge';
@@ -20,38 +19,40 @@ interface FollowerCardProps {
   follower: FollowerProps;
   showActions?: boolean;
   showFollowDate?: boolean;
+  disabled?: boolean;
   onFollow?: (id: string) => void;
   onUnfollow?: (id: string) => void;
   onBlock?: (id: string) => void;
+  onUnblock?: (id: string) => void;
 }
 
 export default function FollowerCard({
   follower,
+  disabled,
   showActions = true,
   showFollowDate = true,
   onUnfollow,
   onFollow,
   onBlock,
+  onUnblock,
 }: FollowerCardProps) {
-  // States
-  const [isFollowing, setIsFollowing] = useState(follower.isFollowing || false);
-  const [isBlocked, setIsBlocked] = useState(follower.isBlocked || false);
-
   // Hooks
   const { t } = useTranslation();
 
+  // Utilities
   const handleFollow = () => {
     if (onFollow) onFollow(follower.userId);
-    setIsFollowing(!isFollowing);
   };
   const handleBlock = () => {
     if (onBlock) onBlock(follower.userId);
-    setIsBlocked(true);
   };
 
   const handleUnfollow = () => {
     if (onUnfollow) onUnfollow(follower.userId);
-    setIsFollowing(false);
+  };
+
+  const handleUnblock = () => {
+    if (onUnblock) onUnblock(follower.userId);
   };
 
   const getRoleIcon = (role: UserRole) => {
@@ -113,26 +114,29 @@ export default function FollowerCard({
 
           {showActions && (
             <div className='flex flex-col gap-2'>
-              {!isBlocked ? (
+              {!follower.isBlocked ? (
                 <>
                   <Button
                     size='sm'
-                    variant={isFollowing ? 'outline' : 'default'}
+                    disabled={disabled}
+                    variant={follower.isFollowing ? 'outline' : 'default'}
                     className={
-                      isFollowing
+                      follower.isFollowing
                         ? ''
                         : 'gradient-gaming glow-effect hover:glow-effect-strong'
                     }
-                    onClick={isFollowing ? handleUnfollow : handleFollow}
+                    onClick={
+                      follower.isFollowing ? handleUnfollow : handleFollow
+                    }
                   >
-                    {isFollowing ? (
+                    {follower.isFollowing ? (
                       <>
-                        <UserMinus className='h-4 w-4 mr-2' />
+                        <UserMinus className='h-4 w-4' />
                         {t('user.unfollow')}
                       </>
                     ) : (
                       <>
-                        <UserPlus className='h-4 w-4 mr-2' />
+                        <UserPlus className='h-4 w-4' />
                         {t('user.follow')}
                       </>
                     )}
@@ -142,13 +146,23 @@ export default function FollowerCard({
                     variant='outline'
                     className='text-red-500 hover:text-red-700 hover:bg-red-50'
                     onClick={handleBlock}
+                    disabled={disabled}
                   >
-                    <Ban className='h-4 w-4 mr-2' />
+                    <Ban className='h-4 w-4' />
                     {t('user.block')}
                   </Button>
                 </>
               ) : (
-                <Badge variant='destructive'>{t('user.blocked')}</Badge>
+                <Button
+                  disabled={disabled}
+                  size='sm'
+                  variant='outline'
+                  onClick={handleUnblock}
+                  className='text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950'
+                >
+                  <Trash2 className='h-4 w-4' />
+                  {t('user.unblock')}
+                </Button>
               )}
             </div>
           )}

@@ -66,7 +66,7 @@ export function DatePicker({
               !date && 'text-muted-foreground'
             )}
           >
-            <CalendarIcon className='me-2 h-4 w-4' />
+            <CalendarIcon className='h-4 w-4' />
             {date ? getDate(date.toISOString()) : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>

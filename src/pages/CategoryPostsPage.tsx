@@ -22,7 +22,7 @@ export default function CategoryPostsPage() {
       <main className='flex-1 container py-8'>
         <Link to={routes.posts.index}>
           <Button variant='ghost' className='mb-6 rtl:flex-row-reverse'>
-            <ArrowLeft className='h-4 w-4 me-2 rtl:rotate-180' />
+            <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
             {t('common.backToPosts')}
           </Button>
         </Link>

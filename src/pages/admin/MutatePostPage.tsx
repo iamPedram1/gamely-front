@@ -399,7 +399,7 @@ export default function MutatePostPage() {
                 type='submit'
                 className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase rtl:flex-row-reverse'
               >
-                <Save className='h-4 w-4 ms-2' />
+                <Save className='h-4 w-4' />
                 {isEditMode ? t('post.updatePost') : t('post.createPost')}
               </Button>
               <Link to={routes.dashboard.posts.index}>
