@@ -68,8 +68,7 @@ export default function Comment({
   };
 
   const handleBlockConfirm = () => {
-    // TODO: Implement block functionality with API
-    block.mutate(comment.username);
+    block.mutate(comment.user.username);
   };
 
   const handleReport = () => {
@@ -88,20 +87,22 @@ export default function Comment({
         <Card className='transition-all hover:shadow-md relative z-10'>
           <CardHeader className='pb-3'>
             <div className='flex items-center gap-3'>
-              <Link to={routes.users.details(comment.username)}>
+              <Link to={routes.users.details(comment.user.username)}>
                 <Avatar className='h-9 w-9'>
                   <AvatarImage
                     src={comment.avatar?.url || '/placeholder.svg'}
-                    alt={comment.username}
+                    alt={comment.user.username}
                   />
                   <AvatarFallback className='text-sm'>
-                    {comment.username[0]}
+                    {comment.user.username[0]}
                   </AvatarFallback>
                 </Avatar>
               </Link>
               <div className='flex-1'>
-                <Link to={routes.users.details(comment.username)}>
-                  <p className='font-semibold text-sm'>{comment.username}</p>
+                <Link to={routes.users.details(comment.user.username)}>
+                  <p className='font-semibold text-sm'>
+                    {comment.user.username}
+                  </p>
                 </Link>
                 <p className='text-xs text-muted-foreground'>
                   {getDate(comment.createDate, 'YYYY/MM/DD HH:mm')}
@@ -202,7 +203,7 @@ export default function Comment({
       <BlockUserDialog
         open={isBlockDialogOpen.state}
         onOpenChange={isBlockDialogOpen.set}
-        username={comment.username}
+        username={comment.user.username}
         onConfirm={handleBlockConfirm}
       />
 

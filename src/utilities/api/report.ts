@@ -1,3 +1,5 @@
+import { DataWithPagination } from './../../types/api';
+import { useAppQuery } from '@/hooks/api/useQuery';
 import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Utilities
@@ -16,4 +18,10 @@ export const useCreateReportMutate = useAppMutation(
     }
   ) => apiHandler.post(endpoints.reports, payload),
   [reportsQueryKey]
+);
+
+export const useUserReportsQuery = useAppQuery(
+  () =>
+    apiHandler.get<DataWithPagination<ReportProps>>(`${endpoints.reports}/me`),
+  [reportsQueryKey, 'user']
 );

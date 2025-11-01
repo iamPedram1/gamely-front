@@ -62,7 +62,6 @@ export default function ProfileFollowingPage() {
       <div className='max-w-3xl mx-auto space-y-6'>
         <PageHeader
           title={t('profile.followings')}
-          description={t('profile.manageFollowings')}
           icon={<UserCheck className='h-8 w-8' />}
         />
 

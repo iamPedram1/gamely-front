@@ -93,19 +93,16 @@ export default function BlockListPage() {
                   <div className='flex items-center gap-4'>
                     <Avatar className='h-12 w-12'>
                       <AvatarImage
-                        src={
-                          block.avatar?.url ||
-                          `https://api.dicebear.com/7.x/avataaars/svg?seed=${block.username}`
-                        }
-                        alt={block.username}
+                        src={block.avatar?.url}
+                        alt={block.user.username}
                       />
                       <AvatarFallback>
-                        {block.username?.[0].toUpperCase()}
+                        {block.user.username?.[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className='font-semibold text-lg'>
-                        {block.username}
+                        {block.user.username}
                       </h3>
                       <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                         <span>
@@ -135,7 +132,7 @@ export default function BlockListPage() {
                         </AlertDialogTitle>
                         <AlertDialogDescription>
                           {t('profile.unblockUserConfirmation', {
-                            username: block.username,
+                            username: block.user.username,
                           })}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
@@ -144,7 +141,7 @@ export default function BlockListPage() {
                           {t('common.cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={() => unblock.mutate(block.userId)}
+                          onClick={() => unblock.mutate(block.user.id)}
                           className='bg-green-600 hover:bg-green-700'
                         >
                           {t('user.unblock')}

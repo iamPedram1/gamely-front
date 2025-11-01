@@ -43,7 +43,7 @@ export function PageLayout({
   backTo,
   backLabel,
   showBack = true,
-  className = 'flex-1 container py-8',
+  className = 'flex-1 container py-4 pb-12',
 }: PageLayoutProps) {
   const { t } = useTranslation();
 
@@ -51,7 +51,7 @@ export function PageLayout({
     <main className={className}>
       {showBack && backTo && (
         <Link to={backTo}>
-          <Button variant='ghost' className='mb-6 flex items-center gap-2'>
+          <Button variant='ghost' className='mb-4'>
             <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
             {backLabel || t('common.back')}
           </Button>
@@ -72,7 +72,7 @@ export function LoadingState({
     <main className={className}>
       <div className='flex flex-col items-center justify-center space-y-4'>
         <Loader2 className='h-8 w-8 animate-spin text-primary' />
-        <h1 className='text-xl md:text-4xl font-bold text-center'>
+        <h1 className='text-2xl md:text-4xl font-bold text-center'>
           {message || t('common.loading')}
         </h1>
       </div>
@@ -92,7 +92,7 @@ export function NotFoundState({
   return (
     <main className={className}>
       <h1 className='text-6xl md:text-9xl font-bold mb-4'>404</h1>
-      <h2 className='text-xl md:text-4xl font-bold mb-4'>{title}</h2>
+      <h2 className='text-2xl md:text-4xl font-bold mb-4'>{title}</h2>
       {description && (
         <p className='text-muted-foreground mb-6'>{description}</p>
       )}
@@ -116,7 +116,7 @@ export function UnauthorizedState({
     <main className={className}>
       <div className='text-center space-y-4'>
         <h1 className='text-6xl md:text-9xl font-bold mb-4'>401</h1>
-        <h2 className='text-xl md:text-4xl font-normal mb-4'>
+        <h2 className='text-2xl md:text-4xl font-normal mb-4'>
           {t('user.unauthorized')}
         </h2>
         <Link to={routes.login} className='flex items-center justify-center'>
@@ -137,7 +137,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className={className}>
-      <h1 className='text-4xl font-black flex items-center gap-3'>
+      <h1 className='text-2xl md:text-4xl font-black flex items-center gap-3'>
         {icon}
         <span className='gradient-gaming-text'>{title}</span>
       </h1>

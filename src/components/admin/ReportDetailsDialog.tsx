@@ -2,58 +2,40 @@ import { useTranslation } from 'react-i18next';
 import {
   Flag,
   User,
-  Calendar,
   MessageSquare,
+  FileText,
+  Calendar,
+  Clock,
   AlertTriangle,
-  Eye,
 } from 'lucide-react';
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Card, CardContent } from '@/components/ui/card';
+
+// Utilities
 import { getDate } from '@/utilities';
 
-interface Report {
-  id: string;
-  type: 'comment' | 'post' | 'user';
-  reason: string;
-  description: string;
-  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
-  reportedBy: {
-    id: string;
-    username: string;
-    avatar?: { url: string };
-  };
-  reportedContent: {
-    id: string;
-    title?: string;
-    content: string;
-    author: {
-      id: string;
-      username: string;
-      avatar?: { url: string };
-    };
-  };
-  createdAt: string;
-  reviewedAt?: string;
-  reviewedBy?: {
-    id: string;
-    username: string;
-  };
-}
+// Types
+import type { ReportProps } from '@/types/management/report';
+import type {
+  CommentProps,
+  PostProps,
+  UserProps,
+} from '@/types/management/blog';
+import i18n from '@/utilities/i18n';
 
 interface ReportDetailsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  report: Report | null;
+  report: ReportProps | null;
 }
 
 export default function ReportDetailsDialog({
@@ -61,11 +43,11 @@ export default function ReportDetailsDialog({
   onOpenChange,
   report,
 }: ReportDetailsDialogProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   if (!report) return null;
 
-  const getStatusBadge = (status: Report['status']) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
         return <Badge variant='destructive'>{t('reports.pending')}</Badge>;
@@ -84,189 +66,227 @@ export default function ReportDetailsDialog({
     }
   };
 
-  const getTypeIcon = (type: Report['type']) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case 'comment':
-        return <MessageSquare className='h-5 w-5' />;
+        return <MessageSquare className='h-5 w-5 text-blue-500' />;
       case 'post':
-        return <Flag className='h-5 w-5' />;
+        return <FileText className='h-5 w-5 text-green-500' />;
       case 'user':
-        return <User className='h-5 w-5' />;
+        return <User className='h-5 w-5 text-purple-500' />;
       default:
-        return <AlertTriangle className='h-5 w-5' />;
+        return <AlertTriangle className='h-5 w-5 text-orange-500' />;
     }
   };
 
+  const getTargetUser = () => {
+    switch (report.type) {
+      case 'comment':
+        return (report.target as CommentProps).creator;
+      case 'user':
+        return report.target as UserProps;
+      case 'post':
+        return (report.target as PostProps).author;
+      default:
+        return null;
+    }
+  };
+
+  const getTargetContent = () => {
+    switch (report.type) {
+      case 'comment':
+        return (report.target as CommentProps).message;
+      case 'post':
+        return {
+          title: (report.target as PostProps).translations[i18n.language].title,
+          content: (report.target as PostProps).translations[i18n.language]
+            .content,
+        };
+      case 'user':
+        return {
+          bio: (report.target as UserProps).bio,
+          username: (report.target as UserProps).username,
+        };
+      default:
+        return null;
+    }
+  };
+
+  const targetUser = getTargetUser();
+  const targetContent = getTargetContent();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[700px] max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='max-w-2xl max-h-[80vh] overflow-y-auto'>
         <DialogHeader>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-3'>
-              <div className='p-2 rounded-lg bg-red-100 dark:bg-red-900'>
-                {getTypeIcon(report.type)}
-              </div>
-              <div>
-                <DialogTitle className='text-xl'>
-                  {t('reports.reportDetails')}
-                </DialogTitle>
-                <DialogDescription>
-                  {t('reports.reportId')}: {report.id}
-                </DialogDescription>
-              </div>
-            </div>
-            {getStatusBadge(report.status)}
-          </div>
+          <DialogTitle className='flex items-center gap-2'>
+            <Flag className='h-5 w-5 text-red-500' />
+            {t('reports.reportDetails')}
+          </DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-6 py-4'>
-          {/* Report Information */}
-          <div className='space-y-4'>
-            <h3 className='font-semibold text-lg flex items-center gap-2'>
-              <AlertTriangle className='h-5 w-5 text-red-600' />
-              {t('reports.reportInformation')}
-            </h3>
-            <Card>
-              <CardContent className='pt-6 space-y-3'>
-                <div className='flex items-start gap-3'>
-                  <span className='font-medium min-w-24'>
-                    {t('reports.type')}:
+        <div className='space-y-6'>
+          {/* Report Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center justify-between'>
+                <div className='flex items-center gap-2'>
+                  {getTypeIcon(report.type)}
+                  <span className='capitalize'>
+                    {t(`reports.${report.type}`)} {t('reports.report')}
                   </span>
-                  <div className='flex items-center gap-2'>
-                    {getTypeIcon(report.type)}
-                    <span className='capitalize'>
-                      {t(`reports.${report.type}`)}
-                    </span>
+                </div>
+                {getStatusBadge(report.status)}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <h4 className='font-semibold text-sm text-muted-foreground mb-1'>
+                    {t('reports.reason')}
+                  </h4>
+                  <Badge variant='secondary' className='capitalize'>
+                    {t(`report.reasons.${report.reason}`, report.reason)}
+                  </Badge>
+                </div>
+                <div>
+                  <h4 className='font-semibold text-sm text-muted-foreground mb-1'>
+                    {t('reports.submittedOn')}
+                  </h4>
+                  <div className='flex items-center gap-1 text-sm'>
+                    <Calendar className='h-4 w-4' />
+                    {getDate(report.createDate, 'YYYY/MM/DD HH:mm')}
                   </div>
                 </div>
-                <div className='flex items-start gap-3'>
-                  <span className='font-medium min-w-24'>
-                    {t('reports.reason')}:
-                  </span>
-                  <span className='font-semibold text-red-600'>
-                    {report.reason}
-                  </span>
-                </div>
-                <div className='flex items-start gap-3'>
-                  <span className='font-medium min-w-24'>
-                    {t('reports.description')}:
-                  </span>
-                  <p className='flex-1 text-muted-foreground'>
-                    {report.description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
 
-          <Separator />
-
-          {/* Reporter Information */}
-          <div className='space-y-4'>
-            <h3 className='font-semibold text-lg flex items-center gap-2'>
-              <User className='h-5 w-5' />
-              {t('reports.reportedBy')}
-            </h3>
-            <Card>
-              <CardContent className='pt-6'>
-                <div className='flex items-center gap-3'>
-                  <Avatar className='h-12 w-12'>
-                    <AvatarImage src={report.reportedBy.avatar?.url} />
-                    <AvatarFallback>
-                      {report.reportedBy.username[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className='font-semibold'>
-                      {report.reportedBy.username}
-                    </p>
-                    <p className='text-sm text-muted-foreground'>
-                      ID: {report.reportedBy.id}
-                    </p>
+              {report.updateDate && (
+                <div>
+                  <h4 className='font-semibold text-sm text-muted-foreground mb-1'>
+                    {t('reports.lastUpdate')}
+                  </h4>
+                  <div className='flex items-center gap-1 text-sm'>
+                    <Clock className='h-4 w-4' />
+                    {getDate(report.updateDate, 'YYYY/MM/DD HH:mm')}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
 
-          <Separator />
+              <div>
+                <h4 className='font-semibold text-sm text-muted-foreground mb-2'>
+                  {t('reports.description')}
+                </h4>
+                <p className='text-sm bg-muted/50 p-3 rounded-lg'>
+                  {report.description}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Reported Content */}
-          <div className='space-y-4'>
-            <h3 className='font-semibold text-lg flex items-center gap-2'>
-              <MessageSquare className='h-5 w-5' />
-              {t('reports.reportedContent')}
-            </h3>
-            <Card>
-              <CardContent className='pt-6 space-y-4'>
-                <div className='flex items-center gap-3'>
-                  <Avatar className='h-12 w-12'>
-                    <AvatarImage
-                      src={report.reportedContent.author.avatar?.url}
-                    />
-                    <AvatarFallback>
-                      {report.reportedContent.author.username[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className='font-semibold'>
-                      {report.reportedContent.author.username}
-                    </p>
-                    <p className='text-sm text-muted-foreground'>
-                      ID: {report.reportedContent.author.id}
-                    </p>
+          {/* Reporter Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-base'>
+                {t('reports.reportedBy')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='flex items-center gap-3'>
+                <Avatar className='h-10 w-10'>
+                  <AvatarImage src={report.user.avatar?.url} />
+                  <AvatarFallback>
+                    {report.user.username[0]?.toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className='font-medium'>@{report.user.username}</div>
+                  <div className='text-sm text-muted-foreground'>
+                    {report.user.email}
                   </div>
                 </div>
-                <div className='bg-muted p-4 rounded-lg'>
-                  <p className='text-sm'>{report.reportedContent.content}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          <Separator />
-
-          {/* Timeline */}
-          <div className='space-y-4'>
-            <h3 className='font-semibold text-lg flex items-center gap-2'>
-              <Calendar className='h-5 w-5' />
-              {t('reports.timeline')}
-            </h3>
-            <Card>
-              <CardContent className='pt-6 space-y-3'>
-                <div className='flex items-start gap-3'>
-                  <span className='font-medium min-w-32'>
-                    {t('reports.reportedOn')}:
-                  </span>
-                  <span className='text-muted-foreground'>
-                    {getDate(report.createdAt, 'YYYY/MM/DD - HH:mm:ss')}
-                  </span>
-                </div>
-                {report.reviewedAt && (
-                  <>
-                    <div className='flex items-start gap-3'>
-                      <span className='font-medium min-w-32'>
-                        {t('reports.reviewedOn')}:
-                      </span>
-                      <span className='text-muted-foreground'>
-                        {getDate(report.reviewedAt, 'YYYY/MM/DD - HH:mm:ss')}
-                      </span>
+          {/* Target Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-base'>
+                {t('reports.reportedContent')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              {/* Target User */}
+              {targetUser && (
+                <div>
+                  <h4 className='font-semibold text-sm text-muted-foreground mb-2'>
+                    {report.type === 'user'
+                      ? t('reports.reportedUser')
+                      : t('reports.contentAuthor')}
+                  </h4>
+                  <div className='flex items-center gap-3 p-3 bg-muted/50 rounded-lg'>
+                    <Avatar className='h-8 w-8'>
+                      <AvatarImage src={targetUser.avatar?.url} />
+                      <AvatarFallback>
+                        {targetUser.username[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className='font-medium'>@{targetUser.username}</div>
+                      {targetUser.email && (
+                        <div className='text-sm text-muted-foreground'>
+                          {targetUser.email}
+                        </div>
+                      )}
                     </div>
-                    {report.reviewedBy && (
-                      <div className='flex items-start gap-3'>
-                        <span className='font-medium min-w-32'>
-                          {t('reports.reviewedBy')}:
-                        </span>
-                        <span className='text-muted-foreground'>
-                          {report.reviewedBy.username}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Target Content */}
+              {targetContent && (
+                <div>
+                  <h4 className='font-semibold text-sm text-muted-foreground mb-2'>
+                    {t('reports.content')}
+                  </h4>
+                  <div className='p-3 bg-muted/50 rounded-lg'>
+                    {report.type === 'post' &&
+                      typeof targetContent === 'object' &&
+                      'title' in targetContent && (
+                        <>
+                          <h5 className='font-semibold mb-2'>
+                            {targetContent.title}
+                          </h5>
+                          <p className='text-sm text-muted-foreground'>
+                            {targetContent.content}
+                          </p>
+                        </>
+                      )}
+
+                    {report.type === 'comment' &&
+                      typeof targetContent === 'string' && (
+                        <p className='text-sm'>{targetContent}</p>
+                      )}
+
+                    {report.type === 'user' &&
+                      typeof targetContent === 'object' &&
+                      'username' in targetContent && (
+                        <>
+                          <div className='font-semibold mb-1'>
+                            @{targetContent.username}
+                          </div>
+                          {targetContent.bio && (
+                            <p className='text-sm text-muted-foreground'>
+                              {targetContent.bio}
+                            </p>
+                          )}
+                        </>
+                      )}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </DialogContent>
     </Dialog>

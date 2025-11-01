@@ -15,12 +15,12 @@ import type { DataWithPagination } from '@/types/api';
 export const gamesQueryKey = 'games';
 
 export const useGamesQuery = useAppQuery(
-  () => apiHandler.get<DataWithPagination<GameProps>>(endpoints.games),
+  () => apiHandler.get<DataWithPagination<GameProps>>(endpoints.games.index),
   [gamesQueryKey]
 );
 
 export const useGameQuery = makeUseFetchQuery(
-  (slug) => apiHandler.get<GameProps>(`${endpoints.games}/${slug}`),
+  (slug) => apiHandler.get<GameProps>(`${endpoints.games.index}/${slug}`),
   [gamesQueryKey]
 );
 
@@ -31,7 +31,7 @@ export const useGamesInfiniteQuery = (
     initialPageParam: 1,
     queryKey: [gamesQueryKey, 'infinite'],
     queryFn: ({ query, pageParam }) =>
-      apiHandler.get<DataWithPagination<GameProps>>(endpoints.games, {
+      apiHandler.get<DataWithPagination<GameProps>>(endpoints.games.index, {
         query: { ...query, page: pageParam },
       }),
     enabled: true,
@@ -40,22 +40,24 @@ export const useGamesInfiniteQuery = (
 
 export const useRateGameMutation = useAppMutation(
   ({ gameId, rating }: { gameId: string; rating: number }) =>
-    apiHandler.post(`${endpoints.games}/${gameId}/rate`, { rating }),
+    apiHandler.post(`${endpoints.games.index}/${gameId}/rate`, { rating }),
   [gamesQueryKey]
 );
 
 export const useToggleFavoriteMutation = useAppMutation(
-  (gameId: string) => apiHandler.post(`${endpoints.games}/${gameId}/favorite`),
+  (gameId: string) =>
+    apiHandler.post(`${endpoints.games.index}/${gameId}/favorite`),
   [gamesQueryKey]
 );
 
 export const useGameRatingQuery = makeUseFetchQuery(
-  (gameId: string) => apiHandler.get(`${endpoints.games}/${gameId}/rating`),
+  (gameId: string) =>
+    apiHandler.get(`${endpoints.games.index}/${gameId}/rating`),
   [gamesQueryKey, 'rating']
 );
 
 export const useGameFavoriteStatusQuery = makeUseFetchQuery(
   (gameId: string) =>
-    apiHandler.get(`${endpoints.games}/${gameId}/favorite-status`),
+    apiHandler.get(`${endpoints.games.index}/${gameId}/favorite-status`),
   [gamesQueryKey, 'favorite']
 );

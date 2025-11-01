@@ -41,18 +41,18 @@ export default function FollowerCard({
 
   // Utilities
   const handleFollow = () => {
-    if (onFollow) onFollow(follower.userId);
+    if (onFollow) onFollow(follower.user.id);
   };
   const handleBlock = () => {
-    if (onBlock) onBlock(follower.userId);
+    if (onBlock) onBlock(follower.user.id);
   };
 
   const handleUnfollow = () => {
-    if (onUnfollow) onUnfollow(follower.userId);
+    if (onUnfollow) onUnfollow(follower.user.id);
   };
 
   const handleUnblock = () => {
-    if (onUnblock) onUnblock(follower.userId);
+    if (onUnblock) onUnblock(follower.user.id);
   };
 
   const getRoleIcon = (role: UserRole) => {
@@ -72,33 +72,36 @@ export default function FollowerCard({
     <Card className='overflow-hidden transition-all duration-300 hover:shadow-lg'>
       <CardContent className='p-4'>
         <div className='flex items-center gap-4'>
-          <Link to={routes.users.details(follower.username)}>
+          <Link to={routes.users.details(follower.user.username)}>
             <Avatar className='h-16 w-16 border-2 border-primary/20'>
-              <AvatarImage src={follower.avatar?.url} alt={follower.username} />
+              <AvatarImage
+                src={follower.user?.avatar?.url}
+                alt={follower.user.username}
+              />
               <AvatarFallback className='text-xl bg-gradient-gaming text-white'>
-                {follower.username[0]}
+                {follower.user.username[0]}
               </AvatarFallback>
             </Avatar>
           </Link>
 
           <div className='flex-1'>
             <Link
-              to={routes.users.details(follower.username)}
+              to={routes.users.details(follower.user.username)}
               className='hover:underline'
             >
-              <h3 className='font-bold text-lg'>{follower.username}</h3>
+              <h3 className='font-bold text-lg'>{follower.user.username}</h3>
             </Link>
             <div className='flex items-center gap-2'>
               <span className='text-sm text-muted-foreground'>
-                @{follower.username}
+                @{follower.user.username}
               </span>
-              {follower.role !== 'user' && (
+              {follower.user.role !== 'user' && (
                 <Badge
                   variant='outline'
                   className='text-xs flex items-center gap-1'
                 >
-                  {getRoleIcon(follower.role)}
-                  {t(`user.${follower.role}`)}
+                  {getRoleIcon(follower.user.role)}
+                  {t(`user.${follower.user.role}`)}
                 </Badge>
               )}
             </div>

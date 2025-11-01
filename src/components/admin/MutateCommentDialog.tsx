@@ -38,8 +38,8 @@ interface MutateCommentDialogProps {
 const createCommentSchema = () =>
   object({
     message: generateStringSchema('message', 3, 255),
-    replyToCommentId: generateStringSchema(
-      'replyToId',
+    replyToComment: generateStringSchema(
+      'replyToComment',
       undefined,
       undefined,
       false
@@ -67,8 +67,8 @@ const MutateCommentDialog = (props: MutateCommentDialogProps) => {
     mode: 'onTouched',
     resolver: zodResolver(schema),
     defaultValues: commentToEdit
-      ? { message: commentToEdit.message, replyToCommentId: replyToComment?.id }
-      : { ...(replyToComment && { replyToCommentId: replyToComment?.id }) },
+      ? { message: commentToEdit.message, replyToComment: replyToComment?.id }
+      : { ...(replyToComment && { replyToComment: replyToComment?.id }) },
   });
 
   const createComment = useCreateComment({ onSuccess: onClose });

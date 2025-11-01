@@ -14,6 +14,7 @@ import {
   Star,
   Users,
   UserCheck,
+  Flag,
 } from 'lucide-react';
 
 import PostCard from '@/components/blog/PostCard';
@@ -21,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
+import ReportDialog from '@/components/blog/ReportDialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -41,12 +43,12 @@ import {
   useUnfollowUserMutation,
   useUserQuery,
 } from '@/utilities/api/user';
-import { useGameFavoriteStatusQuery } from '@/utilities/api/game';
 import { useFavoriteGamesQuery } from '@/utilities/api/favoriteGame';
 
 export default function UserPage() {
   // States
-  const isFollowing = useBoolean(false);
+  const isFollowing = useBoolean();
+  const reportUser = useBoolean();
 
   // Hooks
   const { t } = useTranslation();
@@ -64,7 +66,6 @@ export default function UserPage() {
     enabled: user.isFetched,
     initialParams: username,
   });
-  console.log({ ...userFavoriteGames });
 
   const follow = useFollowUserMutation();
   const unfollow = useUnfollowUserMutation();
@@ -156,29 +157,43 @@ export default function UserPage() {
                   <div className='flex flex-col'>
                     <div className='flex items-center justify-center md:justify-start gap-2 mb-2'>
                       <h1 className='text-3xl font-bold'>@{username}</h1>
-                      {user.data?.id !== profile?.id && (
-                        <Button
-                          disabled={user.data.id === profile?.id}
-                          onClick={toggleFollow}
-                          className={
-                            isFollowing.state
-                              ? 'flex flex-row gap-2 w-full sm:w-fit bg-gray-500 hover:bg-gray-600'
-                              : 'flex flex-row gap-2 w-full sm:w-fit gradient-gaming glow-effect hover:glow-effect-strong'
-                          }
-                        >
-                          {isFollowing.state ? (
-                            <>
-                              <UserMinus className='h-4 w-4' />
-                              {t('user.unfollow')}
-                            </>
-                          ) : (
-                            <>
-                              <UserPlus className='h-4 w-4' />
-                              {t('user.follow')}
-                            </>
-                          )}
-                        </Button>
-                      )}
+
+                      <div className='flex items-center gap-2'>
+                        {user.data?.id !== profile?.id && (
+                          <>
+                            <Button
+                              disabled={user.data.id === profile?.id}
+                              onClick={toggleFollow}
+                              className={
+                                isFollowing.state
+                                  ? 'w-full sm:w-fit bg-gray-500 hover:bg-gray-600'
+                                  : 'w-full sm:w-fit gradient-gaming glow-effect hover:glow-effect-strong'
+                              }
+                            >
+                              {isFollowing.state ? (
+                                <>
+                                  <UserMinus className='h-4 w-4' />
+                                  {t('user.unfollow')}
+                                </>
+                              ) : (
+                                <>
+                                  <UserPlus className='h-4 w-4' />
+                                  {t('user.follow')}
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              onClick={() => reportUser.setTrue()}
+                              className='text-red-600 hover:text-red-700 hover:bg-red-50'
+                            >
+                              <Flag className='h-4 w-4' />
+                              {t('user.report')}
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
                     <Badge
                       className={`w-fit ${getRoleBadgeColor(
@@ -333,6 +348,16 @@ export default function UserPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Report Dialog */}
+      {user.data?.id && (
+        <ReportDialog
+          open={reportUser.state}
+          onOpenChange={reportUser.set}
+          targetId={user.data.id}
+          type='user'
+        />
+      )}
     </PageLayout>
   );
 }

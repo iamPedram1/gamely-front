@@ -22,11 +22,11 @@ export const useCommentsQuery = makeUseFetchQuery(
 );
 
 export const useCreateComment = useAppMutation(
-  (payload: { postId: string; message: string; replyToCommentId?: string }) =>
+  (payload: { postId: string; message: string; replyToComment?: string }) =>
     apiHandler.post(`${endpoints.posts}/${payload.postId}/comments`, {
       message: payload.message,
-      ...(payload.replyToCommentId && {
-        replyToCommentId: payload.replyToCommentId,
+      ...(payload.replyToComment && {
+        replyToComment: payload.replyToComment,
       }),
     }),
   [commentsQueryKey]
@@ -37,14 +37,14 @@ export const useUpdateComment = useAppMutation(
     postId: string;
     commentId: string;
     message: string;
-    replyToCommentId?: string;
+    replyToComment?: string;
   }) =>
     apiHandler.post(
       `${endpoints.posts}/${payload.postId}/comments/${payload.commentId}`,
       {
         message: payload.message,
-        ...(payload.replyToCommentId && {
-          replyToCommentId: payload.replyToCommentId,
+        ...(payload.replyToComment && {
+          replyToComment: payload.replyToComment,
         }),
       }
     ),

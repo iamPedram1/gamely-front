@@ -12,8 +12,8 @@ const endpoints = {
     blocks: '/blocks',
     profile: {
       index: '/user/profile',
-      followers: '/follows/followers',
-      followings: '/follows/followings',
+      followers: '/user/follows/followers',
+      followings: '/user/follows/followings',
     },
   },
   auth: {
@@ -27,7 +27,10 @@ const endpoints = {
   tags: '/tags',
   posts: '/posts',
   reports: '/reports',
-  games: '/games',
+  games: {
+    index: '/games',
+    reviewOf: (gameId: string) => `/games/${gameId}/reviews`,
+  },
   favoriteGames: {
     ofUser: (username: string) => `/user/${username}/favorite-games`,
     favorite: (gameId: string) => `/user/favorite-games/${gameId}`,

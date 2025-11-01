@@ -62,7 +62,6 @@ export default function ProfileFollowersPage() {
       <div className='max-w-3xl mx-auto space-y-6'>
         <PageHeader
           title={t('profile.followers')}
-          description={t('profile.manageFollowers')}
           icon={<Users className='h-8 w-8' />}
         />
 

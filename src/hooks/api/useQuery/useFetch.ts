@@ -120,9 +120,10 @@ export function useFetchApi<
   }, [baseQuery.data, baseQuery.dataUpdatedAt]);
 
   useUpdateEffect(() => {
-    if (options.enabled) enabled.setTrue();
+    setParams(options.initialParams);
+    if (options.enabled && options.initialParams) enabled.setTrue();
     else enabled.setFalse();
-  }, [options?.enabled]);
+  }, [options?.enabled, options.initialParams]);
 
   return {
     ...baseQuery,

@@ -118,7 +118,7 @@ export default function CommentsListPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
+          <h1 className='text-xl md:text-4xl font-black'>
             <span className='gradient-gaming-text'>
               {t('dashboard.comments')}
             </span>{' '}

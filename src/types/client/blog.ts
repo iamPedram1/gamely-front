@@ -88,13 +88,15 @@ export interface GameProps {
   coverImage: FileProps;
   description: string;
   releaseDate: string;
+  averageRate: number;
+  totalRates: number;
 }
 
 type CommentStatusType = 'approved' | 'rejected' | 'pending';
 
 export interface CommentProps {
   id: string;
-  username: string;
+  user: UserProps;
   message: string;
   avatar: FileProps;
   createDate: string;
@@ -104,20 +106,23 @@ export interface CommentProps {
 
 export interface FollowerProps {
   id: string;
-  username: string;
-  userId: string;
-  avatar?: FileProps;
+  user: UserProps;
   since: string;
-  role: UserRole;
   isFollowing?: boolean;
   isBlocked?: boolean;
 }
 
 export interface BlockedProps {
   id: string;
-  username: string;
-  userId: string;
+  user: UserProps;
   avatar?: FileProps;
   blockedAt: string;
-  role: UserRole;
+}
+
+export interface GameReviewProps {
+  id: string;
+  user: UserProps;
+  rate: number;
+  description: string;
+  createDate: string;
 }

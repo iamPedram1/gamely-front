@@ -10,6 +10,8 @@ import {
   MessageSquare,
   User,
 } from 'lucide-react';
+import ReportDetailsDialog from '@/components/admin/ReportDetailsDialog';
+import { Info } from 'lucide-react';
 
 // Components
 import { Badge } from '@/components/ui/badge';
@@ -91,6 +93,8 @@ export default function ReportsListPage() {
   const { t, i18n } = useTranslation();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [selectedReport, setSelectedReport] = useState<ReportProps | null>(null);
+  const [showReportDetails, setShowReportDetails] = useState(false);
 
   const reports = useReportsQuery();
   const updateStatus = useUpdateReportStatusMutate();
@@ -159,32 +163,32 @@ export default function ReportsListPage() {
   // Render
   return (
     <div className='min-h-screen bg-background'>
-      <div className='container py-8'>
+      <div className='container py-4 md:py-8 px-4 md:px-6'>
         {/* Header */}
-        <div className='mb-8'>
-          <div className='flex items-center gap-3 mb-4'>
+        <div className='mb-6 md:mb-8'>
+          <div className='flex flex-col sm:flex-row sm:items-center gap-3 mb-4'>
             <div className='p-2 rounded-lg bg-red-100 dark:bg-red-900'>
               <Flag className='h-6 w-6 text-red-600' />
             </div>
             <div>
-              <h1 className='text-3xl font-bold'>{t('reports.title')}</h1>
-              <p className='text-muted-foreground'>
+              <h1 className='text-2xl md:text-3xl font-bold'>{t('reports.title')}</h1>
+              <p className='text-muted-foreground text-sm md:text-base'>
                 {t('reports.description')}
               </p>
             </div>
           </div>
 
           {/* Stats */}
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-4 mb-6'>
+          <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6'>
             <Card>
-              <CardContent className='p-4'>
+              <CardContent className='p-3 md:p-4'>
                 <div className='flex items-center gap-2'>
-                  <AlertTriangle className='h-5 w-5 text-red-500' />
+                  <AlertTriangle className='h-4 w-4 md:h-5 md:w-5 text-red-500' />
                   <div>
-                    <div className='text-2xl font-bold text-red-500'>
+                    <div className='text-lg md:text-2xl font-bold text-red-500'>
                       {pendingCount}
                     </div>
-                    <div className='text-sm text-muted-foreground'>
+                    <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.pending')}
                     </div>
                   </div>
@@ -192,14 +196,14 @@ export default function ReportsListPage() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent className='p-4'>
+              <CardContent className='p-3 md:p-4'>
                 <div className='flex items-center gap-2'>
-                  <Eye className='h-5 w-5 text-blue-500' />
+                  <Eye className='h-4 w-4 md:h-5 md:w-5 text-blue-500' />
                   <div>
-                    <div className='text-2xl font-bold text-blue-500'>
+                    <div className='text-lg md:text-2xl font-bold text-blue-500'>
                       {reviewedCount}
                     </div>
-                    <div className='text-sm text-muted-foreground'>
+                    <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.reviewed')}
                     </div>
                   </div>
@@ -207,14 +211,14 @@ export default function ReportsListPage() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent className='p-4'>
+              <CardContent className='p-3 md:p-4'>
                 <div className='flex items-center gap-2'>
-                  <Check className='h-5 w-5 text-green-500' />
+                  <Check className='h-4 w-4 md:h-5 md:w-5 text-green-500' />
                   <div>
-                    <div className='text-2xl font-bold text-green-500'>
+                    <div className='text-lg md:text-2xl font-bold text-green-500'>
                       {resolvedCount}
                     </div>
-                    <div className='text-sm text-muted-foreground'>
+                    <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.resolved')}
                     </div>
                   </div>
@@ -222,14 +226,14 @@ export default function ReportsListPage() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent className='p-4'>
+              <CardContent className='p-3 md:p-4'>
                 <div className='flex items-center gap-2'>
-                  <Flag className='h-5 w-5 text-purple-500' />
+                  <Flag className='h-4 w-4 md:h-5 md:w-5 text-purple-500' />
                   <div>
-                    <div className='text-2xl font-bold text-purple-500'>
+                    <div className='text-lg md:text-2xl font-bold text-purple-500'>
                       {reports.data.pagination.totalDocs}
                     </div>
-                    <div className='text-sm text-muted-foreground'>
+                    <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.total')}
                     </div>
                   </div>
@@ -239,13 +243,13 @@ export default function ReportsListPage() {
           </div>
 
           {/* Filters */}
-          <div className='flex flex-col sm:flex-row gap-4'>
+          <div className='flex flex-col sm:flex-row gap-3 md:gap-4'>
             <Searchbar
               className='w-full'
               placeholder={t('reports.searchPlaceholder')}
             />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className='w-full sm:w-48'>
+              <SelectTrigger className='w-full sm:w-40 md:w-48'>
                 <SelectValue placeholder={t('reports.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
@@ -263,7 +267,7 @@ export default function ReportsListPage() {
               </SelectContent>
             </Select>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className='w-full sm:w-48'>
+              <SelectTrigger className='w-full sm:w-40 md:w-48'>
                 <SelectValue placeholder={t('reports.filterByType')} />
               </SelectTrigger>
               <SelectContent>
@@ -278,19 +282,19 @@ export default function ReportsListPage() {
 
         {/* Reports Table */}
         <Card>
-          <CardHeader>
-            <CardTitle>
-              {t('reports.allReports')} ({2})
+          <CardHeader className='pb-3 md:pb-6'>
+            <CardTitle className='text-lg md:text-xl'>
+              {t('reports.allReports')} ({reports.data.docs.length})
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className='p-0'>
             {reports.data.docs.length === 0 ? (
-              <div className='text-center py-12'>
-                <Flag className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
-                <h3 className='text-lg font-semibold mb-2'>
+              <div className='text-center py-8 md:py-12 px-4'>
+                <Flag className='h-10 w-10 md:h-12 md:w-12 text-muted-foreground mx-auto mb-4' />
+                <h3 className='text-base md:text-lg font-semibold mb-2'>
                   {t('reports.noReports')}
                 </h3>
-                <p className='text-muted-foreground'>
+                <p className='text-muted-foreground text-sm md:text-base'>
                   {t('reports.noReportsDescription')}
                 </p>
               </div>
@@ -299,13 +303,13 @@ export default function ReportsListPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t('reports.type')}</TableHead>
-                      <TableHead>{t('reports.reason')}</TableHead>
-                      <TableHead>{t('reports.user')}</TableHead>
-                      <TableHead>{t('reports.reportedUser')}</TableHead>
-                      <TableHead>{t('reports.status')}</TableHead>
-                      <TableHead>{t('reports.date')}</TableHead>
-                      <TableHead>{t('common.actions')}</TableHead>
+                      <TableHead className='min-w-[100px]'>{t('reports.type')}</TableHead>
+                      <TableHead className='min-w-[120px]'>{t('reports.reason')}</TableHead>
+                      <TableHead className='min-w-[120px] hidden md:table-cell'>{t('reports.user')}</TableHead>
+                      <TableHead className='min-w-[120px] hidden lg:table-cell'>{t('reports.reportedUser')}</TableHead>
+                      <TableHead className='min-w-[100px]'>{t('reports.status')}</TableHead>
+                      <TableHead className='min-w-[120px] hidden sm:table-cell'>{t('reports.date')}</TableHead>
+                      <TableHead className='min-w-[120px]'>{t('common.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -314,100 +318,98 @@ export default function ReportsListPage() {
                         <TableCell>
                           <div className='flex items-center gap-2'>
                             {getTypeIcon(report.type)}
-                            <span className='capitalize'>
+                            <span className='capitalize text-sm'>
                               {t(`reports.${report.type}`)}
                             </span>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className='font-medium'>{report.reason}</div>
-                            <div className='text-sm text-muted-foreground truncate max-w-48'>
+                            <div className='font-medium text-sm'>{report.reason}</div>
+                            <div className='text-xs text-muted-foreground truncate max-w-32 md:max-w-48'>
                               {report.description}
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <Link
-                            to={routes.dashboard.users.edit(report.user.id)}
-                          >
+                        <TableCell className='hidden md:table-cell'>
+                          <Link to={routes.dashboard.users.edit(report.user.id)}>
                             <div className='flex items-center gap-2'>
-                              <Avatar className='h-8 w-8'>
+                              <Avatar className='h-6 w-6 md:h-8 md:w-8'>
                                 <AvatarImage src={report.user.avatar?.url} />
-                                <AvatarFallback>
+                                <AvatarFallback className='text-xs'>
                                   {report.user.username[0]}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className='text-sm'>
+                              <span className='text-xs md:text-sm truncate max-w-20'>
                                 {report.user.username}
                               </span>
                             </div>
                           </Link>
                         </TableCell>
-                        <TableCell>
-                          <Link
-                            to={routes.dashboard.users.edit(report.user.id)}
-                          >
+                        <TableCell className='hidden lg:table-cell'>
+                          <Link to={routes.dashboard.users.edit(getTargetUser(report).id)}>
                             <div className='flex items-center gap-2'>
-                              <Avatar className='h-8 w-8'>
-                                <AvatarImage
-                                  src={getTargetUser(report)?.avatar?.url}
-                                />
-                                <AvatarFallback>
+                              <Avatar className='h-6 w-6 md:h-8 md:w-8'>
+                                <AvatarImage src={getTargetUser(report)?.avatar?.url} />
+                                <AvatarFallback className='text-xs'>
                                   {getTargetUser(report).username[0]}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className='text-sm'>
+                              <span className='text-xs md:text-sm truncate max-w-20'>
                                 {getTargetUser(report).username}
                               </span>
                             </div>
                           </Link>
                         </TableCell>
                         <TableCell>{getStatusBadge(report.status)}</TableCell>
-                        <TableCell>
-                          <div className='text-sm'>
+                        <TableCell className='hidden sm:table-cell'>
+                          <div className='text-xs md:text-sm'>
                             <div>
-                              {getDate(
-                                report.createDate,
-                                'YYYY/MM/DD-HH:mm:ss'
-                              )}
+                              {getDate(report.createDate, 'MM/DD')}
                             </div>
                             {report.updateDate && (
                               <div className='text-muted-foreground'>
-                                {t('reports.reviewedOn')}{' '}
-                                {getDate(
-                                  report.updateDate,
-                                  'YYYY/MM/DD-HH:mm:ss'
-                                )}
+                                {getDate(report.updateDate, 'MM/DD')}
                               </div>
                             )}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className='flex gap-2'>
+                          <div className='flex gap-1 md:gap-2'>
+                            {/* View Details Button */}
+                            <Button
+                              size='sm'
+                              variant='outline'
+                              className='text-blue-600 hover:text-blue-700 p-1 md:p-2'
+                              onClick={() => {
+                                setSelectedReport(report);
+                                setShowReportDetails(true);
+                              }}
+                            >
+                              <Info className='h-3 w-3 md:h-4 md:w-4' />
+                            </Button>
+                            
                             {report.status === 'pending' && (
                               <>
                                 <Button
                                   size='sm'
                                   variant='outline'
-                                  className='text-blue-600 hover:text-blue-700'
+                                  className='text-blue-600 hover:text-blue-700 p-1 md:p-2'
                                   onClick={() =>
-                                    handleUpdateReportStatus(
-                                      report.id,
-                                      'reviewed'
-                                    )
+                                    handleUpdateReportStatus(report.id, 'reviewed')
                                   }
                                 >
-                                  <Eye className='h-4 w-4' />
+                                  <Eye className='h-3 w-3 md:h-4 md:w-4' />
                                 </Button>
+                                
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <Button
                                       size='sm'
                                       variant='outline'
-                                      className='text-green-600 hover:text-green-700'
+                                      className='text-green-600 hover:text-green-700 p-1 md:p-2'
                                     >
-                                      <Check className='h-4 w-4' />
+                                      <Check className='h-3 w-3 md:h-4 md:w-4' />
                                     </Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
@@ -424,7 +426,7 @@ export default function ReportsListPage() {
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
-                                        className='bg-green-600 hover:bg-green-700'
+                                        className='bg-green-600 hover:bg-green-700 p-1 md:p-2'
                                         onClick={() =>
                                           handleUpdateReportStatus(
                                             report.id,
@@ -437,14 +439,15 @@ export default function ReportsListPage() {
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
+                                
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <Button
                                       size='sm'
                                       variant='outline'
-                                      className='text-red-600 hover:text-red-700'
+                                      className='text-red-600 hover:text-red-700 p-1 md:p-2'
                                     >
-                                      <X className='h-4 w-4' />
+                                      <X className='h-3 w-3 md:h-4 md:w-4' />
                                     </Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
@@ -461,7 +464,7 @@ export default function ReportsListPage() {
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
-                                        className='bg-red-600 hover:bg-red-700'
+                                        className='bg-red-600 hover:bg-red-700 p-1 md:p-2'
                                         onClick={() =>
                                           handleUpdateReportStatus(
                                             report.id,
@@ -487,6 +490,13 @@ export default function ReportsListPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Report Details Dialog */}
+      <ReportDetailsDialog
+        open={showReportDetails}
+        onOpenChange={setShowReportDetails}
+        report={selectedReport}
+      />
     </div>
   );
 }

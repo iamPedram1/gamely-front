@@ -32,6 +32,7 @@ import CategoriesPage from '@/pages/admin/CategoriesPage';
 import RecoverPasswordPage from '@/pages/RecoverPasswordPage';
 import ChangePasswordPage from '@/pages/ChangePasswordPage';
 import CategoriesPagePublic from '@/pages/CategoriesPage';
+import DashboardPage from '@/pages/admin/DashboardPage';
 import UsersListPage from '@/pages/admin/UsersListPage';
 import UserDetailPage from '@/pages/admin/UserDetailPage';
 import CommentsListPage from '@/pages/admin/CommentsListPage';
@@ -40,10 +41,10 @@ import ProfileFollowersPage from '@/pages/ProfileFollowersPage';
 import ProfileFollowingPage from '@/pages/ProfileFollowingPage';
 import UserFollowersPage from '@/pages/UserFollowersPage';
 import UserFollowingPage from '@/pages/UserFollowingPage';
-import DashboardPage from '@/pages/admin/DashboardPage';
-import UserPostsListPage from '@/pages/UserPostsListPage';
 import CreatePostPage from '@/pages/CreatePostPage';
 import GameDetailPage from '@/pages/GameDetailPage';
+import UserPostsListPage from '@/pages/UserPostsListPage';
+import UserReportsListPage from '@/pages/UserReportsListPage';
 
 // Layout
 import Header from '@/components/layout/Header';
@@ -183,6 +184,7 @@ function App() {
           {/* User Routes */}
           <Route path='/my-posts' element={<UserPostsListPage />} />
           <Route path='/create-post' element={<CreatePostPage />} />
+          <Route path='/my-reports' element={<UserReportsListPage />} />
         </Routes>
         {!isDashboard && <Footer />}
       </Suspense>

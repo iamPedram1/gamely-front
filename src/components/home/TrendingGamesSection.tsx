@@ -24,7 +24,7 @@ export default function TrendingGamesSection({
       <div className='container'>
         <div className='flex items-center justify-between mb-10'>
           <div>
-            <h2 className='text-4xl font-black mb-2'>
+            <h2 className='text-2xl md:text-4xl font-black mb-2'>
               <span className='gradient-gaming-text'>
                 {t('home.trendingGames')}
               </span>

@@ -60,7 +60,7 @@ export default function UsersListPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black'>
+          <h1 className='text-2xl md:text-4xl font-black'>
             <span className='gradient-gaming-text'>{t('dashboard.users')}</span>{' '}
             {t('dashboard.management')}
           </h1>
@@ -112,12 +112,16 @@ export default function UsersListPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('user.name')}</TableHead>
-                <TableHead>{t('user.email')}</TableHead>
-                <TableHead>{t('user.role')}</TableHead>
-                <TableHead>{t('user.status')}</TableHead>
-                <TableHead>{t('user.joined')}</TableHead>
-                <TableHead className='ltr:text-center rtl:text-center'>
+                <TableHead className='text-start'>{t('user.name')}</TableHead>
+                <TableHead className='text-start'>{t('user.email')}</TableHead>
+                <TableHead className='text-center'>{t('user.role')}</TableHead>
+                <TableHead className='text-center'>
+                  {t('user.status')}
+                </TableHead>
+                <TableHead className='text-center'>
+                  {t('user.joined')}
+                </TableHead>
+                <TableHead className='ltr:text-end'>
                   {t('common.actions')}
                 </TableHead>
               </TableRow>
@@ -142,7 +146,7 @@ export default function UsersListPage() {
                   <TableCell className='text-muted-foreground'>
                     {user.email}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className='text-center'>
                     <Badge
                       variant={user.role === 'admin' ? 'default' : 'secondary'}
                       className={
@@ -154,7 +158,7 @@ export default function UsersListPage() {
                       {t(`user.${user.role}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className='text-center'>
                     <Badge
                       variant={
                         user.status === 'active' ? 'default' : 'destructive'
@@ -168,7 +172,7 @@ export default function UsersListPage() {
                       {t(`user.${user.status}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell className='text-muted-foreground'>
+                  <TableCell className='text-center text-muted-foreground'>
                     {getDate(user.createDate)}
                   </TableCell>
                   <TableCell className='text-center'>

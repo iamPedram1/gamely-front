@@ -28,7 +28,9 @@ export default function CategoryPostsPage() {
         </Link>
 
         <div className='mb-8'>
-          <h1 className='text-4xl font-bold mb-2 capitalize'>{categoryName}</h1>
+          <h1 className='text-2xl md:text-4xl font-bold mb-2 capitalize'>
+            {categoryName}
+          </h1>
           <p className='text-muted-foreground'>
             {posts.length}{' '}
             {posts.length === 1 ? t('common.post') : t('common.posts')}{' '}

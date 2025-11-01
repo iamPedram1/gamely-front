@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, Flag } from 'lucide-react';
 
 // Components
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // Utilities
@@ -15,21 +15,21 @@ import type { PostProps } from '@/types/client/blog';
 
 interface PostHeaderProps {
   post: PostProps;
+  onReport?: () => void;
 }
 
-export default function PostHeader({ post }: PostHeaderProps) {
+export default function PostHeader({ post, onReport }: PostHeaderProps) {
   // Hooks
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <div className='mb-6'>
-      <div className='flex items-center gap-2 mb-4'>
+    <header className='space-y-6'>
+      <div className='flex items-center gap-2'>
         <Badge variant='secondary'>{post.category.title}</Badge>
         {post.game && <Badge variant='outline'>{post.game.title}</Badge>}
       </div>
 
-      <h1 className='text-xl md:text-5xl font-bold mb-4'>{post.title}</h1>
-
+      <h1 className='text-xl md:text-5xl font-bold'>{post.title}</h1>
       <div className='flex items-center gap-2 md:gap-4 text-sm text-muted-foreground mb-6'>
         <div className='flex items-center gap-2'>
           <Avatar className='h-10 w-10'>
@@ -61,6 +61,19 @@ export default function PostHeader({ post }: PostHeaderProps) {
           </span>
         </div>
       </div>
-    </div>
+      <div className='flex items-center justify-between'>
+        {onReport && (
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={onReport}
+            className='flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50'
+          >
+            <Flag className='h-4 w-4' />
+            {t('post.report')}
+          </Button>
+        )}
+      </div>
+    </header>
   );
 }

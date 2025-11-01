@@ -1,49 +1,34 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, FileText, TrendingUp, Calendar } from 'lucide-react';
+import { Search, FileText, Calendar } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+// Components
 import { Button } from '@/components/ui/button';
+import Searchbar from '@/components/ui/searchbar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Utilities
 import routes from '@/utilities/routes';
 import { useCategoriesInfiniteQuery } from '@/utilities/api/category';
 
-interface Category {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  postCount: number;
-  color: string;
-  icon: string;
-  trending: boolean;
-  lastPostDate: string;
-}
-
 export default function CategoriesPage() {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
 
-  // Mock categories data
-
+  // Hooks
   const categories = useCategoriesInfiniteQuery();
   const allCategories = useMemo(
     () => categories.data.pages.flatMap((page) => page.docs),
     [categories.data]
   );
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
-
+  // Render
   return (
     <div className='min-h-screen bg-background'>
       <div className='container py-8'>
         {/* Header */}
         <div className='text-center mb-12'>
-          <h1 className='text-4xl md:text-6xl font-bold mb-4 gradient-gaming-text'>
+          <h1 className='text-2xl md:text-4xl md:text-6xl font-bold mb-4 gradient-gaming-text'>
             {t('categories.title')}
           </h1>
           <p className='text-xl text-muted-foreground max-w-2xl mx-auto mb-8'>
@@ -77,16 +62,7 @@ export default function CategoriesPage() {
           </div>
 
           {/* Search */}
-          <div className='relative max-w-md mx-auto'>
-            <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
-            <Input
-              type='search'
-              placeholder={t('categories.searchPlaceholder')}
-              className='pl-10 bg-accent/25 dark:bg-accent/50 border-primary/20 focus:border-primary'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          <Searchbar />
         </div>
         {/* Categories Grid */}
         {allCategories.length === 0 ? (
@@ -163,7 +139,7 @@ export default function CategoriesPage() {
             ))}
           </div>
         )}
-        Featured Categories
+        {/* TODO: Featured Categories
         {!searchQuery && trendingCategories.length > 0 && (
           <div className='mt-16'>
             <h2 className='text-3xl font-bold text-center mb-8 gradient-gaming-text'>
@@ -195,7 +171,7 @@ export default function CategoriesPage() {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

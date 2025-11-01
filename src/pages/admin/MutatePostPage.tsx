@@ -146,7 +146,7 @@ export default function MutatePostPage() {
           </Button>
         </Link>
         <div>
-          <h1 className='text-4xl font-black'>
+          <h1 className='text-2xl md:text-4xl font-black'>
             <span className='gradient-gaming-text'>
               {isEditMode ? t('common.update') : t('common.create')}
             </span>{' '}

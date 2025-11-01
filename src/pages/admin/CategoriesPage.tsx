@@ -48,7 +48,7 @@ export default function CategoriesPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
+          <h1 className='text-2xl md:text-4xl font-black rtl:flex rtl:flex-row-reverse rtl:gap-2'>
             <span className='gradient-gaming-text'>
               {t('dashboard.categories')}
             </span>{' '}
