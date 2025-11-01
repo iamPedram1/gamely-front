@@ -11,7 +11,7 @@ export default function FooterColumn(props: FooterColumnProps) {
 
   // Render
   return (
-    <div className='space-y-4'>
+    <div className='col-span-1 md:col-span-1 space-y-4'>
       <h4 className='font-bold text-lg uppercase tracking-wide'>{title}</h4>
       <ul className='space-y-3 text-sm'>
         {links.map((link, index) => (

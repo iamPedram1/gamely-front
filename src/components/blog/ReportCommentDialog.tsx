@@ -14,16 +14,17 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useCreateReportMutate } from '@/utilities/api/report';
+import { ReportReasonType, ReportType } from '@/types/management/report';
 
 interface ReportDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  contentId: string;
-  contentType: 'comment' | 'post' | 'user';
-  onSubmit: (data: { type: string; description: string }) => void;
+  targetId: string;
+  type: ReportType;
 }
 
-const reportTypes = [
+const reportTypes: Array<{ value: ReportReasonType; label: string }> = [
   { value: 'spam', label: 'Spam' },
   { value: 'harassment', label: 'Harassment' },
   { value: 'inappropriate', label: 'Inappropriate Content' },
@@ -35,40 +36,37 @@ const reportTypes = [
 export default function ReportCommentDialog({
   open,
   onOpenChange,
-  contentId,
-  contentType,
-  onSubmit,
+  targetId,
+  type,
 }: ReportDialogProps) {
   const { t } = useTranslation();
-  const [reportType, setReportType] = useState('spam');
+  const [reason, setReason] = useState<ReportReasonType>('spam');
   const [description, setDescription] = useState('');
 
+  const report = useCreateReportMutate({
+    onSuccess: () => {
+      setReason('spam');
+      setDescription('');
+      onOpenChange(false);
+    },
+  });
+
   const handleSubmit = () => {
-    if (!reportType || !description.trim()) {
-      return;
-    }
+    if (!reason || !description.trim()) return;
 
-    onSubmit({
-      type: reportType,
-      description: description.trim(),
-    });
-
-    // Reset form
-    setReportType('spam');
-    setDescription('');
-    onOpenChange(false);
+    report.mutate({ reason, type, description, targetId });
   };
 
   const handleCancel = () => {
-    setReportType('spam');
+    setReason('spam');
     setDescription('');
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[500px]'>
-        <DialogHeader>
+      <DialogContent className='gap-0 sm:max-w-[500px]'>
+        <DialogHeader className='flex flex-col gap-4'>
           <div className='flex items-center gap-2 mb-2'>
             <div className='p-2 rounded-lg bg-red-100 dark:bg-red-900'>
               <Flag className='h-5 w-5 text-red-600' />
@@ -86,9 +84,13 @@ export default function ReportCommentDialog({
             <Label className='text-base font-semibold'>
               {t('comment.reportType')}
             </Label>
-            <RadioGroup value={reportType} onValueChange={setReportType}>
+            <RadioGroup
+              className='flex flex-col gap-3'
+              value={reason}
+              onValueChange={(value) => setReason(value as ReportReasonType)}
+            >
               {reportTypes.map((type) => (
-                <div key={type.value} className='flex items-center space-x-2'>
+                <div key={type.value} className='flex items-center gap-2'>
                   <RadioGroupItem value={type.value} id={type.value} />
                   <Label
                     htmlFor={type.value}

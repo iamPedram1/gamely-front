@@ -154,10 +154,8 @@ const useBaseMutation = <TData, TError, TVariables>(
         else throw new Error(response.message, { cause: response });
       },
       onSuccess: (data, variables, onMutateResult, context) => {
-        console.log('onSuccess', { data, variables, onMutateResult, context });
         if (!noRevalidate && revalidateBehavior === 'after-success') {
           mutationKey?.forEach((queryKey: any) => {
-            console.log('Revalidate', queryKey);
             queryClient.invalidateQueries({ queryKey: [queryKey] });
           });
         }
@@ -184,20 +182,12 @@ const useBaseMutation = <TData, TError, TVariables>(
         context,
         onMutateResult
       ) => {
-        console.log('onSettled', {
-          data,
-          error,
-          variables,
-          onMutateResult,
-          context,
-        });
         const message =
           data?.message || error?.cause?.message || error?.cause?.errors?.[0];
         const isSuccess = error && 'message' in error ? false : true;
 
         if (!noRevalidate && revalidateBehavior === 'after-settled') {
           mutationKey?.forEach((queryKey: any) => {
-            console.log('Revalidate', queryKey);
             queryClient.invalidateQueries({ queryKey: [queryKey] });
           });
         }

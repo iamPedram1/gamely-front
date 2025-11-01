@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Search, FileText, TrendingUp, Calendar } from 'lucide-react';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import routes from '@/utilities/routes';
+import { useCategoriesInfiniteQuery } from '@/utilities/api/category';
 
 interface Category {
   id: string;
@@ -26,93 +27,16 @@ export default function CategoriesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Mock categories data
-  const categories: Category[] = [
-    {
-      id: '1',
-      title: 'Action Games',
-      slug: 'action-games',
-      description:
-        'Fast-paced games with intense combat and thrilling gameplay',
-      postCount: 156,
-      color: 'bg-red-500',
-      icon: '⚔️',
-      trending: true,
-      lastPostDate: '2024-01-20T10:30:00Z',
-    },
-    {
-      id: '2',
-      title: 'RPG Games',
-      slug: 'rpg-games',
-      description:
-        'Role-playing games with deep storylines and character development',
-      postCount: 234,
-      color: 'bg-purple-500',
-      icon: '🏰',
-      trending: true,
-      lastPostDate: '2024-01-19T15:45:00Z',
-    },
-    {
-      id: '3',
-      title: 'Strategy Games',
-      slug: 'strategy-games',
-      description:
-        'Games that require tactical thinking and strategic planning',
-      postCount: 89,
-      color: 'bg-blue-500',
-      icon: '🧠',
-      trending: false,
-      lastPostDate: '2024-01-18T09:20:00Z',
-    },
-    {
-      id: '4',
-      title: 'Indie Games',
-      slug: 'indie-games',
-      description: 'Independent games with unique and creative gameplay',
-      postCount: 178,
-      color: 'bg-green-500',
-      icon: '🎨',
-      trending: true,
-      lastPostDate: '2024-01-17T14:10:00Z',
-    },
-    {
-      id: '5',
-      title: 'Mobile Games',
-      slug: 'mobile-games',
-      description: 'Games designed for smartphones and tablets',
-      postCount: 145,
-      color: 'bg-orange-500',
-      icon: '📱',
-      trending: false,
-      lastPostDate: '2024-01-16T11:30:00Z',
-    },
-    {
-      id: '6',
-      title: 'VR Games',
-      slug: 'vr-games',
-      description: 'Virtual reality games for immersive experiences',
-      postCount: 67,
-      color: 'bg-pink-500',
-      icon: '🥽',
-      trending: false,
-      lastPostDate: '2024-01-15T16:45:00Z',
-    },
-  ];
 
-  const filteredCategories = categories.filter(
-    (category) =>
-      category.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const categories = useCategoriesInfiniteQuery();
+  const allCategories = useMemo(
+    () => categories.data.pages.flatMap((page) => page.docs),
+    [categories.data]
   );
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
-
-  const totalPosts = categories.reduce(
-    (sum, category) => sum + category.postCount,
-    0
-  );
-  const trendingCategories = categories.filter((category) => category.trending);
 
   return (
     <div className='min-h-screen bg-background'>
@@ -130,7 +54,7 @@ export default function CategoriesPage() {
           <div className='flex flex-wrap justify-center gap-6 mb-8'>
             <div className='text-center'>
               <div className='text-3xl font-bold gradient-gaming-text'>
-                {categories.length}
+                {categories.data.pages[0].pagination.totalDocs}
               </div>
               <div className='text-sm text-muted-foreground'>
                 {t('categories.totalCategories')}
@@ -138,16 +62,14 @@ export default function CategoriesPage() {
             </div>
             <div className='text-center'>
               <div className='text-3xl font-bold gradient-gaming-text'>
-                {totalPosts}
+                {10}
               </div>
               <div className='text-sm text-muted-foreground'>
                 {t('categories.totalPosts')}
               </div>
             </div>
             <div className='text-center'>
-              <div className='text-3xl font-bold gradient-gaming-text'>
-                {trendingCategories.length}
-              </div>
+              <div className='text-3xl font-bold gradient-gaming-text'>{5}</div>
               <div className='text-sm text-muted-foreground'>
                 {t('categories.trending')}
               </div>
@@ -166,9 +88,8 @@ export default function CategoriesPage() {
             />
           </div>
         </div>
-
         {/* Categories Grid */}
-        {filteredCategories.length === 0 ? (
+        {allCategories.length === 0 ? (
           <Card className='max-w-md mx-auto'>
             <CardContent className='flex flex-col items-center justify-center py-12'>
               <Search className='h-12 w-12 text-muted-foreground mb-4' />
@@ -182,7 +103,7 @@ export default function CategoriesPage() {
           </Card>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {filteredCategories.map((category) => (
+            {allCategories.map((category) => (
               <Card
                 key={category.id}
                 className='group flex flex-col border-primary/20 hover:border-primary/40 hover:shadow-xl transition-all duration-300'
@@ -190,16 +111,16 @@ export default function CategoriesPage() {
                 <CardHeader className='relative pb-4'>
                   <div className='flex items-start justify-between'>
                     <div className='flex items-center gap-3'>
-                      <div
+                      {/* <div
                         className={`w-12 h-12 rounded-xl ${category.color} flex items-center justify-center text-2xl shadow-lg`}
                       >
                         {category.icon}
-                      </div>
+                      </div> */}
                       <div>
                         <CardTitle className='text-xl group-hover:gradient-gaming-text transition-all'>
                           {category.title}
                         </CardTitle>
-                        {category.trending && (
+                        {/* {category.trending && (
                           <Badge
                             variant='secondary'
                             className='mt-1 bg-gradient-gaming text-white'
@@ -207,7 +128,7 @@ export default function CategoriesPage() {
                             <TrendingUp className='h-3 w-3 mr-1' />
                             {t('categories.trending')}
                           </Badge>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </div>
@@ -215,18 +136,18 @@ export default function CategoriesPage() {
 
                 <CardContent className='flex flex-col justify-end flex-grow gap-4'>
                   <p className='text-muted-foreground text-sm leading-relaxed line-clamp-1'>
-                    {category.description}
+                    {/* {category.description} */}
                   </p>
                   <div className='flex items-center justify-between text-sm'>
                     <div className='flex items-center gap-1 text-muted-foreground'>
                       <FileText className='h-4 w-4' />
                       <span>
-                        {category.postCount} {t('categories.posts')}
+                        {/* {category.postCount} {t('categories.posts')} */}
                       </span>
                     </div>
                     <div className='flex items-center gap-1 text-muted-foreground'>
                       <Calendar className='h-4 w-4' />
-                      <span>{formatDate(category.lastPostDate)}</span>
+                      {/* <span>{formatDate(category.lastPostDate)}</span> */}
                     </div>
                   </div>
                   <Link to={routes.categories.details(category.slug)}>
@@ -242,8 +163,7 @@ export default function CategoriesPage() {
             ))}
           </div>
         )}
-
-        {/* Featured Categories */}
+        Featured Categories
         {!searchQuery && trendingCategories.length > 0 && (
           <div className='mt-16'>
             <h2 className='text-3xl font-bold text-center mb-8 gradient-gaming-text'>

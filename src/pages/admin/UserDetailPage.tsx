@@ -322,6 +322,9 @@ export default function UserDetailPage() {
                           {t('user.author')}
                         </SelectItem>
                         <SelectItem value='admin'>{t('user.admin')}</SelectItem>
+                        <SelectItem disabled value='superAdmin'>
+                          {t('user.superAdmin')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   )}

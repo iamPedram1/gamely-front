@@ -7,12 +7,12 @@ import useBaseInfiniteQuery from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 
 // Types
 import type { DataWithPagination } from '@/types/api';
+import type { UseBaseInfiniteQueryOptionsProps } from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 import type {
   BlockedProps,
   FollowerProps,
   UserProps,
 } from '@/types/client/blog';
-import type { UseBaseInfiniteQueryOptionsProps } from '@/hooks/api/useQuery/useBaseInfiniteQuery';
 
 export const usersQueryKey = 'user';
 export const blocksQueryKey = 'blocks';
@@ -53,12 +53,12 @@ export const useFollowersInfiniteQuery = (
   useBaseInfiniteQuery<FollowerProps>({
     initialPageParam: 1,
     queryKey: [usersQueryKey, followersQueryKey, username],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ query, pageParam }) =>
       safeApiHandler.get<DataWithPagination<FollowerProps>>(
         username
           ? endpoints.user.followers(username)
           : endpoints.user.profile.followers,
-        { query: { page: pageParam } }
+        { query: { ...query, page: pageParam } }
       ),
     enabled: true,
     ...options,
@@ -70,11 +70,15 @@ export const useBlockListInfiniteQuery = (
   useBaseInfiniteQuery<BlockedProps>({
     initialPageParam: 1,
     queryKey: [usersQueryKey, blocksQueryKey],
-    queryFn: ({ pageParam }) =>
-      safeApiHandler.get<DataWithPagination<BlockedProps>>(
+    queryFn: ({ pageParam, query }) => {
+      return safeApiHandler.get<DataWithPagination<BlockedProps>>(
         endpoints.user.blocks,
-        { query: { page: pageParam } }
-      ),
+        {
+          query: { ...query, page: pageParam },
+          queryWhitelistKeyNames: ['search'],
+        }
+      );
+    },
     enabled: true,
     ...options,
   });
@@ -87,12 +91,12 @@ export const useFollowingInfiniteQuery = (
   useBaseInfiniteQuery<FollowerProps>({
     initialPageParam: 1,
     queryKey: [usersQueryKey, followingQueryKey, username],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ query, pageParam }) =>
       safeApiHandler.get<DataWithPagination<FollowerProps>>(
         username
           ? endpoints.user.followings(username)
           : endpoints.user.profile.followings,
-        { query: { page: pageParam } }
+        { query: { ...query, page: pageParam } }
       ),
     enabled: true,
     ...options,

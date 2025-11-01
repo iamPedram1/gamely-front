@@ -1,5 +1,4 @@
-import dayjs from 'dayjs';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ChevronDown,
@@ -10,8 +9,10 @@ import {
   Flag,
 } from 'lucide-react';
 
-import BlockUserDialog from '@/components/blog/BlockUserDialog';
+// Types
 import { Button } from '@/components/ui/button';
+import BlockUserDialog from '@/components/blog/BlockUserDialog';
+import ReportCommentDialog from '@/components/blog/ReportCommentDialog';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -26,8 +27,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+// Utilities
+import routes from '@/utilities/routes';
+import { getDate } from '@/utilities';
+import { useBoolean } from '@/hooks/state';
+import {
+  useBlockUserMutation,
+  useUnblockUserMutation,
+} from '@/utilities/api/user';
+
+// Types
 import type { CommentProps } from '@/types/client/blog';
-import ReportCommentDialog from '@/components/blog/ReportCommentDialog';
 
 interface CommentComponentProps {
   comment: CommentProps;
@@ -39,33 +49,34 @@ interface CommentComponentProps {
 export default function Comment({
   comment,
   onReply,
-  isReply = false,
   showThreadLine = false,
 }: CommentComponentProps) {
+  // States
+  const isOpen = useBoolean();
+  const isBlockDialogOpen = useBoolean();
+  const isReportDialogOpen = useBoolean();
+
+  // Hooks
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [blockDialogOpen, setBlockDialogOpen] = useState(false);
-  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const block = useBlockUserMutation();
+  const unblock = useUnblockUserMutation();
   const hasReplies = comment.replies && comment.replies.length > 0;
 
+  // Utilities
   const handleBlock = () => {
-    setBlockDialogOpen(true);
+    isBlockDialogOpen.setTrue();
   };
 
   const handleBlockConfirm = () => {
     // TODO: Implement block functionality with API
-    console.log('Block user:', comment.username);
+    block.mutate(comment.username);
   };
 
   const handleReport = () => {
-    setReportDialogOpen(true);
+    isReportDialogOpen.setTrue();
   };
 
-  const handleReportSubmit = (data: { type: string; description: string }) => {
-    // TODO: Implement report functionality with API
-    console.log('Report comment:', comment.id, data);
-  };
-
+  // Render
   return (
     <>
       <div className='relative space-y-3'>
@@ -77,19 +88,23 @@ export default function Comment({
         <Card className='transition-all hover:shadow-md relative z-10'>
           <CardHeader className='pb-3'>
             <div className='flex items-center gap-3'>
-              <Avatar className='h-9 w-9'>
-                <AvatarImage
-                  src={comment.avatar?.url || '/placeholder.svg'}
-                  alt={comment.username}
-                />
-                <AvatarFallback className='text-sm'>
-                  {comment.username[0]}
-                </AvatarFallback>
-              </Avatar>
+              <Link to={routes.users.details(comment.username)}>
+                <Avatar className='h-9 w-9'>
+                  <AvatarImage
+                    src={comment.avatar?.url || '/placeholder.svg'}
+                    alt={comment.username}
+                  />
+                  <AvatarFallback className='text-sm'>
+                    {comment.username[0]}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
               <div className='flex-1'>
-                <p className='font-semibold text-sm'>{comment.username}</p>
+                <Link to={routes.users.details(comment.username)}>
+                  <p className='font-semibold text-sm'>{comment.username}</p>
+                </Link>
                 <p className='text-xs text-muted-foreground'>
-                  {dayjs(comment.createDate).format('YYYY/MM/DD HH:mm')}
+                  {getDate(comment.createDate, 'YYYY/MM/DD HH:mm')}
                 </p>
               </div>
               <DropdownMenu>
@@ -137,8 +152,8 @@ export default function Comment({
 
               {hasReplies && (
                 <Collapsible
-                  open={open}
-                  onOpenChange={setOpen}
+                  open={isOpen.state}
+                  onOpenChange={isOpen.set}
                   className='w-fit'
                 >
                   <CollapsibleTrigger asChild>
@@ -148,10 +163,10 @@ export default function Comment({
                       className='text-xs h-8 flex items-center gap-1'
                     >
                       <MessageSquare className='w-4 h-4' />
-                      {open
+                      {isOpen.state
                         ? `${comment.replies?.length} ${t('common.comment')}`
                         : `${comment.replies?.length} ${t('common.comment')}`}
-                      {open ? (
+                      {isOpen.state ? (
                         <ChevronUp className='w-4 h-4' />
                       ) : (
                         <ChevronDown className='w-4 h-4' />
@@ -166,7 +181,7 @@ export default function Comment({
 
         {/* Flat replies connected with stretched thread line */}
         {hasReplies && (
-          <Collapsible open={open} onOpenChange={setOpen}>
+          <Collapsible open={isOpen.state} onOpenChange={isOpen.set}>
             <CollapsibleContent className='relative space-y-3'>
               <div className='absolute left-4 top-0 bottom-0 w-[2px] bg-border/40 rounded-full' />
               {comment.replies!.map((reply, index) => (
@@ -185,18 +200,17 @@ export default function Comment({
 
       {/* Dialogs */}
       <BlockUserDialog
-        open={blockDialogOpen}
-        onOpenChange={setBlockDialogOpen}
+        open={isBlockDialogOpen.state}
+        onOpenChange={isBlockDialogOpen.set}
         username={comment.username}
         onConfirm={handleBlockConfirm}
       />
 
       <ReportCommentDialog
-        open={reportDialogOpen}
-        onOpenChange={setReportDialogOpen}
-        contentId={comment.id}
-        contentType='comment'
-        onSubmit={handleReportSubmit}
+        type='comment'
+        targetId={comment.id}
+        open={isReportDialogOpen.state}
+        onOpenChange={isReportDialogOpen.set}
       />
     </>
   );

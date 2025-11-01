@@ -138,6 +138,7 @@ export function minutesLeftToTarget(targetTime: string): number {
 }
 
 export const getDate = (date: string, format?: string) => {
+  if (!date) return '';
   const language = i18n.language;
 
   return dayjs(date)

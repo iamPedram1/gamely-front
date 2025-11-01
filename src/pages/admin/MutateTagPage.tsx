@@ -1,20 +1,19 @@
 import { object } from 'zod';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Save } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 // Components
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import FormWrapper from '@/components/ui/form-wrapper';
+import LoadingWrapper from '@/components/ui/loading-wrapper';
 
 // Utilities
 import routes from '@/utilities/routes';
-import { createOnErrorHandler } from '@/utilities';
+import { useSelectLoading } from '@/store/loading';
 import { supportedLanguages } from '@/utilities/helperPack';
 import {
   useCreateTag,
@@ -25,7 +24,6 @@ import {
   generateRegexStringSchema,
   generateStringSchema,
 } from '@/validations/common';
-import { useSelectLoading } from '@/store/loading';
 
 const createTagSchema = () =>
   object({
@@ -42,6 +40,7 @@ export default function MutateTagPage() {
   // Context
   const { t, i18n } = useTranslation();
   const loading = useSelectLoading();
+  const navigate = useNavigate();
 
   // Hooks
   const params = useParams();
@@ -72,87 +71,55 @@ export default function MutateTagPage() {
 
   // Render
   return (
-    <div className='space-y-6 max-w-2xl'>
-      <div className='flex items-center gap-4'>
-        <Link to={routes.dashboard.tags.index}>
-          <Button disabled={disabled} variant='ghost' size='icon'>
-            <ArrowLeft className='h-5 w-5 rtl:rotate-180' />
-          </Button>
-        </Link>
-        <div>
-          <h1 className='text-4xl font-black'>
-            <span className='gradient-gaming-text'>
-              {isEditMode ? t('common.update') : t('common.add')}
-            </span>{' '}
-            {t('common.tag')}
-          </h1>
-          <p className='text-muted-foreground mt-2'>
-            {isEditMode ? t('tag.updateTagInDb') : t('tag.addNewTag')}
-          </p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
-        <Card className='min-w-full border-primary/20'>
-          <CardHeader>
-            <CardTitle>{t('tag.tagDetails')}</CardTitle>
-          </CardHeader>
-          <CardContent className='space-y-6'>
-            {supportedLanguages.map((lng) => (
-              <div className='space-y-2'>
-                <Label htmlFor={`title-${lng}`}>
-                  {t('common.title')} {t(`common.${lng}`)} {t('form.required')}
-                </Label>
-                <Controller
-                  control={control}
-                  name={`translations.${lng}.title`}
-                  render={({ field }) => (
-                    <Input
-                      id={`title-${lng}`}
-                      placeholder={t(`tag.tagTitlePlaceholder.${lng}`)}
-                      disabled={disabled}
-                      {...field}
-                    />
-                  )}
+    <FormWrapper
+      title={isEditMode ? t('tag.updateTag') : t('tag.createTag')}
+      onSubmit={handleSubmit(onSubmit)}
+      onCancel={() => navigate('/dashboard/tags')}
+      isLoading={isEditMode ? tag.isFetching : false}
+      isSubmitting={createTag.isPending || updateTag.isPending}
+      submitText={isEditMode ? t('tag.updateTag') : t('tag.createTag')}
+    >
+      <LoadingWrapper
+        isLoading={isEditMode ? tag.isFetching : false}
+        type='skeleton'
+      >
+        {supportedLanguages.map((lng) => (
+          <div className='space-y-2'>
+            <Label htmlFor={`title-${lng}`}>
+              {t('common.title')} {t(`common.${lng}`)} {t('form.required')}
+            </Label>
+            <Controller
+              control={control}
+              name={`translations.${lng}.title`}
+              render={({ field }) => (
+                <Input
+                  id={`title-${lng}`}
+                  placeholder={t(`tag.tagTitlePlaceholder.${lng}`)}
+                  disabled={disabled}
+                  {...field}
                 />
-              </div>
-            ))}
-            <div className='space-y-2'>
-              <Label htmlFor='slug'>
-                {t('common.slug')} {t('form.required')}
-              </Label>
-              <Controller
-                control={control}
-                name='slug'
-                render={({ field }) => (
-                  <Input
-                    id='slug'
-                    placeholder={t('tag.tagSlugPlaceholder')}
-                    disabled={disabled}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            <div className='flex gap-4 pt-4'>
-              <Button
-                type='submit'
-                className='gradient-gaming glow-effect hover:glow-effect-strong font-semibold uppercase'
+              )}
+            />
+          </div>
+        ))}
+        <div className='space-y-2'>
+          <Label htmlFor='slug'>
+            {t('common.slug')} {t('form.required')}
+          </Label>
+          <Controller
+            control={control}
+            name='slug'
+            render={({ field }) => (
+              <Input
+                id='slug'
+                placeholder={t('tag.tagSlugPlaceholder')}
                 disabled={disabled}
-              >
-                <Save className='h-4 w-4' />
-                {isEditMode ? t('tag.updateTag') : t('tag.createTag')}
-              </Button>
-              <Link to={routes.dashboard.tags.index}>
-                <Button disabled={disabled} type='button' variant='outline'>
-                  {t('common.cancel')}
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </form>
-    </div>
+                {...field}
+              />
+            )}
+          />
+        </div>
+      </LoadingWrapper>
+    </FormWrapper>
   );
 }

@@ -29,12 +29,10 @@ const AvatarImage = React.forwardRef<
     []
   );
 
-  console.log(src || randomAvatar);
-
   return (
     <AvatarPrimitive.Image
       ref={ref}
-      src={randomAvatar}
+      src={src || randomAvatar}
       className={cn('aspect-square h-full w-full', className)}
       {...props}
     />

@@ -1,10 +1,9 @@
 import dayjs from 'dayjs';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Calendar,
-  MapPin,
   UserPlus,
   UserMinus,
   Gamepad2,
@@ -17,10 +16,6 @@ import {
   UserCheck,
 } from 'lucide-react';
 
-// Hooks
-import useAuth from '@/hooks/useAuth';
-
-// Components
 import PostCard from '@/components/blog/PostCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,18 +23,26 @@ import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  PageLayout,
+  LoadingState,
+  NotFoundState,
+} from '@/components/layout/PageLayout';
 
 // Utilities
+import useAuth from '@/hooks/useAuth';
 import routes from '@/utilities/routes';
 import { getDate } from '@/utilities';
 import { useBoolean } from '@/hooks/state';
-import { debounce } from '@/utilities/helperPack';
 import { usePostsQuery } from '@/utilities/api/post';
+import { debounce } from '@/utilities/helperPack';
 import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useUserQuery,
 } from '@/utilities/api/user';
+import { useGameFavoriteStatusQuery } from '@/utilities/api/game';
+import { useFavoriteGamesQuery } from '@/utilities/api/favoriteGame';
 
 export default function UserPage() {
   // States
@@ -57,11 +60,14 @@ export default function UserPage() {
     enabled: user.isFetched,
     queries: { creator: user.data?.id },
   });
+  const userFavoriteGames = useFavoriteGamesQuery({
+    enabled: user.isFetched,
+    initialParams: username,
+  });
+  console.log({ ...userFavoriteGames });
 
   const follow = useFollowUserMutation();
   const unfollow = useUnfollowUserMutation();
-
-  // Mock recent posts
   const handleFollow = useCallback(
     debounce((value: boolean) => {
       if (value) follow.mutate(user.data.id);
@@ -69,6 +75,7 @@ export default function UserPage() {
     }, 1000),
     [user.data?.id]
   );
+
   const toggleFollow = () => {
     const newValue = !isFollowing.state;
     isFollowing.toggle();
@@ -115,10 +122,20 @@ export default function UserPage() {
     }
   };
 
-  // Render
-  if (!user.isFetched) return <p>loading</p>;
+  if (user.isFetching && !user.isFetched) return <LoadingState />;
+
+  if (!user.data && user.isFetched)
+    return (
+      <NotFoundState
+        title={t('user.userNotFound')}
+        description={user.error?.message || t('user.userNotFoundDescription')}
+        backTo={routes.home}
+        backLabel={t('common.backToHome')}
+      />
+    );
+
   return (
-    <div className='min-h-screen bg-background'>
+    <PageLayout showBack={false} className='min-h-screen bg-background'>
       <div className='container py-8 max-w-6xl mx-auto'>
         {/* Profile Header */}
         <Card className='mb-8'>
@@ -177,7 +194,7 @@ export default function UserPage() {
                 </div>
 
                 <p className='text-muted-foreground mb-4 max-w-2xl'>
-                  {user.data?.bio}
+                  {user.data.bio}
                 </p>
 
                 <div className='flex flex-wrap justify-center md:justify-start gap-4 text-sm text-muted-foreground'>
@@ -199,7 +216,7 @@ export default function UserPage() {
             <Separator className='my-6' />
             <div className='grid grid-cols-3 gap-4 text-center'>
               <Link
-                to={routes.users.followers(user.data?.username)}
+                to={routes.users.followers(user.data.username)}
                 className='group'
               >
                 <div className='text-2xl font-bold gradient-gaming-text flex items-center justify-center gap-2'>
@@ -275,8 +292,8 @@ export default function UserPage() {
           </TabsContent>
 
           <TabsContent value='games' className='space-y-6'>
-            {user.data?.favoriteGames &&
-            user.data?.favoriteGames.length === 0 ? (
+            {userFavoriteGames.data?.docs &&
+            userFavoriteGames.data.docs.length === 0 ? (
               <Card>
                 <CardContent className='flex flex-col items-center justify-center py-12'>
                   <Gamepad2 className='h-12 w-12 text-muted-foreground mb-4' />
@@ -290,17 +307,14 @@ export default function UserPage() {
               </Card>
             ) : (
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
-                {user.data?.favoriteGames &&
-                  user.data?.favoriteGames?.map?.((game) => (
-                    <Card
-                      key={game.id}
-                      className='group hover:shadow-lg transition-all duration-300 hover:-translate-y-1'
-                    >
+                {userFavoriteGames?.data?.docs?.map?.((game) => (
+                  <Link to={routes.games.details(game.slug)} key={game.id}>
+                    <Card className='group hover:shadow-lg transition-all duration-300 hover:-translate-y-1'>
                       <CardContent className='p-4'>
                         <div className='aspect-square rounded-lg overflow-hidden mb-3'>
                           <img
                             src={
-                              game.image ||
+                              game.coverImage?.url ||
                               `https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80`
                             }
                             alt={game.title}
@@ -312,12 +326,13 @@ export default function UserPage() {
                         </h3>
                       </CardContent>
                     </Card>
-                  ))}
+                  </Link>
+                ))}
               </div>
             )}
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -35,8 +35,8 @@ export default function PostCard(props: PostCardProps) {
   return (
     <Card className='flex flex-col overflow-hidden hover:shadow-2xl transition-all border-primary/20 hover:border-primary/50 bg-card/50 backdrop-blur group'>
       {post.coverImage && (
-        <Link to={`/posts/${post.slug}`}>
-          <div className='aspect-video overflow-hidden relative'>
+        <Link to={`${routes.posts.index}/${post.slug}`}>
+          <div className='h-[30rem] overflow-hidden relative'>
             <img
               src={post.coverImage?.url || '/placeholder.svg'}
               alt={post.title}
@@ -64,7 +64,7 @@ export default function PostCard(props: PostCardProps) {
             </Badge>
           )}
         </div>
-        <Link to={`/posts/${post.slug}`}>
+        <Link to={`${routes.posts.index}/${post.slug}`}>
           <h3 className='text-xl font-bold hover:text-primary transition-colors line-clamp-2 leading-tight'>
             {post.title}
           </h3>

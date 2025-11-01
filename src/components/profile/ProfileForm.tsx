@@ -1,4 +1,4 @@
-import { Controller } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Save } from 'lucide-react';
 
 // Components
@@ -9,30 +9,28 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AvatarUpload from '@/components/profile/AvatarUpload';
 import { UserProps } from '@/types/client/blog';
+import { createOnErrorHandler } from '@/utilities';
+import { useTranslation } from 'react-i18next';
 
 // Types
 
 interface ProfileFormProps {
-  control: any;
-  handleSubmit: any;
   onSubmit: (data: any) => void;
-  onError: (error: any) => void;
   profile: UserProps;
   disabled: boolean;
-  t: (key: string) => string;
 }
 
 export default function ProfileForm({
-  control,
-  handleSubmit,
   onSubmit,
-  onError,
   profile,
   disabled,
-  t,
 }: ProfileFormProps) {
+  const { control, handleSubmit } = useFormContext();
+  const { t } = useTranslation();
+
+  // Render
   return (
-    <form onSubmit={handleSubmit(onSubmit, onError)}>
+    <form onSubmit={handleSubmit(onSubmit, createOnErrorHandler)}>
       <Card className='border-primary/20'>
         <CardHeader>
           <CardTitle>{t('profile.profileInformation')}</CardTitle>

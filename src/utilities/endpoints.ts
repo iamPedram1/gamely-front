@@ -1,14 +1,14 @@
 const endpoints = {
   user: {
     index: '/user',
-    notifications: '/notifications',
+    notifications: '/user/notifications',
     details: (username: string) => `/user/${username}`,
-    followers: (username: string) => `/follows/${username}/followers`,
-    followings: (username: string) => `/follows/${username}/followings`,
-    follow: (username: string) => `/follows/${username}/follow`,
-    unfollow: (username: string) => `/follows/${username}/unfollow`,
-    block: (username: string) => `/blocks/${username}/block`,
-    unblock: (username: string) => `/blocks/${username}/unblock`,
+    followers: (username: string) => `/user/follows/${username}/followers`,
+    followings: (username: string) => `/fuser/ollows/${username}/followings`,
+    follow: (username: string) => `/user/follows/${username}/follow`,
+    unfollow: (username: string) => `/user/follows/${username}/unfollow`,
+    block: (username: string) => `/user/blocks/${username}/block`,
+    unblock: (username: string) => `/user/blocks/${username}/unblock`,
     blocks: '/blocks',
     profile: {
       index: '/user/profile',
@@ -26,15 +26,21 @@ const endpoints = {
   },
   tags: '/tags',
   posts: '/posts',
+  reports: '/reports',
   games: '/games',
+  favoriteGames: {
+    ofUser: (username: string) => `/user/${username}/favorite-games`,
+    favorite: (gameId: string) => `/user/favorite-games/${gameId}`,
+  },
   categories: '/categories',
   management: {
     tags: '/management/tags',
     games: '/management/games',
-    categories: '/management/categories',
     posts: '/management/posts',
     users: '/management/users',
+    reports: '/management/reports',
     comments: '/management/comments',
+    categories: '/management/categories',
   },
 };
 

@@ -84,6 +84,7 @@ export interface GameProps {
   id: string;
   title: string;
   slug: string;
+  isFavorite?: boolean;
   coverImage: FileProps;
   description: string;
   releaseDate: string;

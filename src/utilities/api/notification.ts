@@ -23,10 +23,10 @@ export const useNotificationsInfiniteQuery = (
     initialPageParam: 1,
     refetchInterval: 60000 * 5,
     queryKey: [notificationsQueryKey],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ query, pageParam }) =>
       safeApiHandler.get<DataWithPagination<NotificationProps>>(
         endpoints.user.notifications,
-        { query: { page: pageParam } }
+        { query: { ...query, page: pageParam } }
       ),
     enabled: true,
     ...options,

@@ -1,6 +1,6 @@
 import { object } from 'zod';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,14 +44,16 @@ type FormSchema = Zod.infer<ReturnType<typeof createProfileSchema>>;
 export default function ProfilePage() {
   // Context
   const { loading } = useLoadingStore();
+
   // Hooks
   const { t, i18n } = useTranslation();
   const schema = useMemo(createProfileSchema, [i18n.language]);
   const { isAuthorized, profile, logout, isAuthLoading } = useAuth();
-  const { control, handleSubmit, reset } = useForm<FormSchema>({
+  const formMethods = useForm<FormSchema>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
   });
+
   const updateProfile = useUpdateProfileMutation({
     onSuccess: (_, vars) => {
       if (
@@ -64,8 +66,8 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    reset(profile);
-  }, [profile, reset]);
+    formMethods.reset(profile);
+  }, [profile, formMethods.reset]);
 
   // Utilities
   const handleUpdate = async (data: FormSchema) => {
@@ -177,15 +179,13 @@ export default function ProfilePage() {
         <Separator className='my-2' />
 
         {/* Profile Form */}
-        <ProfileForm
-          control={control}
-          handleSubmit={handleSubmit}
-          onSubmit={handleUpdate}
-          onError={createOnErrorHandler}
-          profile={profile}
-          disabled={disabled}
-          t={t}
-        />
+        <FormProvider {...formMethods}>
+          <ProfileForm
+            onSubmit={handleUpdate}
+            profile={profile}
+            disabled={disabled}
+          />
+        </FormProvider>
       </div>
     </main>
   );

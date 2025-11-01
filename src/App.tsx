@@ -40,6 +40,10 @@ import ProfileFollowersPage from '@/pages/ProfileFollowersPage';
 import ProfileFollowingPage from '@/pages/ProfileFollowingPage';
 import UserFollowersPage from '@/pages/UserFollowersPage';
 import UserFollowingPage from '@/pages/UserFollowingPage';
+import DashboardPage from '@/pages/admin/DashboardPage';
+import UserPostsListPage from '@/pages/UserPostsListPage';
+import CreatePostPage from '@/pages/CreatePostPage';
+import GameDetailPage from '@/pages/GameDetailPage';
 
 // Layout
 import Header from '@/components/layout/Header';
@@ -69,6 +73,11 @@ function App() {
             element={<PostDetailPage />}
           />
           <Route path={routes.games.index} element={<GameListPage />} />
+          <Route
+            path={routes.games.details(':slug')}
+            element={<GameDetailPage />}
+          />
+
           <Route path={routes.tags.index} element={<TagListPage />} />
           <Route
             path={routes.categories.index}
@@ -112,6 +121,7 @@ function App() {
 
           {/* Admin Routes */}
           <Route path='/dashboard' element={<AdminLayout />}>
+            <Route index element={<DashboardPage />} />
             <Route
               path={routes.dashboard.posts.index}
               element={<PostsListPage />}
@@ -169,6 +179,10 @@ function App() {
               element={<ReportsListPage />}
             />
           </Route>
+
+          {/* User Routes */}
+          <Route path='/my-posts' element={<UserPostsListPage />} />
+          <Route path='/create-post' element={<CreatePostPage />} />
         </Routes>
         {!isDashboard && <Footer />}
       </Suspense>

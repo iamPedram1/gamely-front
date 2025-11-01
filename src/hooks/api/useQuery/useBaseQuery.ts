@@ -194,7 +194,6 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
 
   useUpdateEffect(() => {
     if (enabled && query.data && !query.isFetching && options.onFetch) {
-      console.log('onFetch will be called', { ...query });
       options.onFetch(query.data);
     }
   }, [query.data, query.isStale, query.dataUpdatedAt]);

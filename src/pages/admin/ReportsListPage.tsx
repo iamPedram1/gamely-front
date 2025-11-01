@@ -1,22 +1,21 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Flag,
-  Search,
-  Filter,
   Eye,
   Check,
   X,
   AlertTriangle,
   MessageSquare,
-  Calendar,
   User,
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+// Components
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Searchbar from '@/components/ui/searchbar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Select,
@@ -44,7 +43,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+
+// Utilities
 import { getDate } from '@/utilities';
+import routes from '@/utilities/routes';
+import {
+  useReportsQuery,
+  useUpdateReportStatusMutate,
+} from '@/utilities/api/management/report';
+import type { ReportProps, ReportStatusType } from '@/types/management/report';
+import type {
+  CommentProps,
+  PostProps,
+  UserProps,
+} from '@/types/management/blog';
 
 interface Report {
   id: string;
@@ -52,12 +64,12 @@ interface Report {
   reason: string;
   description: string;
   status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
-  reportedBy: {
+  user: {
     id: string;
     username: string;
     avatar?: { url: string };
   };
-  reportedContent: {
+  target: {
     id: string;
     title?: string;
     content: string;
@@ -77,138 +89,12 @@ interface Report {
 
 export default function ReportsListPage() {
   const { t, i18n } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
 
-  // Mock reports data
-  const [reports, setReports] = useState<Report[]>([
-    {
-      id: '1',
-      type: 'comment',
-      reason: 'Harassment',
-      description: 'This user is being abusive and harassing other members',
-      status: 'pending',
-      reportedBy: {
-        id: '1',
-        username: 'reporter1',
-        avatar: {
-          url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=reporter1',
-        },
-      },
-      reportedContent: {
-        id: '1',
-        content:
-          'This is an inappropriate comment that violates community guidelines...',
-        author: {
-          id: '2',
-          username: 'baduser',
-          avatar: {
-            url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=baduser',
-          },
-        },
-      },
-      createdAt: '2024-01-20T10:30:00Z',
-    },
-    {
-      id: '2',
-      type: 'comment',
-      reason: 'Spam',
-      description: 'Posting the same promotional content repeatedly',
-      status: 'reviewed',
-      reportedBy: {
-        id: '3',
-        username: 'reporter2',
-        avatar: {
-          url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=reporter2',
-        },
-      },
-      reportedContent: {
-        id: '2',
-        content: 'Check out my amazing product at...',
-        author: {
-          id: '4',
-          username: 'spammer',
-          avatar: {
-            url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=spammer',
-          },
-        },
-      },
-      createdAt: '2024-01-19T14:20:00Z',
-      reviewedAt: '2024-01-19T16:45:00Z',
-      reviewedBy: {
-        id: '5',
-        username: 'admin1',
-      },
-    },
-    {
-      id: '3',
-      type: 'comment',
-      reason: 'Inappropriate Content',
-      description: 'Contains offensive language and inappropriate material',
-      status: 'resolved',
-      reportedBy: {
-        id: '6',
-        username: 'reporter3',
-        avatar: {
-          url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=reporter3',
-        },
-      },
-      reportedContent: {
-        id: '3',
-        content: 'Offensive content that was reported...',
-        author: {
-          id: '7',
-          username: 'offender',
-          avatar: {
-            url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=offender',
-          },
-        },
-      },
-      createdAt: '2024-01-18T09:15:00Z',
-      reviewedAt: '2024-01-18T11:30:00Z',
-      reviewedBy: {
-        id: '5',
-        username: 'admin1',
-      },
-    },
-  ]);
-
-  const handleStatusChange = (
-    reportId: string,
-    newStatus: Report['status']
-  ) => {
-    setReports((prev) =>
-      prev.map((report) =>
-        report.id === reportId
-          ? {
-              ...report,
-              status: newStatus,
-              reviewedAt: new Date().toISOString(),
-              reviewedBy: { id: 'current-admin', username: 'current-admin' },
-            }
-          : report
-      )
-    );
-  };
-
-  const filteredReports = reports.filter((report) => {
-    const matchesSearch =
-      report.reason.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      report.reportedBy.username
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
-      report.reportedContent.author.username
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
-    const matchesStatus =
-      statusFilter === 'all' || report.status === statusFilter;
-    const matchesType = typeFilter === 'all' || report.type === typeFilter;
-
-    return matchesSearch && matchesStatus && matchesType;
-  });
+  const reports = useReportsQuery();
+  const updateStatus = useUpdateReportStatusMutate();
+  console.log({ ...reports });
 
   const getStatusBadge = (status: Report['status']) => {
     switch (status) {
@@ -242,10 +128,35 @@ export default function ReportsListPage() {
     }
   };
 
-  const pendingCount = reports.filter((r) => r.status === 'pending').length;
-  const reviewedCount = reports.filter((r) => r.status === 'reviewed').length;
-  const resolvedCount = reports.filter((r) => r.status === 'resolved').length;
+  const pendingCount = reports.data.docs.filter(
+    (r) => r.status === 'pending'
+  ).length;
+  const reviewedCount = reports.data.docs.filter(
+    (r) => r.status === 'reviewed'
+  ).length;
+  const resolvedCount = reports.data.docs.filter(
+    (r) => r.status === 'resolved'
+  ).length;
 
+  const handleUpdateReportStatus = (
+    reportId: string,
+    status: ReportStatusType
+  ) => {
+    updateStatus.mutate({ id: reportId, status });
+  };
+
+  const getTargetUser = (report: ReportProps) => {
+    switch (report.type) {
+      case 'comment':
+        return (report.target as CommentProps).creator;
+      case 'user':
+        return report.target as UserProps;
+      case 'post':
+        return (report.target as PostProps).author;
+    }
+  };
+
+  // Render
   return (
     <div className='min-h-screen bg-background'>
       <div className='container py-8'>
@@ -316,7 +227,7 @@ export default function ReportsListPage() {
                   <Flag className='h-5 w-5 text-purple-500' />
                   <div>
                     <div className='text-2xl font-bold text-purple-500'>
-                      {reports.length}
+                      {reports.data.pagination.totalDocs}
                     </div>
                     <div className='text-sm text-muted-foreground'>
                       {t('reports.total')}
@@ -329,16 +240,10 @@ export default function ReportsListPage() {
 
           {/* Filters */}
           <div className='flex flex-col sm:flex-row gap-4'>
-            <div className='relative flex-1'>
-              <Search className='absolute left-3 top-2.5 h-4 w-4 text-muted-foreground' />
-              <Input
-                type='search'
-                placeholder={t('reports.searchPlaceholder')}
-                className='pl-10'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+            <Searchbar
+              className='w-full'
+              placeholder={t('reports.searchPlaceholder')}
+            />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className='w-full sm:w-48'>
                 <SelectValue placeholder={t('reports.filterByStatus')} />
@@ -375,11 +280,11 @@ export default function ReportsListPage() {
         <Card>
           <CardHeader>
             <CardTitle>
-              {t('reports.allReports')} ({filteredReports.length})
+              {t('reports.allReports')} ({2})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {filteredReports.length === 0 ? (
+            {reports.data.docs.length === 0 ? (
               <div className='text-center py-12'>
                 <Flag className='h-12 w-12 text-muted-foreground mx-auto mb-4' />
                 <h3 className='text-lg font-semibold mb-2'>
@@ -396,7 +301,7 @@ export default function ReportsListPage() {
                     <TableRow>
                       <TableHead>{t('reports.type')}</TableHead>
                       <TableHead>{t('reports.reason')}</TableHead>
-                      <TableHead>{t('reports.reportedBy')}</TableHead>
+                      <TableHead>{t('reports.user')}</TableHead>
                       <TableHead>{t('reports.reportedUser')}</TableHead>
                       <TableHead>{t('reports.status')}</TableHead>
                       <TableHead>{t('reports.date')}</TableHead>
@@ -404,7 +309,7 @@ export default function ReportsListPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredReports.map((report) => (
+                    {reports.data.docs.map((report) => (
                       <TableRow key={report.id}>
                         <TableCell>
                           <div className='flex items-center gap-2'>
@@ -423,46 +328,55 @@ export default function ReportsListPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className='flex items-center gap-2'>
-                            <Avatar className='h-8 w-8'>
-                              <AvatarImage
-                                src={report.reportedBy.avatar?.url}
-                              />
-                              <AvatarFallback>
-                                {report.reportedBy.username[0]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className='text-sm'>
-                              {report.reportedBy.username}
-                            </span>
-                          </div>
+                          <Link
+                            to={routes.dashboard.users.edit(report.user.id)}
+                          >
+                            <div className='flex items-center gap-2'>
+                              <Avatar className='h-8 w-8'>
+                                <AvatarImage src={report.user.avatar?.url} />
+                                <AvatarFallback>
+                                  {report.user.username[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className='text-sm'>
+                                {report.user.username}
+                              </span>
+                            </div>
+                          </Link>
                         </TableCell>
                         <TableCell>
-                          <div className='flex items-center gap-2'>
-                            <Avatar className='h-8 w-8'>
-                              <AvatarImage
-                                src={report.reportedContent.author.avatar?.url}
-                              />
-                              <AvatarFallback>
-                                {report.reportedContent.author.username[0]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className='text-sm'>
-                              {report.reportedContent.author.username}
-                            </span>
-                          </div>
+                          <Link
+                            to={routes.dashboard.users.edit(report.user.id)}
+                          >
+                            <div className='flex items-center gap-2'>
+                              <Avatar className='h-8 w-8'>
+                                <AvatarImage
+                                  src={getTargetUser(report)?.avatar?.url}
+                                />
+                                <AvatarFallback>
+                                  {getTargetUser(report).username[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className='text-sm'>
+                                {getTargetUser(report).username}
+                              </span>
+                            </div>
+                          </Link>
                         </TableCell>
                         <TableCell>{getStatusBadge(report.status)}</TableCell>
                         <TableCell>
                           <div className='text-sm'>
                             <div>
-                              {getDate(report.createdAt, 'YYYY/MM/DD-HH:mm:ss')}
+                              {getDate(
+                                report.createDate,
+                                'YYYY/MM/DD-HH:mm:ss'
+                              )}
                             </div>
-                            {report.reviewedAt && (
+                            {report.updateDate && (
                               <div className='text-muted-foreground'>
                                 {t('reports.reviewedOn')}{' '}
                                 {getDate(
-                                  report.reviewedAt,
+                                  report.updateDate,
                                   'YYYY/MM/DD-HH:mm:ss'
                                 )}
                               </div>
@@ -476,10 +390,13 @@ export default function ReportsListPage() {
                                 <Button
                                   size='sm'
                                   variant='outline'
-                                  onClick={() =>
-                                    handleStatusChange(report.id, 'reviewed')
-                                  }
                                   className='text-blue-600 hover:text-blue-700'
+                                  onClick={() =>
+                                    handleUpdateReportStatus(
+                                      report.id,
+                                      'reviewed'
+                                    )
+                                  }
                                 >
                                   <Eye className='h-4 w-4' />
                                 </Button>
@@ -507,13 +424,13 @@ export default function ReportsListPage() {
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
+                                        className='bg-green-600 hover:bg-green-700'
                                         onClick={() =>
-                                          handleStatusChange(
+                                          handleUpdateReportStatus(
                                             report.id,
                                             'resolved'
                                           )
                                         }
-                                        className='bg-green-600 hover:bg-green-700'
                                       >
                                         {t('reports.resolve')}
                                       </AlertDialogAction>
@@ -544,13 +461,13 @@ export default function ReportsListPage() {
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
+                                        className='bg-red-600 hover:bg-red-700'
                                         onClick={() =>
-                                          handleStatusChange(
+                                          handleUpdateReportStatus(
                                             report.id,
                                             'dismissed'
                                           )
                                         }
-                                        className='bg-red-600 hover:bg-red-700'
                                       >
                                         {t('reports.dismiss')}
                                       </AlertDialogAction>

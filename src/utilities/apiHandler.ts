@@ -145,8 +145,6 @@ async function appFetch<T = any>(
       message,
     };
   } catch (error: any) {
-    console.log(error);
-
     const statusCode = error?.cause?.statusCode || 502;
     const errors = error?.cause?.errors || [];
     const errorMessage =

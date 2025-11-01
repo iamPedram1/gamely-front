@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft } from 'lucide-react';
 
 // Hooks
 import useAuth from '@/hooks/useAuth';
 import { useBoolean } from '@/hooks/state';
 
 // Components
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import PostHeader from '@/components/blog/PostHeader';
 import PostContent from '@/components/blog/PostContent';
 import CommentsSection from '@/components/blog/CommentsSection';
 import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
+import {
+  PageLayout,
+  LoadingState,
+  NotFoundState,
+} from '@/components/layout/PageLayout';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -57,58 +60,52 @@ export default function PostDetailPage() {
     addComment.setFalse();
   };
 
-  // Render loading or not found state
-  if (!post.data) {
+  // Loading state
+  if (post.isFetching && !post.isFetched) {
+    return <LoadingState />;
+  }
+
+  // Not found state
+  if (!post.data && post.isFetched) {
     return (
-      <main className='min-h-screen flex flex-col bg-background flex-1 container py-8'>
-        {post.isFetching && !post.isFetched ? (
-          <h1 className='text-center text-4xl font-bold mb-4'>
-            {t('common.loading')}
-          </h1>
-        ) : (
-          <>
-            <h1 className='text-4xl font-bold mb-4'>
-              {t('post.postNotFound')}
-            </h1>
-            <Link to={routes.posts.index}>
-              <Button>{t('common.backToPosts')}</Button>
-            </Link>
-          </>
-        )}
-      </main>
+      <NotFoundState
+        title={t('post.postNotFound')}
+        description={t('post.postNotFoundDescription')}
+        backTo={routes.posts.index}
+        backLabel={t('common.backToPosts')}
+      />
     );
   }
 
   // Render post detail
   return (
-    <main className='min-h-screen flex flex-col bg-background flex-1 container py-8'>
-      <Link to={routes.posts.index}>
-        <Button variant='ghost' className='mb-6'>
-          <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
-          {t('common.backToPosts')}
-        </Button>
-      </Link>
+    <PageLayout
+      backTo={routes.posts.index}
+      backLabel={t('common.backToPosts')}
+      className='min-h-screen flex flex-col bg-background flex-1 container py-8'
+    >
+      {post.data && (
+        <article className='max-w-4xl mx-auto'>
+          {/* Post Header */}
+          <PostHeader post={post.data} />
 
-      <article className='max-w-4xl mx-auto'>
-        {/* Post Header */}
-        <PostHeader post={post.data} />
+          {/* Post Content */}
+          <PostContent post={post.data} />
 
-        {/* Post Content */}
-        <PostContent post={post.data} />
+          <Separator className='my-8' />
 
-        <Separator className='my-8' />
-
-        {/* Comments Section */}
-        <CommentsSection
-          comments={comments.data}
-          isSuccess={comments.isSuccess}
-          onAddComment={handleOpenAddCommentDialog}
-          onReply={setCommentToReply}
-        />
-      </article>
+          {/* Comments Section */}
+          <CommentsSection
+            comments={comments.data}
+            isSuccess={comments.isSuccess}
+            onAddComment={handleOpenAddCommentDialog}
+            onReply={setCommentToReply}
+          />
+        </article>
+      )}
 
       {/* Comment Dialog */}
-      {post.data.id &&
+      {post.data?.id &&
         (commentToEdit || commentToReply || addComment.state) && (
           <MutateCommentDialog
             commentToEdit={commentToEdit}
@@ -117,6 +114,6 @@ export default function PostDetailPage() {
             postId={post.data.id}
           />
         )}
-    </main>
+    </PageLayout>
   );
 }

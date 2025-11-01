@@ -16,23 +16,23 @@ export default function Footer() {
   const contentLinks = [
     { to: routes.posts.index, label: t('dashboard.allPosts') },
     { to: routes.games.index, label: t('nav.games') },
-    { to: routes.tags.index, label: t('nav.tags') }
+    { to: routes.tags.index, label: t('nav.tags') },
   ];
 
   // Category links
   const categoryLinks = [
     { to: '/category/reviews', label: t('footer.reviews') },
     { to: '/category/news', label: t('footer.news') },
-    { to: '/category/guides', label: t('footer.guides') }
+    { to: '/category/guides', label: t('footer.guides') },
   ];
 
   // Render
   return (
     <footer className='border-t border-primary/20 bg-accent/30 backdrop-blur'>
       <div className='container py-16'>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-12'>
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-12'>
           {/* Logo and Description */}
-          <div className='space-y-4'>
+          <div className='col-span-2 md:col-span-1 space-y-4'>
             <Logo />
             <p className='text-sm text-muted-foreground leading-relaxed'>
               {t('footer.description')}
@@ -40,19 +40,13 @@ export default function Footer() {
           </div>
 
           {/* Content Links */}
-          <FooterColumn 
-            title={t('post.content')}
-            links={contentLinks}
-          />
+          <FooterColumn title={t('post.content')} links={contentLinks} />
 
           {/* Category Links */}
-          <FooterColumn 
-            title={t('nav.categories')}
-            links={categoryLinks}
-          />
+          <FooterColumn title={t('nav.categories')} links={categoryLinks} />
 
           {/* Social Links */}
-          <div className='space-y-4'>
+          <div className='flex flex-col items-center md:w-fit col-span-2 md:col-span-1 space-y-4'>
             <h4 className='font-bold text-lg uppercase tracking-wide'>
               {t('nav.followUs')} ❤️
             </h4>

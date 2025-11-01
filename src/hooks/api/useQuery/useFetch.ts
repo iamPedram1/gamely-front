@@ -63,7 +63,6 @@ export function useFetchApi<
   const isChanging = useBoolean();
 
   // Hooks
-
   const lastParamsRef = useRef<Params | undefined>(undefined);
   const memoizedQueryKey = useMemo(
     () => [...queryKey, ...(params ? [params] : [])] as readonly unknown[],
@@ -119,6 +118,11 @@ export function useFetchApi<
   useUpdateEffect(() => {
     isChanging.setFalse();
   }, [baseQuery.data, baseQuery.dataUpdatedAt]);
+
+  useUpdateEffect(() => {
+    if (options.enabled) enabled.setTrue();
+    else enabled.setFalse();
+  }, [options?.enabled]);
 
   return {
     ...baseQuery,

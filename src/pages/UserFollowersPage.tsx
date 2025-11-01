@@ -1,11 +1,13 @@
-import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Users } from 'lucide-react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Users } from 'lucide-react';
+import { useMemo } from 'react';
 
-import { Button } from '@/components/ui/button';
-import FollowerCard from '@/components/profile/FollowerCard';
+// Components
 import Searchbar from '@/components/ui/searchbar';
+import FollowerCard from '@/components/profile/FollowerCard';
+import { PageLayout, PageHeader } from '@/components/layout/PageLayout';
+import InfiniteScrollList from '@/components/ui/infinite-scroll';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -15,68 +17,46 @@ export default function UserFollowersPage() {
   // Hooks
   const { t } = useTranslation();
   const { username } = useParams();
-  const [searchParams] = useSearchParams();
   const followers = useFollowersInfiniteQuery(username);
-
   const allFollowers = useMemo(
-    () => followers.data?.pages?.flatMap?.((page) => page.docs) || [],
+    () => followers.data?.pages.flatMap((page) => page.docs) || [],
     [followers.data?.pages]
   );
 
-  // Render
-  return (
-    <main className='flex-1 container py-8'>
-      <Link to={routes.users.details(username || '')}>
-        <Button variant='ghost' className='mb-6 flex items-center gap-2'>
-          <ArrowLeft className='h-4 w-4 rtl:rotate-180' />
-          {t('common.back')}
-        </Button>
-      </Link>
+  const emptyState = (
+    <div className='text-center py-12'>
+      <Users className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
+      <h3 className='text-lg font-semibold mb-2'>{t('user.noFollowers')}</h3>
+      <p className='text-muted-foreground'>
+        {t('user.noFollowersDescription')}
+      </p>
+    </div>
+  );
 
+  return (
+    <PageLayout backTo={routes.users.details(username || '')}>
       <div className='max-w-3xl mx-auto space-y-6'>
-        {/* Page Header */}
-        <div>
-          <h1 className='text-4xl font-black flex items-center gap-3'>
-            <Users className='h-8 w-8' />
-            <span className='gradient-gaming-text'>
-              {t('user.followersOf', { name: username })}
-            </span>
-          </h1>
-          <p className='text-muted-foreground mt-2'>
-            {t('user.peopleFollowings', { name: username })}
-          </p>
-        </div>
+        <PageHeader
+          title={t('user.followersOf', { name: username })}
+          description={t('user.peopleFollowings', { name: username })}
+          icon={<Users className='h-8 w-8' />}
+        />
 
         {/* Search */}
         <Searchbar />
 
-        {/* Followers List */}
-        <div className='space-y-4'>
-          {allFollowers.length === 0 ? (
-            <div className='text-center py-12'>
-              <Users className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
-              <h3 className='text-lg font-semibold mb-2'>
-                {searchParams.get('search')
-                  ? t('user.noSearchResults')
-                  : t('user.noFollowers')}
-              </h3>
-              <p className='text-muted-foreground'>
-                {searchParams.get('search')
-                  ? t('user.tryDifferentSearch')
-                  : t('user.noFollowersDescription')}
-              </p>
-            </div>
-          ) : (
-            allFollowers.map((follower) => (
-              <FollowerCard
-                key={follower.id}
-                follower={follower}
-                showActions={true}
-              />
-            ))
+        {/* Followers List with Infinite Scroll */}
+        <InfiniteScrollList
+          data={allFollowers}
+          hasNextPage={followers.hasNextPage || false}
+          isFetchingNextPage={followers.isFetchingNextPage}
+          fetchNextPage={followers.fetchNextPage}
+          renderItem={(follower) => (
+            <FollowerCard follower={follower} showActions={false} />
           )}
-        </div>
+          emptyState={emptyState}
+        />
       </div>
-    </main>
+    </PageLayout>
   );
 }

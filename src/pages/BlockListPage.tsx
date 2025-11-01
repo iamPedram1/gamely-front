@@ -31,7 +31,7 @@ export default function BlockListPage() {
   // Hooks
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const blocks = useBlockListInfiniteQuery();
+  const blocks = useBlockListInfiniteQuery({ refetchOnQueryChange: true });
   const unblock = useUnblockUserMutation();
 
   const allBlocks = useMemo(
@@ -86,30 +86,32 @@ export default function BlockListPage() {
         </Card>
       ) : (
         <div onScroll={handleScroll} className='space-y-4'>
-          {allBlocks.map((user) => (
-            <Card key={user.id} className='hover:shadow-md transition-shadow'>
+          {allBlocks.map((block) => (
+            <Card key={block.id} className='hover:shadow-md transition-shadow'>
               <CardContent className='p-6'>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-4'>
                     <Avatar className='h-12 w-12'>
                       <AvatarImage
                         src={
-                          user.avatar?.url ||
-                          `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.username}`
+                          block.avatar?.url ||
+                          `https://api.dicebear.com/7.x/avataaars/svg?seed=${block.username}`
                         }
-                        alt={user.username}
+                        alt={block.username}
                       />
                       <AvatarFallback>
-                        {user.username[0].toUpperCase()}
+                        {block.username?.[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className='font-semibold text-lg'>{user.username}</h3>
+                      <h3 className='font-semibold text-lg'>
+                        {block.username}
+                      </h3>
                       <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                         <span>
                           {t('profile.blockedOn')}{' '}
                           <span dir='ltr'>
-                            {getDate(user.blockedAt, 'YYYY/MM/DD - HH:mm')}
+                            {getDate(block.blockedAt, 'YYYY/MM/DD - HH:mm')}
                           </span>
                         </span>
                       </div>
@@ -133,7 +135,7 @@ export default function BlockListPage() {
                         </AlertDialogTitle>
                         <AlertDialogDescription>
                           {t('profile.unblockUserConfirmation', {
-                            username: user.username,
+                            username: block.username,
                           })}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
@@ -142,7 +144,7 @@ export default function BlockListPage() {
                           {t('common.cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={() => unblock.mutate(user.id)}
+                          onClick={() => unblock.mutate(block.userId)}
                           className='bg-green-600 hover:bg-green-700'
                         >
                           {t('user.unblock')}

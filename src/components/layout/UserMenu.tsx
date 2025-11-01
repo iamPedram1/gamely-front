@@ -76,7 +76,7 @@ export default function UserMenu() {
       >
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-semibold leading-none gradient-gaming-text'>
+            <p className='text-sm font-semibold gradient-gaming-text'>
               {profile.username}
             </p>
             <p className='text-xs leading-none text-muted-foreground mt-1'>
