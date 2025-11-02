@@ -10,11 +10,13 @@ import { useBoolean } from '@/hooks/state';
 import { Separator } from '@/components/ui/separator';
 import PostHeader from '@/components/blog/PostHeader';
 import PostContent from '@/components/blog/PostContent';
-import LoadingWrapper from '@/components/ui/loading-wrapper';
 import CommentsSection from '@/components/blog/CommentsSection';
 import MutateCommentDialog from '@/components/admin/MutateCommentDialog';
-import ReportDialog from '@/components/blog/ReportDialog';
-import { PageLayout, NotFoundState } from '@/components/layout/PageLayout';
+import {
+  PageLayout,
+  LoadingState,
+  NotFoundState,
+} from '@/components/layout/PageLayout';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -28,7 +30,6 @@ import type { CommentProps } from '@/types/client/blog';
 export default function PostDetailPage() {
   // States
   const addComment = useBoolean();
-  const reportPost = useBoolean();
   const [commentToEdit, setCommentToEdit] = useState<CommentProps | null>(null);
   const [commentToReply, setCommentToReply] = useState<CommentProps | null>(
     null
@@ -59,12 +60,17 @@ export default function PostDetailPage() {
     addComment.setFalse();
   };
 
+  // Loading state
+  if (post.isFetching && !post.isFetched) {
+    return <LoadingState />;
+  }
+
   // Not found state
-  if (!post.data && !post.isFetching) {
+  if (!post.data && post.isFetched) {
     return (
       <NotFoundState
         title={t('post.postNotFound')}
-        description={t('post.postNotFoundDescription')}
+        description={t('post.postNotFoundDesc')}
         backTo={routes.posts.index}
         backLabel={t('common.backToPosts')}
       />
@@ -76,53 +82,38 @@ export default function PostDetailPage() {
     <PageLayout
       backTo={routes.posts.index}
       backLabel={t('common.backToPosts')}
-      className='min-h-screen flex flex-col bg-background flex-1 container py-8'
+      className='min-h-screen flex flex-col bg-background flex-1 container py-4 md:py-8 px-4'
     >
-      <LoadingWrapper isLoading={!post.isFetched}>
-        {post.data && (
-          <article className='max-w-4xl mx-auto'>
-            {/* Post Header */}
-            <PostHeader
-              post={post.data}
-              onReport={() => reportPost.setTrue()}
-            />
+      {post.data && (
+        <article className='max-w-4xl mx-auto w-full'>
+          {/* Post Header */}
+          <PostHeader post={post.data} />
 
-            {/* Post Content */}
-            <PostContent post={post.data} />
+          {/* Post Content */}
+          <PostContent post={post.data} />
 
-            <Separator className='my-8' />
+          <Separator className='my-6 md:my-8' />
 
-            {/* Comments Section */}
-            <CommentsSection
-              comments={comments.data}
-              isSuccess={comments.isSuccess}
-              onAddComment={handleOpenAddCommentDialog}
-              onReply={setCommentToReply}
-            />
-          </article>
-        )}
+          {/* Comments Section */}
+          <CommentsSection
+            comments={comments.data}
+            isSuccess={comments.isSuccess}
+            onAddComment={handleOpenAddCommentDialog}
+            onReply={setCommentToReply}
+          />
+        </article>
+      )}
 
-        {/* Comment Dialog */}
-        {post.data?.id &&
-          (commentToEdit || commentToReply || addComment.state) && (
-            <MutateCommentDialog
-              commentToEdit={commentToEdit}
-              replyToComment={commentToReply}
-              onClose={handleCloseDialog}
-              postId={post.data.id}
-            />
-          )}
-
-        {/* Report Dialog */}
-        {post.data?.id && (
-          <ReportDialog
-            open={reportPost.state}
-            onOpenChange={reportPost.set}
-            targetId={post.data.id}
-            type='post'
+      {/* Comment Dialog */}
+      {post.data?.id &&
+        (commentToEdit || commentToReply || addComment.state) && (
+          <MutateCommentDialog
+            commentToEdit={commentToEdit}
+            replyToComment={commentToReply}
+            onClose={handleCloseDialog}
+            postId={post.data.id}
           />
         )}
-      </LoadingWrapper>
     </PageLayout>
   );
 }

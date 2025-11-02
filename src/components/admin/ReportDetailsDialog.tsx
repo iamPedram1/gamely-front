@@ -31,6 +31,8 @@ import type {
   UserProps,
 } from '@/types/management/blog';
 import i18n from '@/utilities/i18n';
+import { Link } from 'react-router-dom';
+import routes from '@/utilities/routes';
 
 interface ReportDetailsDialogProps {
   open: boolean;
@@ -106,6 +108,7 @@ export default function ReportDetailsDialog({
         return {
           bio: (report.target as UserProps).bio,
           username: (report.target as UserProps).username,
+          id: (report.target as UserProps).id,
         };
       default:
         return null;
@@ -155,7 +158,7 @@ export default function ReportDetailsDialog({
                   </h4>
                   <div className='flex items-center gap-1 text-sm'>
                     <Calendar className='h-4 w-4' />
-                    {getDate(report.createDate, 'YYYY/MM/DD HH:mm')}
+                    {getDate(report.createDate, 'YYYY/MM/DD-HH:mm')}
                   </div>
                 </div>
               </div>
@@ -191,7 +194,10 @@ export default function ReportDetailsDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='flex items-center gap-3'>
+              <Link
+                to={routes.dashboard.users.edit(report.user.id)}
+                className='flex items-center gap-3 w-fit'
+              >
                 <Avatar className='h-10 w-10'>
                   <AvatarImage src={report.user.avatar?.url} />
                   <AvatarFallback>
@@ -204,7 +210,7 @@ export default function ReportDetailsDialog({
                     {report.user.email}
                   </div>
                 </div>
-              </div>
+              </Link>
             </CardContent>
           </Card>
 
@@ -224,22 +230,26 @@ export default function ReportDetailsDialog({
                       ? t('reports.reportedUser')
                       : t('reports.contentAuthor')}
                   </h4>
-                  <div className='flex items-center gap-3 p-3 bg-muted/50 rounded-lg'>
-                    <Avatar className='h-8 w-8'>
-                      <AvatarImage src={targetUser.avatar?.url} />
-                      <AvatarFallback>
-                        {targetUser.username[0]?.toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className='font-medium'>@{targetUser.username}</div>
-                      {targetUser.email && (
-                        <div className='text-sm text-muted-foreground'>
-                          {targetUser.email}
+                  <Link to={routes.dashboard.users.edit(targetUser.id)}>
+                    <div className='flex items-center gap-3 p-3 bg-muted/50 rounded-lg'>
+                      <Avatar className='h-8 w-8'>
+                        <AvatarImage src={targetUser.avatar?.url} />
+                        <AvatarFallback>
+                          {targetUser.username[0]?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className='font-medium'>
+                          @{targetUser.username}
                         </div>
-                      )}
+                        {targetUser.email && (
+                          <div className='text-sm text-muted-foreground'>
+                            {targetUser.email}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               )}
 
@@ -272,9 +282,13 @@ export default function ReportDetailsDialog({
                       typeof targetContent === 'object' &&
                       'username' in targetContent && (
                         <>
-                          <div className='font-semibold mb-1'>
-                            @{targetContent.username}
-                          </div>
+                          <Link
+                            to={routes.dashboard.users.edit(targetContent.id)}
+                          >
+                            <div className='font-semibold mb-1'>
+                              @{targetContent.username}
+                            </div>
+                          </Link>
                           {targetContent.bio && (
                             <p className='text-sm text-muted-foreground'>
                               {targetContent.bio}

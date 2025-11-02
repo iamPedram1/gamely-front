@@ -43,7 +43,7 @@ export default function BlockUserDialog({
             <AlertDialogTitle>{t('user.blockUser')}</AlertDialogTitle>
           </div>
           <AlertDialogDescription>
-            {t('comment.blockUserConfirmation', { username })}
+            {t('user.blockUserDescription', { username })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className='flex gap-4'>

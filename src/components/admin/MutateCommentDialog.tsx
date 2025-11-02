@@ -37,7 +37,7 @@ interface MutateCommentDialogProps {
 
 const createCommentSchema = () =>
   object({
-    message: generateStringSchema('message', 3, 255),
+    message: generateStringSchema('message', 10, 500),
     replyToComment: generateStringSchema(
       'replyToComment',
       undefined,

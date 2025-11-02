@@ -80,9 +80,8 @@ export default function UserDetailPage() {
   const isLoading = updateUser.isPending || !user.isFetched;
   const disabled =
     isLoading ||
-    (profile.role !== 'superAdmin' &&
-      ['admin', 'superAdmin'].includes(user.data.role) &&
-      !isUpdatingSelf);
+    profile.role !== 'superAdmin' ||
+    (user.data?.role === 'admin' && !isUpdatingSelf);
 
   // Utilities
   const handleUpdate = (data: FormSchema) => {
@@ -272,7 +271,7 @@ export default function UserDetailPage() {
                   render={({ field }) => (
                     <Input
                       id='username'
-                      placeholder={t('user.enterUserName')}
+                      placeholder={t('user.enterUsername')}
                       disabled={disabled}
                       {...field}
                     />
@@ -311,7 +310,7 @@ export default function UserDetailPage() {
                     <Select
                       value={field.value}
                       onValueChange={(value) => field.onChange(value)}
-                      disabled={disabled || user.data.role !== 'superAdmin'}
+                      disabled={disabled}
                     >
                       <SelectTrigger>
                         <SelectValue />

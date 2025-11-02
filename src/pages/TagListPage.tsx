@@ -6,13 +6,9 @@ import { Hash } from 'lucide-react';
 // Components
 import { Badge } from '@/components/ui/badge';
 import { TagCardSkeleton } from '@/components/ui/loading-skeleton';
+import { PageLayout, PageHeader, LoadingState } from '@/components/layout/PageLayout';
 import { InfiniteScrollGrid } from '@/components/ui/infinite-scroll';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  PageLayout,
-  PageHeader,
-  LoadingState,
-} from '@/components/layout/PageLayout';
 
 // Utilities
 import routes from '@/utilities/routes';
@@ -28,10 +24,10 @@ export default function TagListPage() {
   );
 
   const emptyState = (
-    <div className='text-center py-12'>
+    <div className='text-center py-12 px-4'>
       <Hash className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
-      <h3 className='text-lg font-semibold mb-2'>{t('tag.noTags')}</h3>
-      <p className='text-muted-foreground'>{t('tag.noTagsDescription')}</p>
+      <h3 className='text-base md:text-lg font-semibold mb-2'>{t('tag.noTags')}</h3>
+      <p className='text-sm md:text-base text-muted-foreground'>{t('tag.noTagsDescription')}</p>
     </div>
   );
 
@@ -43,13 +39,17 @@ export default function TagListPage() {
     </div>
   );
 
-  if (tags.isLoading) return <LoadingState />;
+  if (tags.isLoading) {
+    return <LoadingState />;
+  }
+
   return (
-    <PageLayout showBack={false}>
+    <PageLayout showBack={false} className='flex-1 container py-4 md:py-8 px-4'>
       <PageHeader
         title={t('common.tags')}
         description={t('tag.browseByTags')}
-        icon={<Hash className='h-8 w-8' />}
+        icon={<Hash className='h-6 w-6 md:h-8 md:w-8' />}
+        className='mb-6 md:mb-8'
       />
 
       <InfiniteScrollGrid
@@ -59,17 +59,19 @@ export default function TagListPage() {
         fetchNextPage={tags.fetchNextPage}
         renderItem={(tag) => (
           <Link to={`${routes.posts.index}?tag=${tag.slug}`}>
-            <Card className='hover:shadow-lg transition-shadow cursor-pointer'>
-              <CardHeader>
+            <Card className='hover:shadow-lg transition-shadow cursor-pointer h-full'>
+              <CardHeader className='p-3 md:p-4'>
                 <div className='flex items-center justify-between'>
-                  <h3 className='text-lg font-bold'>#{tag.title}</h3>
-                  <Badge variant='secondary'>{tag.postsCount}</Badge>
+                  <h3 className='text-sm md:text-base lg:text-lg font-bold truncate'>#{tag.title}</h3>
+                  <Badge variant='secondary' className='text-xs md:text-sm'>{tag.postsCount}</Badge>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className='text-sm text-muted-foreground'>
+              <CardContent className='p-3 md:p-4 pt-0'>
+                <p className='text-xs md:text-sm text-muted-foreground'>
                   {tag.postsCount}{' '}
-                  {tag.postsCount === 1 ? t('common.post') : t('common.posts')}
+                  {tag.postsCount === 1
+                    ? t('common.post')
+                    : t('common.posts')}
                 </p>
               </CardContent>
             </Card>

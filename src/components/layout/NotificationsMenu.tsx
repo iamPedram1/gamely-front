@@ -85,6 +85,7 @@ export default function NotificationsMenu() {
           </DropdownMenuLabel>
           <div className='flex gap-1'>
             <Button
+              disabled={allNotifications.length === 0}
               variant='ghost'
               size='icon'
               className='h-7 w-7 text-primary hover:text-primary/80'
@@ -94,6 +95,7 @@ export default function NotificationsMenu() {
               <Check className='h-4 w-4' />
             </Button>
             <Button
+              disabled={allNotifications.length === 0}
               variant='ghost'
               size='icon'
               className='h-7 w-7 text-destructive hover:text-destructive/80'

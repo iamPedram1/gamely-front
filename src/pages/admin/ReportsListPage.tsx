@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Flag,
@@ -50,57 +50,43 @@ import {
 import { getDate } from '@/utilities';
 import routes from '@/utilities/routes';
 import {
+  useReportsOverviewQuery,
   useReportsQuery,
   useUpdateReportStatusMutate,
 } from '@/utilities/api/management/report';
-import type { ReportProps, ReportStatusType } from '@/types/management/report';
+import type {
+  ReportProps,
+  ReportStatusType,
+  ReportType,
+} from '@/types/management/report';
 import type {
   CommentProps,
   PostProps,
   UserProps,
 } from '@/types/management/blog';
-
-interface Report {
-  id: string;
-  type: 'comment' | 'post' | 'user';
-  reason: string;
-  description: string;
-  status: 'pending' | 'reviewed' | 'resolved' | 'dismissed';
-  user: {
-    id: string;
-    username: string;
-    avatar?: { url: string };
-  };
-  target: {
-    id: string;
-    title?: string;
-    content: string;
-    author: {
-      id: string;
-      username: string;
-      avatar?: { url: string };
-    };
-  };
-  createdAt: string;
-  reviewedAt?: string;
-  reviewedBy?: {
-    id: string;
-    username: string;
-  };
-}
+import PaginationControls from '@/components/ui/pagination-controls';
 
 export default function ReportsListPage() {
-  const { t, i18n } = useTranslation();
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [selectedReport, setSelectedReport] = useState<ReportProps | null>(null);
+  // States
+  const [statusFilter, setStatusFilter] = useState<ReportStatusType | 'all'>(
+    'all'
+  );
+  const [typeFilter, setTypeFilter] = useState<ReportType | 'all'>('all');
+  const [selectedReport, setSelectedReport] = useState<ReportProps | null>(
+    null
+  );
+
+  // Hooks
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { t } = useTranslation();
   const [showReportDetails, setShowReportDetails] = useState(false);
-
-  const reports = useReportsQuery();
+  const reports = useReportsQuery({ refetchOnQueryChange: true });
+  const reportsOverview = useReportsOverviewQuery({
+    placeholderData: { dismissed: 0, resolved: 0, reviewed: 0, pending: 0 },
+  });
   const updateStatus = useUpdateReportStatusMutate();
-  console.log({ ...reports });
 
-  const getStatusBadge = (status: Report['status']) => {
+  const getStatusBadge = (status: ReportStatusType) => {
     switch (status) {
       case 'pending':
         return <Badge variant='destructive'>{t('reports.pending')}</Badge>;
@@ -119,7 +105,7 @@ export default function ReportsListPage() {
     }
   };
 
-  const getTypeIcon = (type: Report['type']) => {
+  const getTypeIcon = (type: ReportType) => {
     switch (type) {
       case 'comment':
         return <MessageSquare className='h-4 w-4' />;
@@ -131,16 +117,6 @@ export default function ReportsListPage() {
         return <AlertTriangle className='h-4 w-4' />;
     }
   };
-
-  const pendingCount = reports.data.docs.filter(
-    (r) => r.status === 'pending'
-  ).length;
-  const reviewedCount = reports.data.docs.filter(
-    (r) => r.status === 'reviewed'
-  ).length;
-  const resolvedCount = reports.data.docs.filter(
-    (r) => r.status === 'resolved'
-  ).length;
 
   const handleUpdateReportStatus = (
     reportId: string,
@@ -160,6 +136,23 @@ export default function ReportsListPage() {
     }
   };
 
+  const handleFilterStatus = (status: ReportStatusType | 'all') => {
+    setStatusFilter(status);
+    setSearchParams((sp) => {
+      if (status === 'all') sp.delete('status');
+      else sp.set('status', status);
+      return sp;
+    });
+  };
+  const handleFilterType = (type: ReportType | 'all') => {
+    setTypeFilter(type);
+    setSearchParams((sp) => {
+      if (type === 'all') sp.delete('type');
+      else sp.set('type', type);
+      return sp;
+    });
+  };
+
   // Render
   return (
     <div className='min-h-screen bg-background'>
@@ -171,7 +164,9 @@ export default function ReportsListPage() {
               <Flag className='h-6 w-6 text-red-600' />
             </div>
             <div>
-              <h1 className='text-2xl md:text-3xl font-bold'>{t('reports.title')}</h1>
+              <h1 className='text-2xl md:text-3xl font-bold'>
+                {t('reports.title')}
+              </h1>
               <p className='text-muted-foreground text-sm md:text-base'>
                 {t('reports.description')}
               </p>
@@ -186,7 +181,7 @@ export default function ReportsListPage() {
                   <AlertTriangle className='h-4 w-4 md:h-5 md:w-5 text-red-500' />
                   <div>
                     <div className='text-lg md:text-2xl font-bold text-red-500'>
-                      {pendingCount}
+                      {reportsOverview.data?.pending}
                     </div>
                     <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.pending')}
@@ -201,7 +196,7 @@ export default function ReportsListPage() {
                   <Eye className='h-4 w-4 md:h-5 md:w-5 text-blue-500' />
                   <div>
                     <div className='text-lg md:text-2xl font-bold text-blue-500'>
-                      {reviewedCount}
+                      {reportsOverview?.data?.reviewed}
                     </div>
                     <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.reviewed')}
@@ -216,7 +211,7 @@ export default function ReportsListPage() {
                   <Check className='h-4 w-4 md:h-5 md:w-5 text-green-500' />
                   <div>
                     <div className='text-lg md:text-2xl font-bold text-green-500'>
-                      {resolvedCount}
+                      {reportsOverview?.data?.resolved}
                     </div>
                     <div className='text-xs md:text-sm text-muted-foreground'>
                       {t('reports.resolved')}
@@ -248,7 +243,7 @@ export default function ReportsListPage() {
               className='w-full'
               placeholder={t('reports.searchPlaceholder')}
             />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={handleFilterStatus}>
               <SelectTrigger className='w-full sm:w-40 md:w-48'>
                 <SelectValue placeholder={t('reports.filterByStatus')} />
               </SelectTrigger>
@@ -266,7 +261,7 @@ export default function ReportsListPage() {
                 </SelectItem>
               </SelectContent>
             </Select>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <Select value={typeFilter} onValueChange={handleFilterType}>
               <SelectTrigger className='w-full sm:w-40 md:w-48'>
                 <SelectValue placeholder={t('reports.filterByType')} />
               </SelectTrigger>
@@ -303,13 +298,27 @@ export default function ReportsListPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className='min-w-[100px]'>{t('reports.type')}</TableHead>
-                      <TableHead className='min-w-[120px]'>{t('reports.reason')}</TableHead>
-                      <TableHead className='min-w-[120px] hidden md:table-cell'>{t('reports.user')}</TableHead>
-                      <TableHead className='min-w-[120px] hidden lg:table-cell'>{t('reports.reportedUser')}</TableHead>
-                      <TableHead className='min-w-[100px]'>{t('reports.status')}</TableHead>
-                      <TableHead className='min-w-[120px] hidden sm:table-cell'>{t('reports.date')}</TableHead>
-                      <TableHead className='min-w-[120px]'>{t('common.actions')}</TableHead>
+                      <TableHead className='min-w-[100px]'>
+                        {t('reports.type')}
+                      </TableHead>
+                      <TableHead className='min-w-[120px]'>
+                        {t('reports.reason')}
+                      </TableHead>
+                      <TableHead className='min-w-[120px] hidden md:table-cell'>
+                        {t('reports.user')}
+                      </TableHead>
+                      <TableHead className='min-w-[120px] hidden lg:table-cell'>
+                        {t('reports.reportedUser')}
+                      </TableHead>
+                      <TableHead className='min-w-[100px]'>
+                        {t('reports.status')}
+                      </TableHead>
+                      <TableHead className='min-w-[120px] hidden sm:table-cell'>
+                        {t('reports.date')}
+                      </TableHead>
+                      <TableHead className='min-w-[120px]'>
+                        {t('common.actions')}
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -325,14 +334,18 @@ export default function ReportsListPage() {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className='font-medium text-sm'>{report.reason}</div>
+                            <div className='font-medium text-sm'>
+                              {`${t(`report.reasons.${report.reason}`)}`}
+                            </div>
                             <div className='text-xs text-muted-foreground truncate max-w-32 md:max-w-48'>
                               {report.description}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className='hidden md:table-cell'>
-                          <Link to={routes.dashboard.users.edit(report.user.id)}>
+                          <Link
+                            to={routes.dashboard.users.edit(report.user.id)}
+                          >
                             <div className='flex items-center gap-2'>
                               <Avatar className='h-6 w-6 md:h-8 md:w-8'>
                                 <AvatarImage src={report.user.avatar?.url} />
@@ -347,10 +360,16 @@ export default function ReportsListPage() {
                           </Link>
                         </TableCell>
                         <TableCell className='hidden lg:table-cell'>
-                          <Link to={routes.dashboard.users.edit(getTargetUser(report).id)}>
+                          <Link
+                            to={routes.dashboard.users.edit(
+                              getTargetUser(report).id
+                            )}
+                          >
                             <div className='flex items-center gap-2'>
                               <Avatar className='h-6 w-6 md:h-8 md:w-8'>
-                                <AvatarImage src={getTargetUser(report)?.avatar?.url} />
+                                <AvatarImage
+                                  src={getTargetUser(report)?.avatar?.url}
+                                />
                                 <AvatarFallback className='text-xs'>
                                   {getTargetUser(report).username[0]}
                                 </AvatarFallback>
@@ -364,12 +383,18 @@ export default function ReportsListPage() {
                         <TableCell>{getStatusBadge(report.status)}</TableCell>
                         <TableCell className='hidden sm:table-cell'>
                           <div className='text-xs md:text-sm'>
-                            <div>
-                              {getDate(report.createDate, 'MM/DD')}
+                            <div dir='ltr' className='text-end'>
+                              {getDate(report.createDate, 'YYYY/MM/DD - HH:mm')}
                             </div>
                             {report.updateDate && (
-                              <div className='text-muted-foreground'>
-                                {getDate(report.updateDate, 'MM/DD')}
+                              <div
+                                dir='ltr'
+                                className='text-end text-muted-foreground'
+                              >
+                                {getDate(
+                                  report.updateDate,
+                                  'YYYY/MM/DD - HH:mm'
+                                )}
                               </div>
                             )}
                           </div>
@@ -388,7 +413,7 @@ export default function ReportsListPage() {
                             >
                               <Info className='h-3 w-3 md:h-4 md:w-4' />
                             </Button>
-                            
+
                             {report.status === 'pending' && (
                               <>
                                 <Button
@@ -396,12 +421,15 @@ export default function ReportsListPage() {
                                   variant='outline'
                                   className='text-blue-600 hover:text-blue-700 p-1 md:p-2'
                                   onClick={() =>
-                                    handleUpdateReportStatus(report.id, 'reviewed')
+                                    handleUpdateReportStatus(
+                                      report.id,
+                                      'reviewed'
+                                    )
                                   }
                                 >
                                   <Eye className='h-3 w-3 md:h-4 md:w-4' />
                                 </Button>
-                                
+
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <Button
@@ -421,12 +449,12 @@ export default function ReportsListPage() {
                                         {t('reports.resolveReportConfirmation')}
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
-                                    <AlertDialogFooter>
+                                    <AlertDialogFooter className='flex gap-2'>
                                       <AlertDialogCancel>
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
-                                        className='bg-green-600 hover:bg-green-700 p-1 md:p-2'
+                                        className='min-w-16 bg-green-600 hover:bg-green-700 p-1 md:p-2'
                                         onClick={() =>
                                           handleUpdateReportStatus(
                                             report.id,
@@ -439,7 +467,7 @@ export default function ReportsListPage() {
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
-                                
+
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <Button
@@ -459,12 +487,12 @@ export default function ReportsListPage() {
                                         {t('reports.dismissReportConfirmation')}
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
-                                    <AlertDialogFooter>
+                                    <AlertDialogFooter className='flex gap-2'>
                                       <AlertDialogCancel>
                                         {t('common.cancel')}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
-                                        className='bg-red-600 hover:bg-red-700 p-1 md:p-2'
+                                        className='min-w-16 bg-red-600 hover:bg-red-700 p-1 md:p-2'
                                         onClick={() =>
                                           handleUpdateReportStatus(
                                             report.id,
@@ -489,6 +517,7 @@ export default function ReportsListPage() {
             )}
           </CardContent>
         </Card>
+        <PaginationControls pagination={reports.data?.pagination} />
       </div>
 
       {/* Report Details Dialog */}

@@ -40,14 +40,14 @@ export default function PostCard(props: PostCardProps) {
             <img
               src={post.coverImage?.url || '/placeholder.svg'}
               alt={post.title}
-              className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
+              className='w-full h-full aspect-square object-cover group-hover:scale-110 transition-transform duration-500'
             />
             <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
           </div>
         </Link>
       )}
 
-      <CardHeader className='space-y-3'>
+      <CardHeader className='space-y-3 !pb-0'>
         <div className='flex items-center gap-2'>
           <Badge
             variant='secondary'
@@ -65,15 +65,15 @@ export default function PostCard(props: PostCardProps) {
           )}
         </div>
         <Link to={`${routes.posts.index}/${post.slug}`}>
-          <h3 className='text-xl font-bold hover:text-primary transition-colors line-clamp-2 leading-tight'>
+          <h3 className='text-lg font-bold hover:text-primary transition-colors line-clamp-2 leading-tight h-12'>
             {post.title}
           </h3>
         </Link>
       </CardHeader>
 
-      <CardContent className='space-y-4'>
-        <p className='text-muted-foreground line-clamp-3 leading-relaxed'>
-          {post.title}
+      <CardContent className='space-y-4  !pt-2 !pb-0'>
+        <p className='text-sm text-muted-foreground h-16 line-clamp-3 leading-relaxed'>
+          {post.abstract}
         </p>
 
         <div className='flex flex-wrap gap-2'>

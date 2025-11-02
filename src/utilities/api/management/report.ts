@@ -15,15 +15,24 @@ const reportsQueryKey = 'reports';
 export const useReportsQuery = useAppQuery(
   (reqInit: AppRequestInitProps) =>
     apiHandler.get<DataWithPagination<ReportProps>>(
-      endpoints.management.reports,
+      endpoints.management.reports.index,
       reqInit
     ),
   [reportsQueryKey]
 );
 
+export const useReportsOverviewQuery = useAppQuery(
+  (reqInit?: AppRequestInitProps) =>
+    apiHandler.get<Record<ReportStatusType, number>>(
+      endpoints.management.reports.overview,
+      reqInit
+    ),
+  [reportsQueryKey, 'overview']
+);
+
 export const useUpdateReportStatusMutate = useAppMutation(
   (payload: { id: string; status: ReportStatusType }) =>
-    apiHandler.patch(`${endpoints.reports}/${payload.id}`, {
+    apiHandler.patch(`${endpoints.management.reports.index}/${payload.id}`, {
       status: payload.status,
     }),
   [reportsQueryKey]

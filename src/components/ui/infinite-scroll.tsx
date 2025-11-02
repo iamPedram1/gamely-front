@@ -1,6 +1,5 @@
-import { ReactNode, useRef, useCallback, useMemo } from 'react';
+import { ReactNode, useEffect, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 interface InfiniteScrollListProps<T> {
   data: T[];
@@ -15,37 +14,34 @@ interface InfiniteScrollListProps<T> {
   itemClassName?: string;
 }
 
-export default function InfiniteScrollList<T extends { id: string }>({
-  data,
-  hasNextPage,
-  isFetchingNextPage,
-  fetchNextPage,
-  renderItem,
-  emptyState,
-  loadingState,
-  className = "space-y-4 max-h-[600px] overflow-y-auto pr-1",
-  containerClassName = "",
-  itemClassName = ""
-}: InfiniteScrollListProps<T>) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
+export default function InfiniteScrollList<T extends { id: string }>(props: InfiniteScrollListProps<T>) {
+  const {
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    renderItem,
+    emptyState,
+    className = 'space-y-4',
+    containerClassName = '',
+    itemClassName = ''
+  } = props;
 
   const handleScroll = useCallback(() => {
-    if (!scrollContainerRef.current) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    const isEndOfScroll = scrollHeight - scrollTop - clientHeight < 100;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+    const isEndOfScroll = scrollHeight - scrollTop - clientHeight < 300;
     
     if (hasNextPage && !isFetchingNextPage && isEndOfScroll) {
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const defaultLoadingState = useMemo(() => (
-    <div className='flex justify-center py-12'>
-      <Loader2 className='h-8 w-8 animate-spin text-primary' />
-    </div>
-  ), []);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   if (data.length === 0) {
     return (
@@ -57,11 +53,7 @@ export default function InfiniteScrollList<T extends { id: string }>({
 
   return (
     <div className={containerClassName}>
-      <div
-        className={className}
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-      >
+      <div className={className}>
         {data.map((item, index) => (
           <div key={item.id} className={itemClassName}>
             {renderItem(item, index)}
@@ -69,8 +61,8 @@ export default function InfiniteScrollList<T extends { id: string }>({
         ))}
         
         {isFetchingNextPage && (
-          <div className='flex justify-center py-4'>
-            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+          <div className='flex justify-center py-8'>
+            <Loader2 className='h-6 w-6 animate-spin text-primary' />
           </div>
         )}
       </div>
@@ -90,34 +82,38 @@ interface InfiniteScrollGridProps<T> extends Omit<InfiniteScrollListProps<T>, 'c
   };
 }
 
-export function InfiniteScrollGrid<T extends { id: string }>({
-  data,
-  hasNextPage,
-  isFetchingNextPage,
-  fetchNextPage,
-  renderItem,
-  emptyState,
-  loadingState,
-  gridClassName,
-  columns = { default: 1, md: 2, lg: 3 },
-  containerClassName = "",
-  itemClassName = ""
-}: InfiniteScrollGridProps<T>) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+export function InfiniteScrollGrid<T extends { id: string }>(props: InfiniteScrollGridProps<T>) {
+  const {
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    renderItem,
+    emptyState,
+    gridClassName,
+    columns = { default: 1, md: 2, lg: 3 },
+    containerClassName = '',
+    itemClassName = ''
+  } = props;
 
   const handleScroll = useCallback(() => {
-    if (!scrollContainerRef.current) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-    const isEndOfScroll = scrollHeight - scrollTop - clientHeight < 100;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+    const isEndOfScroll = scrollHeight - scrollTop - clientHeight < 300;
     
     if (hasNextPage && !isFetchingNextPage && isEndOfScroll) {
       fetchNextPage();
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
   const getGridClasses = () => {
-    let classes = 'grid gap-6';
+    let classes = 'grid gap-4 md:gap-6';
     
     if (gridClassName) return `${classes} ${gridClassName}`;
     
@@ -140,25 +136,19 @@ export function InfiniteScrollGrid<T extends { id: string }>({
 
   return (
     <div className={containerClassName}>
-      <div
-        className="max-h-[80vh] overflow-y-auto pr-1"
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
-      >
-        <div className={getGridClasses()}>
-          {data.map((item, index) => (
-            <div key={item.id} className={itemClassName}>
-              {renderItem(item, index)}
-            </div>
-          ))}
-        </div>
-        
-        {isFetchingNextPage && (
-          <div className='flex justify-center py-4 mt-6'>
-            <Loader2 className='h-5 w-5 animate-spin text-primary' />
+      <div className={getGridClasses()}>
+        {data.map((item, index) => (
+          <div key={item.id} className={itemClassName}>
+            {renderItem(item, index)}
           </div>
-        )}
+        ))}
       </div>
+      
+      {isFetchingNextPage && (
+        <div className='flex justify-center py-8 mt-6'>
+          <Loader2 className='h-6 w-6 animate-spin text-primary' />
+        </div>
+      )}
     </div>
   );
 }

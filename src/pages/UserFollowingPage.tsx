@@ -24,24 +24,28 @@ export default function UserFollowingPage() {
   );
 
   const emptyState = (
-    <div className='text-center py-12'>
+    <div className='text-center py-12 px-4'>
       <UserCheck className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
-      <h3 className='text-lg font-semibold mb-2'>
+      <h3 className='text-base md:text-lg font-semibold mb-2'>
         {t('user.notFollowingAnyone', { username })}
       </h3>
-      <p className='text-muted-foreground'>
+      <p className='text-sm md:text-base text-muted-foreground'>
         {t('user.notFollowingAnyoneDescription')}
       </p>
     </div>
   );
 
   return (
-    <PageLayout backTo={routes.users.details(username || '')}>
-      <div className='max-w-3xl mx-auto space-y-6'>
+    <PageLayout
+      backTo={routes.users.details(username)}
+      className='flex-1 container py-4 md:py-8 px-4'
+    >
+      <div className='max-w-3xl mx-auto space-y-4 md:space-y-6'>
         <PageHeader
           title={t('user.followingsOf', { name: username })}
           description={t('user.peopleFollowedBy', { name: username })}
-          icon={<UserCheck className='h-8 w-8' />}
+          icon={<UserCheck className='h-6 w-6 md:h-8 md:w-8' />}
+          className='mb-4 md:mb-6'
         />
 
         {/* Search */}

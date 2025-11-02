@@ -41,9 +41,12 @@ const endpoints = {
     games: '/management/games',
     posts: '/management/posts',
     users: '/management/users',
-    reports: '/management/reports',
     comments: '/management/comments',
     categories: '/management/categories',
+    reports: {
+      index: '/management/reports',
+      overview: '/management/reports/overview',
+    },
   },
 };
 

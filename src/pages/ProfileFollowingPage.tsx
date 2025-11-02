@@ -9,12 +9,7 @@ import useAuth from '@/hooks/useAuth';
 // Components
 import Searchbar from '@/components/ui/searchbar';
 import FollowerCard from '@/components/profile/FollowerCard';
-import {
-  PageLayout,
-  PageHeader,
-  LoadingState,
-  UnauthorizedState,
-} from '@/components/layout/PageLayout';
+import { PageLayout, PageHeader, LoadingState, UnauthorizedState } from '@/components/layout/PageLayout';
 import InfiniteScrollList from '@/components/ui/infinite-scroll';
 
 // Utilities
@@ -40,29 +35,39 @@ export default function ProfileFollowingPage() {
   );
 
   const emptyState = (
-    <div className='text-center py-12'>
+    <div className='text-center py-12 px-4'>
       <UserCheck className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
-      <h3 className='text-lg font-semibold mb-2'>
+      <h3 className='text-base md:text-lg font-semibold mb-2'>
         {searchParams.get('search')
-          ? t('user.noSearchResults')
+          ? t('profile.noSearchResults')
           : t('profile.notFollowingAnyone')}
       </h3>
-      <p className='text-muted-foreground'>
+      <p className='text-sm md:text-base text-muted-foreground'>
         {searchParams.get('search')
-          ? t('user.tryDifferentSearch')
+          ? t('profile.tryDifferentSearch')
           : t('profile.notFollowingAnyoneDescription')}
       </p>
     </div>
   );
 
-  if (isAuthLoading || !following.isFetched) return <LoadingState />;
-  if (!isAuthorized) return <UnauthorizedState />;
+  // Loading state
+  if (isAuthLoading || !following.isFetched) {
+    return <LoadingState />;
+  }
+
+  // Unauthorized state
+  if (!isAuthorized) {
+    return <UnauthorizedState />;
+  }
+
   return (
-    <PageLayout backTo={routes.profile.index}>
-      <div className='max-w-3xl mx-auto space-y-6'>
+    <PageLayout backTo={routes.profile.index} className='flex-1 container py-4 md:py-8 px-4'>
+      <div className='max-w-3xl mx-auto space-y-4 md:space-y-6'>
         <PageHeader
-          title={t('profile.followings')}
-          icon={<UserCheck className='h-8 w-8' />}
+          title={t('profile.following')}
+          description={t('profile.manageFollowing')}
+          icon={<UserCheck className='h-6 w-6 md:h-8 md:w-8' />}
+          className='mb-4 md:mb-6'
         />
 
         {/* Search */}
