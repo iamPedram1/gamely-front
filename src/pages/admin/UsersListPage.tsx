@@ -160,16 +160,14 @@ export default function UsersListPage() {
                   </TableCell>
                   <TableCell className='text-center'>
                     <Badge
-                      variant={
-                        user.status === 'active' ? 'default' : 'destructive'
-                      }
+                      variant={user.isBanned ? 'destructive' : 'default'}
                       className={
-                        user.status === 'active'
-                          ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                          : ''
+                        user.isBanned
+                          ? ''
+                          : 'bg-green-500/10 text-green-500 border-green-500/20'
                       }
                     >
-                      {t(`user.${user.status}`)}
+                      {t(user.isBanned ? 'user.banned' : 'user.active')}
                     </Badge>
                   </TableCell>
                   <TableCell className='text-center text-muted-foreground'>

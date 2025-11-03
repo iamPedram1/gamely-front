@@ -6,7 +6,11 @@ import { Calendar, Gamepad2 } from 'lucide-react';
 // Components
 import { Badge } from '@/components/ui/badge';
 import { GameCardSkeleton } from '@/components/ui/loading-skeleton';
-import { PageLayout, PageHeader, LoadingState } from '@/components/layout/PageLayout';
+import {
+  PageLayout,
+  PageHeader,
+  LoadingState,
+} from '@/components/layout/PageLayout';
 import { InfiniteScrollGrid } from '@/components/ui/infinite-scroll';
 import {
   Card,
@@ -33,8 +37,12 @@ export default function GameListPage() {
   const emptyState = (
     <div className='text-center py-12 px-4'>
       <Gamepad2 className='h-12 w-12 mx-auto text-muted-foreground mb-4' />
-      <h3 className='text-base md:text-lg font-semibold mb-2'>{t('game.noGames')}</h3>
-      <p className='text-sm md:text-base text-muted-foreground'>{t('game.noGamesDescription')}</p>
+      <h3 className='text-base md:text-lg font-semibold mb-2'>
+        {t('game.noGames')}
+      </h3>
+      <p className='text-sm md:text-base text-muted-foreground'>
+        {t('game.noGamesDescription')}
+      </p>
     </div>
   );
 
@@ -86,7 +94,7 @@ export default function GameListPage() {
             </Link>
 
             <CardHeader className='!py-2 md:!py-3 px-3 md:px-4'>
-              <Link to={`/game/${game.slug}`}>
+              <Link to={routes.games.details(game.slug)}>
                 <h3 className='text-base md:text-lg lg:text-xl font-bold hover:text-primary transition-colors line-clamp-1'>
                   {game.title}
                 </h3>

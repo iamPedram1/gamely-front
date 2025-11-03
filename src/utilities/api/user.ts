@@ -14,7 +14,7 @@ import type {
   UserProps,
 } from '@/types/client/blog';
 
-export const usersQueryKey = 'user';
+export const usersQueryKey = 'users';
 export const blocksQueryKey = 'blocks';
 export const followersQueryKey = 'followers';
 export const followingQueryKey = 'following';

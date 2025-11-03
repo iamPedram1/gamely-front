@@ -3,14 +3,13 @@ import { useAppMutation } from '@/hooks/api/useMutation';
 import { makeUseFetchQuery } from '@/hooks/api/useQuery/useFetch';
 
 // Utilities
-import apiHandler from '@/utilities/safeApiHandler';
 import endpoints from '@/utilities/endpoints';
+import apiHandler from '@/utilities/safeApiHandler';
+import { usersQueryKey } from '@/utilities/api/user';
 
 // Types
 import type { UserProps } from '@/types/client/blog';
 import type { DataWithPagination } from '@/types/api';
-
-const usersQueryKey = 'users';
 
 export const useUsersQuery = useAppQuery(
   (options) =>

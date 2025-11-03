@@ -8,9 +8,11 @@ import {
   FolderOpen,
   LogOut,
   Menu,
+  Ban,
   Users,
   MessageSquare,
   OctagonAlertIcon,
+  Flag,
 } from 'lucide-react';
 
 // Custom Hooks
@@ -70,8 +72,14 @@ export default function AdminLayout() {
     {
       path: '/dashboard/reports',
       roles: ['admin', 'superAdmin'],
-      icon: OctagonAlertIcon,
+      icon: Flag,
       label: t('dashboard.reports'),
+    },
+    {
+      path: '/dashboard/bans',
+      roles: ['admin', 'superAdmin'],
+      icon: Ban,
+      label: t('dashboard.bans'),
     },
     {
       path: '/dashboard/comments',

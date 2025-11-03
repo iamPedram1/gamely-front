@@ -73,11 +73,10 @@ export default function ProfilePage() {
   const handleUpdate = async (data: FormSchema) => {
     const payload = structuredClone(data);
 
-    setLoadingState(true);
-    if (data.avatar && data.avatar instanceof File) {
+    if (data?.avatar && data.avatar instanceof File) {
       const res = await uploadFile([data.avatar], 'user');
       if (res.data) payload.avatar = res.data[0].id;
-    } else if ('id' in data.avatar) {
+    } else if (data?.avatar && 'id' in data.avatar) {
       payload.avatar = data.avatar.id;
     }
 

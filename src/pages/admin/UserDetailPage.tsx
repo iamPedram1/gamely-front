@@ -8,6 +8,7 @@ import { ArrowLeft, Save, Ban, CheckCircle } from 'lucide-react';
 
 // Hooks
 import useAuth from '@/hooks/useAuth';
+import { useBoolean } from '@/hooks/state';
 
 // Components
 import { Button } from '@/components/ui/button';
@@ -35,10 +36,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import BanUserDialog from '@/components/admin/BanUserDialog';
 
 // Utilities
 import routes from '@/utilities/routes';
 import { createOnErrorHandler, getChangedFields, getDate } from '@/utilities';
+import {
+  unbanUser,
+  useBanUserMutation,
+  useUnbanUserMutation,
+} from '@/utilities/api/management/ban';
 import { useUpdateUser, useUserQuery } from '@/utilities/api/management/user';
 import {
   generateEmailSchema,
@@ -49,7 +56,6 @@ const createUserSchema = () =>
   object({
     username: generateStringSchema('username', 3, 255, false),
     email: generateEmailSchema(),
-    status: zodEnum(['active', 'blocked']).optional(),
     role: zodEnum(['user', 'author', 'admin', 'superAdmin']).optional(),
     bio: generateStringSchema('bio', 10, 500, false),
     createDate: generateStringSchema(
@@ -68,20 +74,20 @@ export default function UserDetailPage() {
 
   // Hooks
   const { profile } = useAuth();
+  const blockDialog = useBoolean();
   const updateUser = useUpdateUser();
+  const banUser = useBanUserMutation();
+  const unbanUser = useUnbanUserMutation();
   const schema = useMemo(createUserSchema, [i18n.language]);
   const formMethods = useForm<FormSchema>({ resolver: zodResolver(schema) });
   const user = useUserQuery({ onFetch: formMethods.reset });
-  const status = useWatch<FormSchema>({
-    control: formMethods.control,
-    name: 'status',
-  });
   const isUpdatingSelf = user?.data?.id === profile?.id;
   const isLoading = updateUser.isPending || !user.isFetched;
   const disabled =
     isLoading ||
-    profile.role !== 'superAdmin' ||
-    (user.data?.role === 'admin' && !isUpdatingSelf);
+    (profile.role !== 'superAdmin' &&
+      ['admin', 'superAdmin'].includes(user.data.role) &&
+      !isUpdatingSelf);
 
   // Utilities
   const handleUpdate = (data: FormSchema) => {
@@ -91,9 +97,16 @@ export default function UserDetailPage() {
     });
   };
 
-  const handleStatusToggle = () => {
-    const newStatus = status === 'active' ? 'blocked' : 'active';
-    updateUser.mutate({ userId: user.data.id, data: { status: newStatus } });
+  const handleUnblock = () => {
+    unbanUser.mutate(user.data.id);
+  };
+
+  const handleBlock = (blockData: {
+    type: 'permanent' | 'temporary';
+    startAt: string;
+    endAt: string | null;
+  }) => {
+    banUser.mutate({ userId: user.data.id, data: blockData });
   };
 
   // Render
@@ -176,75 +189,63 @@ export default function UserDetailPage() {
                 >
                   {t(`user.${user.data?.role}`)}
                 </Badge>
-                <Controller
-                  control={formMethods.control}
-                  name='status'
-                  render={({ field }) => (
-                    <Badge
-                      variant={
-                        field.value === 'active' ? 'default' : 'destructive'
-                      }
-                      className={
-                        field.value === 'active'
-                          ? 'bg-green-500/10 text-green-500 border-green-500/20'
-                          : ''
-                      }
-                    >
-                      {t(`user.${field.value}`)}
-                    </Badge>
-                  )}
-                />
+
+                <Badge
+                  variant={user.data.isBanned ? 'destructive' : 'default'}
+                  className={
+                    user.data.isBanned
+                      ? ''
+                      : 'bg-green-500/10 text-green-500 border-green-500/20'
+                  }
+                >
+                  {t(user.data.isBanned ? `user.banned` : 'user.active')}
+                </Badge>
               </div>
               <p className='text-xs text-muted-foreground'>
                 {t('user.joined')} {getDate(user.data?.createDate)}
               </p>
             </div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  disabled={disabled || user.data.id === profile.id}
-                  variant={status === 'active' ? 'destructive' : 'default'}
-                  className='w-full'
-                >
-                  {status === 'active' ? (
-                    <>
-                      <Ban className='h-4 w-4' />
-                      {t('user.block')}
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className='h-4 w-4' />
-                      {t('user.unblock')}
-                    </>
-                  )}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {status === 'active'
-                      ? t('user.blockUser')
-                      : t('user.unblockUser')}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {status === 'active'
-                      ? t('user.blockUserDescription')
-                      : t('user.unblockUserDescription')}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className='gap-2'>
-                  <AlertDialogCancel className='w-24'>
-                    {t('common.cancel')}
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    className='w-24'
-                    onClick={handleStatusToggle}
+
+            {!user.data?.isBanned ? (
+              <Button
+                disabled={disabled || user.data.id === profile.id}
+                variant='destructive'
+                className='w-full'
+                onClick={blockDialog.setTrue}
+              >
+                <Ban className='h-4 w-4' />
+                {t('user.block')}
+              </Button>
+            ) : (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    disabled={disabled || user.data.id === profile.id}
+                    variant='default'
+                    className='w-full'
                   >
-                    {t('common.confirm')}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    <CheckCircle className='h-4 w-4' />
+                    {t('user.unblock')}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('user.unblockUser')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('user.unblockUserDescription')}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className='gap-2'>
+                    <AlertDialogCancel className='w-24'>
+                      {t('common.cancel')}
+                    </AlertDialogCancel>
+                    <AlertDialogAction className='w-24' onClick={handleUnblock}>
+                      {t('common.confirm')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </CardContent>
         </Card>
 
@@ -271,7 +272,7 @@ export default function UserDetailPage() {
                   render={({ field }) => (
                     <Input
                       id='username'
-                      placeholder={t('user.enterUsername')}
+                      placeholder={t('user.enterUserName')}
                       disabled={disabled}
                       {...field}
                     />
@@ -310,7 +311,7 @@ export default function UserDetailPage() {
                     <Select
                       value={field.value}
                       onValueChange={(value) => field.onChange(value)}
-                      disabled={disabled}
+                      disabled={disabled || user.data.role !== 'superAdmin'}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -367,6 +368,15 @@ export default function UserDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Block User Dialog */}
+      <BanUserDialog
+        open={blockDialog.state}
+        onClose={blockDialog.setFalse}
+        onConfirm={handleBlock}
+        userName={user.data?.username || ''}
+        isLoading={updateUser.isPending}
+      />
     </div>
   );
 }

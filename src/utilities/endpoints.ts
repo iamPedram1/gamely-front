@@ -37,6 +37,7 @@ const endpoints = {
   },
   categories: '/categories',
   management: {
+    bans: '/management/bans',
     tags: '/management/tags',
     games: '/management/games',
     posts: '/management/posts',

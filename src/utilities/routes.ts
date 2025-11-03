@@ -42,6 +42,9 @@ const routes = {
       add: '/dashboard/posts/add',
       edit: (id: string) => '/dashboard/posts/' + id,
     },
+    bans: {
+      index: '/dashboard/bans',
+    },
     tags: {
       index: '/dashboard/tags',
       add: '/dashboard/tags/add',

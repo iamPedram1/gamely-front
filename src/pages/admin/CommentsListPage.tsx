@@ -319,27 +319,25 @@ export default function CommentsListPage() {
               </div>
 
               <div className='p-4 rounded-lg bg-accent/50 border border-primary/10'>
-                <div className='space-y-4'>
-                  <div className='space-y-2'>
-                    <Label htmlFor='title'>
-                      {t('common.comment')} {t('form.required')}
-                    </Label>
-                    <Controller
-                      control={control}
-                      name='comment.message'
-                      render={({ field }) => (
-                        <Textarea
-                          id='comment'
-                          required
-                          rows={10}
-                          disabled={
-                            updateComment.isPending || deleteComment.isPending
-                          }
-                          {...field}
-                        />
-                      )}
-                    />
-                  </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='title'>
+                    {t('common.comment')} {t('form.required')}
+                  </Label>
+                  <Controller
+                    control={control}
+                    name='comment.message'
+                    render={({ field }) => (
+                      <Textarea
+                        id='comment'
+                        required
+                        rows={10}
+                        disabled={
+                          updateComment.isPending || deleteComment.isPending
+                        }
+                        {...field}
+                      />
+                    )}
+                  />
                 </div>
               </div>
 

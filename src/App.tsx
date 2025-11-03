@@ -49,6 +49,7 @@ import UserReportsListPage from '@/pages/UserReportsListPage';
 // Layout
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import BanListPage from '@/pages/admin/BanListPage';
 
 function App() {
   // Hooks
@@ -158,6 +159,10 @@ function App() {
             <Route
               path={routes.dashboard.tags.add}
               element={<MutateTagPage />}
+            />
+            <Route
+              path={routes.dashboard.bans.index}
+              element={<BanListPage />}
             />
             <Route
               path={routes.dashboard.tags.edit(':id')}

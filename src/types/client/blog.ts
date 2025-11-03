@@ -48,7 +48,7 @@ export interface UserProps {
   avatar: FileProps;
   bio: string;
   role: UserRole;
-  status?: UserStatus;
+  isBanned?: boolean;
   createDate?: string;
 }
 
