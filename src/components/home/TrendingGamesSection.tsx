@@ -7,18 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // Types
-import { GameProps } from '@/types/client/blog';
+import { useGamesQuery } from '@/utilities/api/game';
 
-interface TrendingGamesSectionProps {
-  games: GameProps[];
-}
-
-export default function TrendingGamesSection({
-  games,
-}: TrendingGamesSectionProps) {
+export default function TrendingGamesSection() {
   // Custom Hooks
   const { t } = useTranslation();
+  const games = useGamesQuery();
 
+  // Render
   return (
     <section className='py-16 bg-accent/30'>
       <div className='container'>
@@ -42,7 +38,7 @@ export default function TrendingGamesSection({
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          {games.map((game, index) => (
+          {games.data.docs.slice(0, 3).map((game, index) => (
             <Link key={game.id} to={`/game/${game.slug}`}>
               <div className='group relative aspect-[3/4] rounded-xl overflow-hidden border border-primary/20 hover:border-primary/50 transition-all glow-effect hover:glow-effect-strong'>
                 <img

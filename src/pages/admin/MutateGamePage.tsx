@@ -37,16 +37,15 @@ import {
 // Types
 const createGameSchema = () =>
   object({
+    title: generateStringSchema('title', 3, 255),
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     releaseDate: generateStringSchema('release date'),
     coverImage: generateFileSchema('cover image'),
     translations: object({
       en: object({
-        title: generateStringSchema('title', 3, 255),
         description: generateStringSchema('description', 10, 500),
       }),
       fa: object({
-        title: generateStringSchema('title', 3, 255),
         description: generateStringSchema('description', 10, 500),
       }),
     }),
@@ -134,45 +133,42 @@ export default function MutateGamePage() {
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
-              {supportedLanguages.map((lng) => (
-                <div className='space-y-2'>
-                  <Label htmlFor='title'>
-                    {t('game.gameTitle')} {t(`common.${lng}`)}{' '}
-                    {t('form.required')}
-                  </Label>
-                  <Controller
-                    defaultValue=''
-                    control={control}
-                    name={`translations.${lng}.title`}
-                    render={({ field }) => (
-                      <Input
-                        disabled={disabled}
-                        id='title'
-                        placeholder={t('game.enterGameTitle')}
-                        {...field}
-                      />
-                    )}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className='space-y-2'>
-              <Label htmlFor='slug'>
-                {t('common.slug')} {t('form.required')}
-              </Label>
-              <Controller
-                defaultValue=''
-                control={control}
-                name='slug'
-                render={({ field }) => (
-                  <Input
-                    disabled={disabled}
-                    id='slug'
-                    placeholder={t('game.gameUrlSlug')}
-                    {...field}
-                  />
-                )}
-              />
+              <div className='space-y-2'>
+                <Label htmlFor='title'>
+                  {t('game.gameTitle')} {t('form.required')}
+                </Label>
+                <Controller
+                  defaultValue=''
+                  control={control}
+                  name='title'
+                  render={({ field }) => (
+                    <Input
+                      disabled={disabled}
+                      id='title'
+                      placeholder={t('game.enterGameTitle')}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              <div className='space-y-2'>
+                <Label htmlFor='slug'>
+                  {t('common.slug')} {t('form.required')}
+                </Label>
+                <Controller
+                  defaultValue=''
+                  control={control}
+                  name='slug'
+                  render={({ field }) => (
+                    <Input
+                      disabled={disabled}
+                      id='slug'
+                      placeholder={t('game.gameUrlSlug')}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
             </div>
             <div className='grid grid-cols-2 gap-4'>
               {supportedLanguages.map((lng) => (

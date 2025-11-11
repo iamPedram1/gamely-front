@@ -66,19 +66,20 @@ export interface CategoryProps {
 
 export interface SummaryProps {
   id: string;
+  title?: string;
   translations: WithDictionary<{ title: string }>;
   slug?: string;
 }
 
 // <----------------   GAME   ---------------->
 export interface GameTranslation {
-  title: string;
   description: string;
 }
 
 export interface GameProps {
   id: string;
   slug: string;
+  title: string;
   coverImage: FileProps;
   translations: WithDictionary<GameTranslation>;
   releaseDate: string;

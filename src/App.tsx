@@ -45,6 +45,7 @@ import CreatePostPage from '@/pages/CreatePostPage';
 import GameDetailPage from '@/pages/GameDetailPage';
 import UserPostsListPage from '@/pages/UserPostsListPage';
 import UserReportsListPage from '@/pages/UserReportsListPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 // Layout
 import Header from '@/components/layout/Header';
@@ -190,6 +191,9 @@ function App() {
           <Route path='/my-posts' element={<UserPostsListPage />} />
           <Route path='/create-post' element={<CreatePostPage />} />
           <Route path='/my-reports' element={<UserReportsListPage />} />
+
+          {/* 404 Not Found - Must be last */}
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
         {!isDashboard && <Footer />}
       </Suspense>

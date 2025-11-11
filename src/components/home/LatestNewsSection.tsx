@@ -8,15 +8,16 @@ import PostCard from '@/components/blog/PostCard';
 
 // Types
 import { PostProps } from '@/types/client/blog';
+import { usePostsQuery } from '@/utilities/api/post';
 
-interface LatestNewsSectionProps {
-  posts: PostProps[];
-}
+interface LatestNewsSectionProps {}
 
-export default function LatestNewsSection({ posts }: LatestNewsSectionProps) {
+export default function LatestNewsSection() {
   // Custom Hooks
   const { t } = useTranslation();
+  const posts = usePostsQuery();
 
+  // Render
   return (
     <section className='py-16'>
       <div className='container'>
@@ -38,7 +39,7 @@ export default function LatestNewsSection({ posts }: LatestNewsSectionProps) {
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-          {posts.map((post) => (
+          {posts.data.docs.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>

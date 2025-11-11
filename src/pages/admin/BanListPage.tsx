@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Ban, Clock, Info } from 'lucide-react';
+import { Ban, Clock, Info, Unlock, CheckCircle, XCircle } from 'lucide-react';
 
 // Components
 import { Badge } from '@/components/ui/badge';
@@ -27,7 +27,10 @@ import LoadingWrapper from '@/components/ui/loading-wrapper';
 import PaginationControls from '@/components/ui/pagination-controls';
 
 // Hooks
-import { useBanListQuery } from '@/utilities/api/management/ban';
+import {
+  useBanListQuery,
+  useUnbanUserMutation,
+} from '@/utilities/api/management/ban';
 
 // Utilities
 import { getDate } from '@/utilities';
@@ -45,6 +48,7 @@ export default function BanListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
   const bans = useBanListQuery({ refetchOnQueryChange: true });
+  const unbanUser = useUnbanUserMutation();
 
   // Utilities
   const getBanTypeBadge = (type: string) => {
@@ -68,6 +72,35 @@ export default function BanListPage() {
         );
       default:
         return <Badge variant='outline'>{type}</Badge>;
+    }
+  };
+
+  const getBanStatus = (ban: BanRecordProps): 'active' | 'expired' => {
+    if (ban.type === 'permanent') return 'active';
+    if (!ban.endAt) return 'active';
+    return new Date(ban.endAt) > new Date() ? 'active' : 'expired';
+  };
+
+  const getBanStatusBadge = (status: 'active' | 'expired') => {
+    if (status === 'active') {
+      return (
+        <Badge variant='destructive' className='flex items-center gap-1'>
+          <XCircle className='h-3 w-3' />
+          {t('ban.active')}
+        </Badge>
+      );
+    }
+    return (
+      <Badge className='bg-green-500 hover:bg-green-600 flex items-center gap-1'>
+        <CheckCircle className='h-3 w-3' />
+        {t('ban.expired')}
+      </Badge>
+    );
+  };
+
+  const handleUnban = (banId: string) => {
+    if (confirm(t('ban.confirmUnban'))) {
+      unbanUser.mutate(banId);
     }
   };
 
@@ -205,6 +238,9 @@ export default function BanListPage() {
                           <TableHead className='min-w-[100px]'>
                             {t('ban.type')}
                           </TableHead>
+                          <TableHead className='min-w-[100px]'>
+                            {t('ban.status')}
+                          </TableHead>
                           <TableHead className='min-w-[120px] hidden md:table-cell'>
                             {t('ban.startDate')}
                           </TableHead>
@@ -212,73 +248,92 @@ export default function BanListPage() {
                             {t('ban.endDate')}
                           </TableHead>
                           <TableHead>{t('ban.bannedBy')}</TableHead>
-                          <TableHead className='min-w-[80px]'>
+                          <TableHead className='min-w-[100px]'>
                             {t('common.actions')}
                           </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {bans.data.docs.map((ban) => (
-                          <TableRow key={ban.id}>
-                            <TableCell>
-                              <div className='flex items-center gap-2'>
-                                <Avatar className='h-6 w-6 md:h-8 md:w-8'>
-                                  <AvatarImage src={ban.user.avatar?.url} />
-                                  <AvatarFallback className='text-xs'>
-                                    {ban.user.username[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <div className='font-medium text-sm'>
-                                    @{ban.user.username}
-                                  </div>
-                                  <div className='text-xs text-muted-foreground truncate max-w-32'>
-                                    {ban.user.email}
+                        {bans.data.docs.map((ban) => {
+                          const banStatus = getBanStatus(ban);
+                          return (
+                            <TableRow key={ban.id}>
+                              <TableCell>
+                                <div className='flex items-center gap-2'>
+                                  <Avatar className='h-6 w-6 md:h-8 md:w-8'>
+                                    <AvatarImage src={ban.user.avatar?.url} />
+                                    <AvatarFallback className='text-xs'>
+                                      {ban.user.username[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <div className='font-medium text-sm'>
+                                      @{ban.user.username}
+                                    </div>
+                                    <div className='text-xs text-muted-foreground truncate max-w-32'>
+                                      {ban.user.email}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>{getBanTypeBadge(ban.type)}</TableCell>
-                            <TableCell className='hidden md:table-cell'>
-                              <div className='text-xs md:text-sm'>
-                                {getDate(ban.startAt, 'YYYY/MM/DD')}
-                              </div>
-                            </TableCell>
-                            <TableCell className='hidden lg:table-cell'>
-                              <div className='text-xs md:text-sm'>
-                                {ban.endAt
-                                  ? getDate(ban.endAt, 'YYYY/MM/DD')
-                                  : '-'}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className='flex items-center gap-2'>
-                                <Avatar className='h-6 w-6'>
-                                  <AvatarImage src={ban.actor.avatar?.url} />
-                                  <AvatarFallback className='text-xs'>
-                                    {ban.actor.username[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span className='text-xs md:text-sm truncate max-w-20'>
-                                  {ban.actor.username}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                size='sm'
-                                variant='outline'
-                                className='text-blue-600 hover:text-blue-700 p-1 md:p-2'
-                                onClick={() => {
-                                  setSelectedBan(ban);
-                                  setShowBanDetails(true);
-                                }}
-                              >
-                                <Info className='h-3 w-3 md:h-4 md:w-4' />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                              </TableCell>
+                              <TableCell>{getBanTypeBadge(ban.type)}</TableCell>
+                              <TableCell>
+                                {getBanStatusBadge(banStatus)}
+                              </TableCell>
+                              <TableCell className='hidden md:table-cell'>
+                                <div className='text-xs md:text-sm'>
+                                  {getDate(ban.startAt, 'YYYY/MM/DD')}
+                                </div>
+                              </TableCell>
+                              <TableCell className='hidden lg:table-cell'>
+                                <div className='text-xs md:text-sm'>
+                                  {ban.endAt
+                                    ? getDate(ban.endAt, 'YYYY/MM/DD')
+                                    : '-'}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className='flex items-center gap-2'>
+                                  <Avatar className='h-6 w-6'>
+                                    <AvatarImage src={ban.actor.avatar?.url} />
+                                    <AvatarFallback className='text-xs'>
+                                      {ban.actor.username[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <span className='text-xs md:text-sm truncate max-w-20'>
+                                    {ban.actor.username}
+                                  </span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className='flex gap-1'>
+                                  <Button
+                                    size='sm'
+                                    variant='outline'
+                                    className='text-blue-600 hover:text-blue-700 p-1 md:p-2'
+                                    onClick={() => {
+                                      setSelectedBan(ban);
+                                      setShowBanDetails(true);
+                                    }}
+                                  >
+                                    <Info className='h-3 w-3 md:h-4 md:w-4' />
+                                  </Button>
+                                  {banStatus === 'active' && (
+                                    <Button
+                                      size='sm'
+                                      variant='outline'
+                                      className='text-green-600 hover:text-green-700 p-1 md:p-2'
+                                      onClick={() => handleUnban(ban.id)}
+                                      disabled={unbanUser.isPending}
+                                    >
+                                      <Unlock className='h-3 w-3 md:h-4 md:w-4' />
+                                    </Button>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </div>

@@ -1,8 +1,7 @@
 import type { UserProps } from '@/types/management/blog';
 
-export type UserStatus = 'active' | 'blocked';
 export type BanType = 'permanent' | 'temporary';
-export type UserRole = 'user' | 'author' | 'admin' | 'superAdmin';
+export type BanStatusType = 'active' | 'expired';
 
 export interface BanRecordProps {
   id: string;
@@ -10,6 +9,7 @@ export interface BanRecordProps {
   user: UserProps;
   actor: UserProps;
   type: BanType;
+  status: BanStatusType;
   startAt: string;
   endAt: string | null;
 }

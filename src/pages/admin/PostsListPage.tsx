@@ -66,7 +66,7 @@ export default function PostsListPage() {
   const gameOptions = useMemo(
     () =>
       games.data.map((ctg) => ({
-        label: ctg.translations[i18n.language].title,
+        label: ctg.title,
         value: ctg.id,
       })),
     [games.data]
@@ -195,9 +195,7 @@ export default function PostsListPage() {
                   <TableCell className='text-center'>
                     {post.game ? (
                       <Link to={routes.dashboard.games.edit(post.game.id)}>
-                        <Badge variant='outline'>
-                          {post?.game?.translations?.[i18n.language]?.title}
-                        </Badge>
+                        <Badge variant='outline'>{post?.game?.title}</Badge>
                       </Link>
                     ) : (
                       '-'

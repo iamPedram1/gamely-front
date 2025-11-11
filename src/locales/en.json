@@ -572,6 +572,21 @@
     "temporaryBan": "Temporary Ban",
     "temporaryBanDescription": "This user will be banned until the selected end date.",
     "permanentBanDescription": "This user will be permanently banned with no end date.",
-    "endDate": "End Date"
+    "endDate": "End Date",
+    "active": "Active",
+    "expired": "Expired",
+    "status": "Status",
+    "confirmUnban": "Are you sure you want to unban this user?"
+  },
+  "notFound": {
+    "title": "Game Over!",
+    "description": "Oops! The page you're looking for has respawned somewhere else or doesn't exist.",
+    "suggestions": "You might want to:",
+    "checkUrl": "Check the URL",
+    "goHome": "Go to homepage",
+    "goBack": "Go back",
+    "goBackButton": "Go Back",
+    "homeButton": "Back to Home",
+    "funMessage": "💡 Pro tip: This page is harder to find than a legendary loot drop!"
   }
 }
