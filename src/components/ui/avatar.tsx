@@ -28,6 +28,7 @@ const AvatarImage = React.forwardRef<
       `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${generateRandomNumber()}`,
     []
   );
+  console.log(randomAvatar);
 
   return (
     <AvatarPrimitive.Image

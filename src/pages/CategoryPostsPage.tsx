@@ -17,8 +17,12 @@ export default function CategoryPostsPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const category = useCategoryQuery({ initialParams: slug });
-  const posts = usePostsQuery({ queries: { category: category.data.id } });
+  const posts = usePostsQuery({
+    queries: { category: category?.data?.id },
+    queryKey: [category?.data?.id],
+  });
 
+  // Render
   if (!category.isFetched || !posts.isFetched) return <LoadingState />;
   return (
     <div className='min-h-screen flex flex-col bg-background'>

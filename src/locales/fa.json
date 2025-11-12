@@ -74,6 +74,8 @@
     "register": "ثبت‌نام",
     "email": "ایمیل",
     "password": "رمز عبور",
+    "name": "نام",
+    "username": "نام کاربری",
     "forgotPassword": "فراموشی رمز عبور؟",
     "resetPassword": "بازنشانی رمز عبور",
     "newPassword": "رمز عبور جدید",
@@ -89,13 +91,22 @@
     "emailPlaceholder": "your@email.com",
     "passwordPlaceholder": "••••••••",
     "namePlaceholder": "نام شما",
+    "usernamePlaceholder": "نام کاربری شما",
     "enterEmailForRecovery": "ایمیل خود را وارد کنید تا لینک بازنشانی برایتان ارسال شود",
     "resetLinkSent": "لینک بازنشانی به ایمیل شما ارسال شد",
     "enterNewPassword": "رمز عبور جدید را وارد کنید",
     "confirmNewPassword": "تأیید رمز عبور جدید",
     "changePassword": "تغییر رمز عبور",
     "currentPassword": "رمز عبور فعلی",
-    "updatePassword": "به‌روزرسانی رمز عبور"
+    "updatePassword": "به‌روزرسانی رمز عبور",
+    "verifyEmail": "ایمیل خود را تایید کنید",
+    "verificationCodeSent": "ما یک کد 6 رقمی به ایمیل شما ارسال کردیم",
+    "verificationSentTo": "کد تایید ارسال شده به: ",
+    "verificationCode": "کد تایید",
+    "enter6DigitCode": "کد 6 رقمی دریافتی خود را وارد کنید",
+    "verifyAndRegister": "تایید و پایان ثبت‌نام",
+    "resendCode": "ارسال مجدد کد",
+    "continue": "ادامه"
   },
   "nav": {
     "home": "خانه",
@@ -166,6 +177,7 @@
   },
   "user": {
     "name": "نام",
+    "username": "نام‌کاربری",
     "email": "ایمیل",
     "bio": "بیو",
     "avatar": "آواتار",
@@ -396,6 +408,7 @@
   },
   "fields": {
     "name": "نام",
+    "username": "نام کاربری",
     "email": "ایمیل",
     "password": "رمز عبور",
     "confirmPassword": "تأیید رمز عبور",

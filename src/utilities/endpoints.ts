@@ -19,6 +19,8 @@ const endpoints = {
   auth: {
     login: '/auth/login',
     register: '/auth/register',
+    resendVerificationEmail: '/auth/register/resend-otp',
+    verifyEmail: '/auth/register/verify-email',
     tokenRefresh: '/auth/token/refresh',
     tokenRevoke: '/auth/token/revoke',
     recoverPassword: '/auth/recover-password',

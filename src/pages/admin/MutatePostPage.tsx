@@ -1,4 +1,4 @@
-import { object } from 'zod';
+import { boolean, object } from 'zod';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save } from 'lucide-react';
@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 // Context
 import useLoadingStore, { setLoadingState } from '@/store/loading';
@@ -55,6 +56,7 @@ const createPostSchema = () =>
     category: generateStringSchema('category'),
     game: generateStringSchema('game'),
     tags: generateStringArraySchema('tags'),
+    isFeatured: boolean().optional(),
     translations: object({
       en: object({
         title: generateStringSchema('title', 3, 255),
@@ -220,6 +222,30 @@ export default function MutatePostPage() {
                       placeholder={t('post.readingTimeMinutes')}
                       value={field.value}
                       onChange={(v) => field.onChange(v.target.valueAsNumber)}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between'>
+                <div className='space-y-0.5'>
+                  <Label htmlFor='isFeatured'>{t('post.featuredPost')}</Label>
+                  <p className='text-sm text-muted-foreground'>
+                    {t('post.featuredPostDescription')}
+                  </p>
+                </div>
+                <Controller
+                  defaultValue={false}
+                  control={control}
+                  name='isFeatured'
+                  render={({ field }) => (
+                    <Switch
+                      id='isFeatured'
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
                     />
                   )}
                 />

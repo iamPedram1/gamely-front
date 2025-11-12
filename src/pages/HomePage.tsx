@@ -1,5 +1,6 @@
 // Components
 // import HeroSection from '@/components/home/HeroSection';
+import HeroSection from '@/components/home/HeroSection';
 import LatestNewsSection from '@/components/home/LatestNewsSection';
 import TrendingGamesSection from '@/components/home/TrendingGamesSection';
 
@@ -10,7 +11,7 @@ export default function HomePage() {
   return (
     <main className='min-h-screen flex flex-col bg-background flex-1'>
       {/* Hero Section */}
-      {/* <HeroSection  /> */}
+      <HeroSection />
 
       {/* Trending Games */}
       <TrendingGamesSection />

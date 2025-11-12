@@ -1,3 +1,4 @@
+import routes from '@/utilities/routes';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from 'lucide-react';
@@ -39,7 +40,7 @@ export default function TrendingGamesSection() {
 
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           {games.data.docs.slice(0, 3).map((game, index) => (
-            <Link key={game.id} to={`/game/${game.slug}`}>
+            <Link key={game.id} to={routes.games.details(game.slug)}>
               <div className='group relative aspect-[3/4] rounded-xl overflow-hidden border border-primary/20 hover:border-primary/50 transition-all glow-effect hover:glow-effect-strong'>
                 <img
                   src={game.coverImage?.url || '/placeholder.svg'}

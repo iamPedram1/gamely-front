@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 // Components
 import { Badge } from '@/components/ui/badge';
 
+// Utilities
+import routes from '@/utilities/routes';
+
 // Types
 import type { PostProps } from '@/types/client/blog';
 
@@ -29,7 +32,7 @@ export default function PostContent({ post }: PostContentProps) {
       </div>
       <div className='flex flex-wrap gap-2 mb-8'>
         {post.tags.map((tag) => (
-          <Link key={tag.id} to={`/tag/${tag.slug}`}>
+          <Link key={tag.id} to={routes.tags.details(tag.slug)}>
             <Badge variant='outline' className='hover:bg-accent'>
               #{tag.title}
             </Badge>

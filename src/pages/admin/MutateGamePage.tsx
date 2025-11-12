@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { object } from 'zod';
+import { boolean, object } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,6 +39,7 @@ import {
 const createGameSchema = () =>
   object({
     title: generateStringSchema('title', 3, 255),
+    isFeatured: boolean().optional(),
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     releaseDate: generateStringSchema('release date'),
     coverImage: generateFileSchema('cover image'),
@@ -210,6 +212,29 @@ export default function MutateGamePage() {
                   />
                 )}
               />
+            </div>
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between'>
+                <div className='space-y-0.5'>
+                  <Label htmlFor='isFeatured'>{t('game.featuredGame')}</Label>
+                  <p className='text-sm text-muted-foreground'>
+                    {t('game.featuredGameDescription')}
+                  </p>
+                </div>
+                <Controller
+                  defaultValue={false}
+                  control={control}
+                  name='isFeatured'
+                  render={({ field }) => (
+                    <Switch
+                      id='isFeatured'
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
+                    />
+                  )}
+                />
+              </div>
             </div>
             <div className='space-y-2'>
               <Label htmlFor='coverImage'>

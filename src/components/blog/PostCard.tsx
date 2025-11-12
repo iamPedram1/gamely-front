@@ -79,7 +79,7 @@ export default function PostCard(props: PostCardProps) {
         <div className='flex flex-wrap gap-2'>
           {post.tags.length > 0 &&
             post.tags.map((tag) => (
-              <Link key={tag.id} to={`/tag/${tag.slug}`}>
+              <Link key={tag.id} to={routes.tags.details(tag.slug)}>
                 <Badge
                   variant='outline'
                   className='hover:bg-primary/10 hover:border-primary/50 transition-all text-xs'

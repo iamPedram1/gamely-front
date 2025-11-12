@@ -127,6 +127,8 @@ function useBaseQuery<T = any>(options: UseBaseQueryOptionsProps<T>) {
     [searchParams, queryKey]
   );
 
+  console.log(queryKey, searchParams, queryKey);
+
   const query = useQuery<CommonResponseProps<T>, any, T | null, any>({
     staleTime: 600000,
     gcTime: 600000,

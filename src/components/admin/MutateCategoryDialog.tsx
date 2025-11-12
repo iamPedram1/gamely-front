@@ -1,4 +1,4 @@
-import { object } from 'zod';
+import { boolean, object } from 'zod';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -38,6 +39,7 @@ interface MutateCategoryDialogProps {
 const createCategorySchema = () =>
   object({
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    isFeatured: boolean().optional(),
     translations: object({
       en: object({ title: generateStringSchema('title', 3, 255) }),
       fa: object({ title: generateStringSchema('title', 3, 255) }),
@@ -154,6 +156,32 @@ const MutateCategoryDialog = (props: MutateCategoryDialogProps) => {
                   />
                 )}
               />
+            </div>
+
+            <div className='space-y-2'>
+              <div className='flex items-center justify-between'>
+                <div className='space-y-0.5'>
+                  <Label htmlFor='isFeatured'>
+                    {t('category.featuredCategory')}
+                  </Label>
+                  <p className='text-xs text-muted-foreground'>
+                    {t('category.featuredCategoryDescription')}
+                  </p>
+                </div>
+                <Controller
+                  defaultValue={false}
+                  control={control}
+                  name='isFeatured'
+                  render={({ field }) => (
+                    <Switch
+                      id='isFeatured'
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
+                    />
+                  )}
+                />
+              </div>
             </div>
           </div>
           <DialogFooter>

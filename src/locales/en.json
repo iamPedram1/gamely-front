@@ -71,6 +71,8 @@
     "logout": "Logout",
     "register": "Register",
     "email": "Email",
+    "name": "Name",
+    "username": "Username",
     "password": "Password",
     "forgotPassword": "Forgot Password?",
     "resetPassword": "Reset Password",
@@ -87,13 +89,22 @@
     "emailPlaceholder": "your@email.com",
     "passwordPlaceholder": "••••••••",
     "namePlaceholder": "Your name",
+    "usernamePlaceholder": "Your username",
     "enterEmailForRecovery": "Enter your email address and we'll send you a link to reset your password",
     "resetLinkSent": "We've sent a password reset link to",
     "enterNewPassword": "Enter your new password",
     "confirmNewPassword": "Confirm your new password",
     "changePassword": "Change Password",
     "currentPassword": "Current Password",
-    "updatePassword": "Update Password"
+    "updatePassword": "Update Password",
+    "verifyEmail": "Verify Your Email",
+    "verificationCodeSent": "We've sent a verification code to your email",
+    "verificationSentTo": "Verification code sent to:",
+    "verificationCode": "Verification Code",
+    "enter6DigitCode": "Enter the 6-digit code from your email",
+    "verifyAndRegister": "Verify & Complete Registration",
+    "resendCode": "Resend Code",
+    "continue": "Continue"
   },
   "nav": {
     "home": "Home",
@@ -163,6 +174,7 @@
   },
   "user": {
     "name": "Name",
+    "username": "Username",
     "email": "Email",
     "bio": "Bio",
     "avatar": "Avatar",
@@ -394,6 +406,7 @@
   },
   "fields": {
     "name": "name",
+    "username": "username",
     "email": "email",
     "password": "password",
     "confirmPassword": "confirm password",

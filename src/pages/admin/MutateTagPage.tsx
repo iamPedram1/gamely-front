@@ -1,9 +1,10 @@
-import { object } from 'zod';
+import { boolean, object } from 'zod';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Switch } from '@/components/ui/switch';
 
 // Components
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ import {
 const createTagSchema = () =>
   object({
     slug: generateRegexStringSchema('slug', /^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    isFeatured: boolean().optional(),
     translations: object({
       en: object({ title: generateStringSchema('title', 3, 255) }),
       fa: object({ title: generateStringSchema('title', 3, 255) }),
@@ -84,7 +86,7 @@ export default function MutateTagPage() {
         type='skeleton'
       >
         {supportedLanguages.map((lng) => (
-          <div className='space-y-2'>
+          <div className='space-y-2' key={`title-${lng}`}>
             <Label htmlFor={`title-${lng}`}>
               {t('common.title')} {t(`common.${lng}`)} {t('form.required')}
             </Label>
@@ -118,6 +120,30 @@ export default function MutateTagPage() {
               />
             )}
           />
+        </div>
+
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <div className='space-y-0.5'>
+              <Label htmlFor='isFeatured'>{t('tag.featuredTag')}</Label>
+              <p className='text-sm text-muted-foreground'>
+                {t('tag.featuredTagDescription')}
+              </p>
+            </div>
+            <Controller
+              defaultValue={false}
+              control={control}
+              name='isFeatured'
+              render={({ field }) => (
+                <Switch
+                  id='isFeatured'
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={disabled}
+                />
+              )}
+            />
+          </div>
         </div>
       </LoadingWrapper>
     </FormWrapper>

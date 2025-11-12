@@ -57,7 +57,7 @@ const useAuth = () => {
   return {
     isAuthLoading: profile.isFetching,
     profile: profile.data as UserProps | null,
-    isAuthorized: profile.data || isAuthorized.state,
+    isAuthorized: isAuthorized.state,
     logout,
     signin,
   };

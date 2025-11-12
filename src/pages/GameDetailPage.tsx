@@ -83,7 +83,7 @@ export default function GameDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { profile } = useAuth();
   const game = useGameQuery({ initialParams: slug });
-  const posts = usePostsQuery({ queries: { game: slug } });
+  const posts = usePostsQuery({ queries: { game: slug }, queryKey: [slug] });
   const reviews = useGameReviewsQuery({
     initialParams: game.data?.id,
     enabled: game.isFetched,
@@ -377,7 +377,7 @@ export default function GameDetailPage() {
                           <Avatar className='h-10 w-10 border-2 border-primary/20'>
                             <AvatarImage src={review.user.avatar?.url} />
                             <AvatarFallback>
-                              U{review.user.username}
+                              {review.user.username[0].toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <div className='flex-1'>
@@ -385,10 +385,7 @@ export default function GameDetailPage() {
                               <span className='font-semibold'>
                                 {review.user.username}
                               </span>
-                              <RatingStars
-                                rating={5 - review.rate + 3}
-                                readonly
-                              />
+                              <RatingStars rating={review.rate} readonly />
                               <span className='text-xs text-muted-foreground'>
                                 {getDate(review.createDate)}
                               </span>

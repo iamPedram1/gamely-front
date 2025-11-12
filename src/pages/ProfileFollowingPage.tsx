@@ -9,7 +9,12 @@ import useAuth from '@/hooks/useAuth';
 // Components
 import Searchbar from '@/components/ui/searchbar';
 import FollowerCard from '@/components/profile/FollowerCard';
-import { PageLayout, PageHeader, LoadingState, UnauthorizedState } from '@/components/layout/PageLayout';
+import {
+  PageLayout,
+  PageHeader,
+  LoadingState,
+  UnauthorizedState,
+} from '@/components/layout/PageLayout';
 import InfiniteScrollList from '@/components/ui/infinite-scroll';
 
 // Utilities
@@ -61,11 +66,14 @@ export default function ProfileFollowingPage() {
   }
 
   return (
-    <PageLayout backTo={routes.profile.index} className='flex-1 container py-4 md:py-8 px-4'>
+    <PageLayout
+      backTo={routes.profile.index}
+      className='flex-1 container py-4 md:py-8 px-4'
+    >
       <div className='max-w-3xl mx-auto space-y-4 md:space-y-6'>
         <PageHeader
-          title={t('profile.following')}
-          description={t('profile.manageFollowing')}
+          title={t('profile.followings')}
+          description={t('profile.manageFollowings')}
           icon={<UserCheck className='h-6 w-6 md:h-8 md:w-8' />}
           className='mb-4 md:mb-6'
         />

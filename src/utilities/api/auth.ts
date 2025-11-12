@@ -5,6 +5,7 @@ import { useAppMutation } from '@/hooks/api/useMutation';
 
 // Types
 import type { CommonResponseProps } from '@/types/api';
+import { UserProps } from '@/types/management/blog';
 
 export interface AuthResponseProps {
   accessToken: string;
@@ -32,8 +33,25 @@ export const usePasswordChangeMutation = useAppMutation(
 );
 
 export const useRegisterMutation = useAppMutation(
-  (payload: { username: string; email: string; password: string }) =>
-    apiHandler.post<AuthResponseProps>(endpoints.auth.register, payload),
+  (
+    payload: Pick<UserProps, 'name' | 'username' | 'email'> & {
+      password: string;
+    }
+  ) => apiHandler.post<null>(endpoints.auth.register, payload),
+  [authQueryKey, profileQueryKey]
+);
+
+export const useResendVerificationEmailMutation = useAppMutation(
+  (email: string) =>
+    apiHandler.post<AuthResponseProps>(endpoints.auth.resendVerificationEmail, {
+      email,
+    }),
+  [authQueryKey, profileQueryKey]
+);
+
+export const useVerifyEmailMutation = useAppMutation(
+  (payload: { email: string; code: string }) =>
+    apiHandler.post<AuthResponseProps>(endpoints.auth.verifyEmail, payload),
   [authQueryKey, profileQueryKey]
 );
 

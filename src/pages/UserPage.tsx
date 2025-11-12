@@ -16,7 +16,6 @@ import {
   UserCheck,
   Flag,
 } from 'lucide-react';
-
 import PostCard from '@/components/blog/PostCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -36,14 +35,14 @@ import useAuth from '@/hooks/useAuth';
 import routes from '@/utilities/routes';
 import { getDate } from '@/utilities';
 import { useBoolean } from '@/hooks/state';
-import { usePostsQuery } from '@/utilities/api/post';
 import { debounce } from '@/utilities/helperPack';
+import { usePostsQuery } from '@/utilities/api/post';
+import { useFavoriteGamesQuery } from '@/utilities/api/favoriteGame';
 import {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useUserQuery,
 } from '@/utilities/api/user';
-import { useFavoriteGamesQuery } from '@/utilities/api/favoriteGame';
 
 export default function UserPage() {
   // States
@@ -61,6 +60,7 @@ export default function UserPage() {
   const userRecentPosts = usePostsQuery({
     enabled: user.isFetched,
     queries: { creator: user.data?.id },
+    queryKey: [user.data?.id],
   });
   const userFavoriteGames = useFavoriteGamesQuery({
     enabled: user.isFetched,
@@ -156,7 +156,7 @@ export default function UserPage() {
                 <div className='flex flex-col md:flex-row md:items-center gap-4 mb-4'>
                   <div className='flex flex-col'>
                     <div className='flex items-center justify-center md:justify-start gap-2 mb-2'>
-                      <h1 className='text-3xl font-bold'>@{username}</h1>
+                      <h1 className='text-3xl font-bold'>{user.data.name}</h1>
 
                       <div className='flex items-center gap-2'>
                         {user.data?.id !== profile?.id && (

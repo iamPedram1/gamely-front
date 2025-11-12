@@ -19,6 +19,7 @@ export interface PostProps extends PostBaseProps {
   createDate: string;
   updateDate: string;
   readingTime: number;
+  isFeatured: boolean;
   author: UserProps;
   tags?: TagProps[];
   category: CategoryProps;
@@ -31,6 +32,7 @@ export interface PostSummaryProps extends PostBaseProps {}
 // <----------------   USER   ---------------->
 export interface UserProps {
   id: string;
+  name: string;
   username: string;
   email: string;
   avatar: FileProps;
@@ -48,6 +50,7 @@ export interface TagTranslationProps {
 export interface TagProps {
   id: string;
   slug: string;
+  isFeatured: boolean;
   postsCount: number;
   translations: WithDictionary<TagTranslationProps>;
 }
@@ -60,6 +63,7 @@ export interface CategoryTranslation {
 export interface CategoryProps {
   id: string;
   slug: string;
+  isFeatured: boolean;
   parentId: string;
   translations: WithDictionary<CategoryTranslation>;
 }
@@ -81,6 +85,7 @@ export interface GameProps {
   slug: string;
   title: string;
   coverImage: FileProps;
+  isFeatured: boolean;
   translations: WithDictionary<GameTranslation>;
   releaseDate: string;
 }
